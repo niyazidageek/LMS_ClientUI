@@ -2,12 +2,12 @@ import * as Yup from 'yup';
 
 const signUpSchema = Yup.object().shape(
     {
-        firstname: Yup.string()
+        name: Yup.string()
             .min(5, 'Should be 5 character long')
             .max(15, 'should not exceed 15 characters')
             .required('Required'),
 
-        lastname: Yup.string()
+        surname: Yup.string()
             .min(5, 'Should be 5 character long')
             .max(15, 'should not exceed 15 characters')
             .required('Required'),
