@@ -26,7 +26,7 @@ import {
     SimpleGrid,
     Text,
 } from "@chakra-ui/react"
-import { AuthSignUpErrorAlert } from '../../alerts/AuthSignUpErrorAlert';
+import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 
 
 const Register = () => {
@@ -42,7 +42,7 @@ const Register = () => {
 
     return (
         <>
-            <AuthSignUpErrorAlert />
+            <AuthErrorAlert />
             <Flex
                 minH={'100vh'}
                 align={'center'}

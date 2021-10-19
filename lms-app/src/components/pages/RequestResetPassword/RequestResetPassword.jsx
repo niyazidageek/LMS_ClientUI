@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import {authCreator} from '../../../redux/authCreator'
-import signInSchema from '../../../validations/signInSchema';
-import { NavLink, Redirect } from 'react-router-dom';
+import requestResetPasswordSchema from '../../../validations/requestResetPasswordSchema';
+import { Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
 import validatePassword from '../../../validations/validatePassword';
 import {
@@ -23,18 +23,15 @@ import {
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 import { actionTypes } from '../../../redux/actionTypes';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
-import RequestResetPassword from '../RequestResetPassword/RequestResetPassword';
 
 
-const Login = () => {
+const RequestResetPassword = () => {
     const dispatch = useDispatch();
     const isFetching = useSelector(state=>state.authReducer.isFetching)
-    const isLoggedIn = useSelector(state=>state.authReducer.isLoggedIn)
     function handleSubmit(values) {
-        dispatch(authCreator.signIn(values));
+        dispatch(authCreator.requestResetPassword(values));
     }
 
-    if (isLoggedIn) return <Redirect to="/home" />;
 
 
     return (
@@ -48,28 +45,29 @@ const Login = () => {
             >
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
-                    <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+                    <Heading fontSize={'4xl'}>Send a request for a new password</Heading>
                     <Text fontSize={'lg'} color={'gray.600'}>
-                        to start learning!
+                        to secure your account better!
                     </Text>
                 </Stack>
                 <Box
-                    boxSize={'md'}
+                    alignSelf={'center'}
+                    boxSize={'sm'}
                     rounded={'lg'}
                     boxShadow={'lg'}
+                    height = {'max-content'}
                     p={8}>
                     <Formik
                     initialValues={
                         {
-                            email: '',
-                            password:''
+                            email: ''
                         }
                     }
-                    validationSchema={signInSchema}
+                    validationSchema={requestResetPasswordSchema}
                     onSubmit={handleSubmit}
                     >
                     <Form>
-                    <Stack spacing={4}>
+                    <Stack spacing={8}>
                         <FormControl id="email">
                         <Field name="email" validate={validateEmail}>
                             {({ field, form }) => (
@@ -82,26 +80,8 @@ const Login = () => {
                             }
                         </Field>
                         </FormControl>
-                        <FormControl id="password">
-                        <Field name="password" validate={validatePassword}>
-                            {({ field, form }) => (
-                                <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
-                                    <Input type='password' {...field} placeholder="Password" />
-                                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
-                                </FormControl>
-                            )
-                            }
-                        </Field>
-                        </FormControl>
-                        <Stack spacing={10}>
-                            <Stack
-                                direction={{ base: 'column', sm: 'row' }}
-                                align={'start'}
-                                justify={'space-between'}>
-                                <Checkbox>Remember me</Checkbox>
-                                <NavLink exact to="/requestresetpassword" color={'blue.400'} >Forgot password?</NavLink>
-                            </Stack>
+                        
+                        <Stack spacing={6}>
                             <Button
                                 isLoading={isFetching}
                                 type="submit"
@@ -110,7 +90,7 @@ const Login = () => {
                                 _hover={{
                                     bg: 'blue.500',
                                 }}>
-                                Sign in
+                                Send
                             </Button>
                         </Stack>
                     </Stack>
@@ -123,4 +103,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default RequestResetPassword;

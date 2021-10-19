@@ -28,8 +28,12 @@ const signIn = (userObj) => dispatch => {
         })
         .catch(function (error) {
             // handle error
-            console.log(error.response.data.message)
-            dispatch(setLoginError(error.response.data.message))
+            if(error.message == "Network Error"){
+                dispatch(setAuthError(error.message))
+            }
+            else{
+                dispatch(setAuthError(error.response.data.message))
+            }
         })
         .then(function () {
             // always executed
@@ -43,19 +47,20 @@ const setUser = userObj => {
     }
 }
 
-const setLoginError = error => {
+const setAuthError = error => {
     return {
-        type: actionTypes.SET_SIGN_IN_ERROR,
+        type: actionTypes.SET_AUTH_ERROR,
         payload: { error }
     }
 }
 
-const setSignupError = error => {
-    return {
-        type: actionTypes.SET_SIGNUP_ERROR,
-        payload: { error }
+const setAuthMessage = message =>{
+    return{
+        type: actionTypes.SET_AUTH_MESSAGE,
+        payload: { message }
     }
 }
+
 
 const signUp = (userObj) => dispatch => {
     dispatch({
@@ -79,9 +84,12 @@ const signUp = (userObj) => dispatch => {
         })
         .catch(function (error) {
             // handle error
-            console.log(userObj)
-            console.log(error.response)
-            dispatch(setSignupError(error.response.data.message))
+            if(error.message == "Network Error"){
+                dispatch(setAuthError(error.message))
+            }
+            else{
+                dispatch(setAuthError(error.response.data.message))
+            }
 
         })
         .then(function () {
@@ -95,18 +103,77 @@ const logOut = () => {
     }
 }
 
-const disableSignUpError = () =>{
-    return{
-        type: actionTypes.DISABLE_SIGNUP_ERROR
-    }
+const requestResetPassword = (userObj) => dispatch =>{
+    dispatch({
+        type: actionTypes.REQUEST_RESET_PASSWORD
+    })
+    axios({
+        method: 'post',
+        url: process.env.REACT_APP_REQUEST_RESET_PASSWORD_API,
+        data: {
+            email:userObj.email
+        }
+    })
+    .then(function (response){
+        dispatch({
+            type: actionTypes.REQUEST_RESET_PASSWORD_COMPLETE
+        })
+        dispatch(setAuthMessage(response.data.message))
+    })
+    .catch(function(error){
+        if(error.message == "Network Error"){
+            dispatch(setAuthError(error.message))
+        }
+        else{
+            dispatch(setAuthError(error.response.data.message))
+        }
+    })
 }
 
 
-const disableSignInError = () =>{
+
+const resetPassword = (userObj) => dispatch =>{
+    dispatch({
+        type: actionTypes.RESET_PASSWORD
+    })
+    axios({
+        method:'post',
+        url: process.env.REACT_APP_RESET_PASSWORD_API,
+        data: {
+            email:userObj.email,
+            token:userObj.token,
+            newPassword:userObj.newPassword
+        }
+    })
+    .then(function(response){
+        dispatch({
+            type:actionTypes.RESET_PASSWORD_COMPLETE
+        })
+        console.log(response)
+        dispatch(setAuthMessage(response.data.message))
+    })
+    .catch(function(error){
+        if(error.message == "Network Error"){
+            dispatch(setAuthError(error.message))
+        }
+        else{
+            dispatch(setAuthError(error.response.data.message))
+        }
+    })
+}
+
+const disableAuthError = () =>{
     return{
-        type: actionTypes.DISABLE_SIGNIN_ERROR
+        type: actionTypes.DISABLE_AUTH_ERROR
     }
 }
+
+const disableAuthMessage = () =>{
+    return{
+        type: actionTypes.DISABLE_AUTH_MESSAGE
+    }
+}
+
 
 
 export const authCreator = {
@@ -114,8 +181,9 @@ export const authCreator = {
     logOut,
     signIn,
     signUp,
-    setLoginError,
-    setSignupError,
-    disableSignUpError,
-    disableSignInError  
+    setAuthError,
+    disableAuthError,
+    requestResetPassword,
+    resetPassword,
+    disableAuthMessage
 }

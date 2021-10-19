@@ -7,6 +7,8 @@ import {PrivateRoute} from "./utils/PrivateRoute";
 import Login from "./components/pages/Login/Login";
 import Home from "./components/pages/Home/Home";
 import Register from "./components/pages/Register/Register";
+import RequestResetPassword from "./components/pages/RequestResetPassword/RequestResetPassword";
+import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
               <PrivateRoute exact path="/home" component={Home}/>
               <Route exact path="/login" component={Login}/>
               <Route exact path="/register" component={Register}/>
+              <Route exact path="/requestresetpassword" component={RequestResetPassword}/>
+              <Route exact path="/resetpassword" component={ResetPassword}/>
             </ChakraProvider>
           </Switch>
       </Router>

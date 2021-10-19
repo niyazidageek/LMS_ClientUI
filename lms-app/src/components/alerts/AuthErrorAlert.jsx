@@ -5,21 +5,20 @@ import {
 } from "@chakra-ui/react"
 import {authCreator} from '../../redux/authCreator'
 
-export const AuthSignInErrorAlert = React.memo(()=>{
-    const signinError = useSelector(state => state.authReducer.loginError)
-    const hasError = signinError ? true:false;
+export const AuthErrorAlert = React.memo(()=>{
+    const error = useSelector(state => state.authReducer.error)
+    const hasError = error ? true:false;
 
     const dispatch = useDispatch()
     const toast = useToast();
     function Log(){
         
-        toast({ status: "error",description: signinError, position:'top' ,duration:2000 })
+        toast({ status: "error",description: error, position:'top' ,duration:2000 })
 
-        dispatch(authCreator.disableSignInError());
+        dispatch(authCreator.disableAuthError());
     }
 
     return(
-        console.log('render'),
         <>
             {
                 hasError ? Log() : null

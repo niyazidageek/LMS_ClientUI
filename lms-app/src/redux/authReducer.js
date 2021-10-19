@@ -6,8 +6,8 @@ const initialState = {
     isFetching: false,
     jwt: null,
     jwtExpiryDate:null,
-    loginError: null,
-    signupError: null
+    error:null,
+    message:null
 }
 
 const authReducer = ( state = initialState, action) => {
@@ -19,7 +19,8 @@ const authReducer = ( state = initialState, action) => {
                 isLoggedIn: true,
                 isFetching: false,
                 jwt: action.payload.token,
-                loginError: null
+                error: null,
+                message:null
             }
         case actionTypes.LOG_OUT:
             return initialState
@@ -27,50 +28,71 @@ const authReducer = ( state = initialState, action) => {
             return {
                 ...state,
                 isFetching: true,
-                loginError: null
+                error: null
             }
         case actionTypes.SIGN_UP:
             return {
                 ...state,
-                signupError:null,
+                error:null,
                 isFetching: true    
             }
         case actionTypes.SIGN_UP_COMPLETE:
             return {
                 ...state,
                 isFetching: false,
-                signupError: null
+                error: null
+            }
+        case actionTypes.RESET_PASSWORD:
+            return{
+                ...state,
+                isFetching:true
+            }
+        case actionTypes.RESET_PASSWORD_COMPLETE:
+            return{
+                ...state,
+                isFetching:false
+            }
+        case actionTypes.REQUEST_RESET_PASSWORD:
+            return{
+                ...state,
+                isFetching:true
+            }
+        case actionTypes.REQUEST_RESET_PASSWORD_COMPLETE:
+            return{
+                ...state,
+                isFetching:false
             }
         case actionTypes.SIGN_IN_COMPLETE:
             return {
                 ...state,
                 isFetching: false,
-                loginError: null
+                error: null
             }
-        case actionTypes.SET_SIGN_IN_ERROR:
+        case actionTypes.SET_AUTH_ERROR:
             return {
                 ...state,
                 isFetching: false,
-                loginError: action.payload.error
+                error: action.payload.error
             }
-        case actionTypes.SET_SIGNUP_ERROR:
+        case actionTypes.DISABLE_AUTH_ERROR:
+            return{
+                ...state,
+                isFetching:false,
+                error:null
+            }
+        case actionTypes.SET_AUTH_MESSAGE:
             return {
                 ...state,
                 isFetching: false,
-                signupError: action.payload.error
+                message: action.payload.message
             }
-        case actionTypes.DISABLE_SIGNUP_ERROR:
+        case actionTypes.DISABLE_AUTH_MESSAGE:
             return{
                 ...state,
                 isFetching:false,
-                signupError:null
+                message:null
             }
-        case actionTypes.DISABLE_SIGNIN_ERROR:
-            return{
-                ...state,
-                isFetching:false,
-                loginError:null
-            }
+        
         default:
             return state
     }
