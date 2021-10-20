@@ -17,11 +17,25 @@ const signIn = (userObj) => dispatch => {
     })
         .then(function (response) {
             // handle success
-            console.log(response)
-            dispatch(setUser({
-                email: userObj.email,
-                jwt: response.data.token
-            }))
+            if(userObj.rememberMe){   
+                dispatch(setUser({
+                    email: userObj.email,
+                    jwt: response.data.token,
+                    jwtExpiryDate: response.data.expiryDate,
+                    rememberMe:userObj.rememberMe
+                }))
+            }
+            else{
+                let date = new Date;
+                date = new Date(date.getTime()+1*60000);
+                date = date.toISOString();
+                dispatch(setUser({
+                    email: userObj.email,
+                    jwt: response.data.token,
+                    jwtExpiryDate: date,
+                    rememberMe:userObj.rememberMe
+                }))
+            }
             dispatch({
                 type: actionTypes.SIGN_IN_COMPLETE
             })

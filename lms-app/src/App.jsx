@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from 'axios'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { authCreator } from "./redux/authCreator";
 import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import {PrivateRoute} from "./utils/PrivateRoute";
@@ -10,11 +11,15 @@ import Register from "./components/pages/Register/Register";
 import RequestResetPassword from "./components/pages/RequestResetPassword/RequestResetPassword";
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 import ConfirmEmail from "./components/pages/EmailConfirmation/ConfirmEmail";
+import { useValidateToken } from "./hooks/useValidateToken";
 
 
 function App() {
+  
+  useValidateToken();
 
   return (
+    console.log('renderMain'),
     <>
     <Router>
           <Switch>

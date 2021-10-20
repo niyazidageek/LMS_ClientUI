@@ -6,6 +6,7 @@ import requestResetPasswordSchema from '../../../validations/requestResetPasswor
 import { Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
 import validatePassword from '../../../validations/validatePassword';
+import { NavLink, useHistory } from 'react-router-dom';
 import {
     FormControl,
     FormLabel,
@@ -31,8 +32,7 @@ const RequestResetPassword = () => {
     function handleSubmit(values) {
         dispatch(authCreator.requestResetPassword(values));
     }
-
-
+    let history = useHistory();
 
     return (
         <> 
@@ -51,6 +51,7 @@ const RequestResetPassword = () => {
                     </Text>
                 </Stack>
                 <Box
+                    justifyContent='space-around'
                     alignSelf={'center'}
                     boxSize={'sm'}
                     rounded={'lg'}
@@ -93,6 +94,9 @@ const RequestResetPassword = () => {
                                 Send
                             </Button>
                         </Stack>
+                        <Link fontSize="sm" color={'blue.400'} onClick={()=>history.goBack()}>
+                            Go back
+                        </Link>
                     </Stack>
                     </Form>
                     </Formik>

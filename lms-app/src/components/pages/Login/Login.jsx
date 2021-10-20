@@ -31,7 +31,9 @@ const Login = () => {
     const isLoggedIn = useSelector(state=>state.authReducer.isLoggedIn)
     function handleSubmit(values) {
         dispatch(authCreator.signIn(values));
+        // console.log(values)
     }
+
 
     if (isLoggedIn) return <Redirect to="/" />;
 
@@ -56,19 +58,21 @@ const Login = () => {
                     boxSize={'md'}
                     rounded={'lg'}
                     boxShadow={'lg'}
+                    height={'max-content'}
                     p={8}>
                     <Formik
                     initialValues={
                         {
                             email: '',
-                            password:''
+                            password:'',
+                            rememberMe:false
                         }
                     }
                     validationSchema={signInSchema}
                     onSubmit={handleSubmit}
                     >
                     <Form>
-                    <Stack spacing={4}>
+                    <Stack spacing={6}>
                         <FormControl id="email">
                         <Field name="email" validate={validateEmail}>
                             {({ field, form }) => (
@@ -93,13 +97,29 @@ const Login = () => {
                             }
                         </Field>
                         </FormControl>
-                        <Stack spacing={10}>
+                        <Stack spacing={8}>
                             <Stack
                                 direction={{ base: 'column', sm: 'row' }}
                                 align={'start'}
                                 justify={'space-between'}>
-                                <Checkbox>Remember me</Checkbox>
-                                <NavLink exact to="/requestresetpassword" color={'blue.400'} >Forgot password?</NavLink>
+                                    
+                            <Field  name="rememberMe">
+                                {({ field }) => (
+                                    <Checkbox {...field}>
+                                        <Text fontSize="sm" textAlign="left">
+                                            Remember me
+                                        </Text>
+                                    </Checkbox>
+                                    
+                                )
+                                }
+                            </Field>  
+                                
+                                <NavLink exact to="/requestresetpassword" >
+                                        <Link fontSize="sm" color={'blue.400'}>
+                                            Forgot password
+                                        </Link>
+                                </NavLink>
                             </Stack>
                             <Button
                                 isLoading={isFetching}
@@ -112,6 +132,11 @@ const Login = () => {
                                 Sign in
                             </Button>
                         </Stack>
+                        <NavLink path to="/register">
+                            <Link fontSize="sm" color={'blue.400'}>
+                                Don't have an account? Create one!
+                            </Link>
+                        </NavLink>
                     </Stack>
                     </Form>
                     </Formik>

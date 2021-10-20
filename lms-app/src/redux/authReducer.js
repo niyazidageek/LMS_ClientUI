@@ -8,7 +8,8 @@ const initialState = {
     jwtExpiryDate:null,
     error:null,
     message:null,
-    isMailConfirmed:false
+    isMailConfirmed:false,
+    rememberMe:false
 }
 
 const authReducer = ( state = initialState, action) => {
@@ -19,9 +20,11 @@ const authReducer = ( state = initialState, action) => {
                 profileName: action.payload.email,
                 isLoggedIn: true,
                 isFetching: false,
-                jwt: action.payload.token,
+                jwt: action.payload.jwt,
                 error: null,
-                message:null
+                message:null,
+                jwtExpiryDate:action.payload.jwtExpiryDate,
+                rememberMe:action.payload.rememberMe
             }
         case actionTypes.LOG_OUT:
             return initialState

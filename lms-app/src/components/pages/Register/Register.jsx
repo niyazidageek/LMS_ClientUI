@@ -6,6 +6,7 @@ import signUpSchema from '../../../validations/signUpSchema';
 import { Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
 import validatePassword from '../../../validations/validatePassword';
+import { NavLink } from 'react-router-dom';
 import {
     FormControl,
     FormLabel,
@@ -37,8 +38,7 @@ const Register = () => {
         dispatch(authCreator.signUp(values));
     }
 
-    if (isLoggedIn) return <Redirect to="/home" />;
-
+    if (isLoggedIn) return <Redirect to="/" />;
 
     return (
         <>
@@ -59,6 +59,7 @@ const Register = () => {
                         boxSize={'xl'}
                         rounded={'lg'}
                         boxShadow={'lg'}
+                        height={'max-content'}
                         p={8}>
                         <Formik
                             initialValues={
@@ -68,7 +69,8 @@ const Register = () => {
                                     username: '',
                                     email: '',
                                     password: '',
-                                    confirmPassword: ''
+                                    confirmPassword: '',
+                                    rememberMe:'false'
                                 }
                             }
                             validationSchema={signUpSchema}
@@ -155,7 +157,16 @@ const Register = () => {
                                             direction={{ base: 'column', sm: 'row' }}
                                             align={'start'}
                                             justify={'space-between'}>
-                                            <Checkbox>Remember me</Checkbox>
+                                            <Field  name="rememberMe">
+                                            {({ field }) => (
+                                                <Checkbox {...field}>
+                                                    <Text fontSize="sm" textAlign="left">
+                                                        Remember me
+                                                    </Text>
+                                                </Checkbox>
+                                            )
+                                            }
+                                            </Field>  
                                         </Stack>
                                         <Button
                                             isLoading={isFetching}
@@ -168,6 +179,11 @@ const Register = () => {
                                             Sign up
                                         </Button>
                                     </Stack>
+                                    <NavLink path to="/login">
+                                        <Link fontSize="sm" color={'blue.400'}>
+                                            Already have an account? Sign in!
+                                        </Link>
+                                    </NavLink>
                                 </Stack>
                             </Form>
                         </Formik>
