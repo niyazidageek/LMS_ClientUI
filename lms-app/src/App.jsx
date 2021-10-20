@@ -18,8 +18,11 @@ function App() {
   
   useValidateToken();
 
+  useEffect(()=>{
+    console.log('renderMain')
+  })
+
   return (
-    console.log('renderMain'),
     <>
     <Router>
           <Switch>

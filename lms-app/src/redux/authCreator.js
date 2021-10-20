@@ -117,11 +117,11 @@ const logOut = () => {
     }
 }
 
-const requestResetPassword = (userObj) => dispatch =>{
+const requestResetPassword = (userObj) => async dispatch =>{
     dispatch({
         type: actionTypes.REQUEST_RESET_PASSWORD
     })
-    axios({
+    await axios({
         method: 'post',
         url: process.env.REACT_APP_REQUEST_RESET_PASSWORD_API,
         data: {
@@ -199,11 +199,11 @@ const confirmEmail = (userObj) => dispatch =>{
     })
 }
 
-const resetPassword = (userObj) => dispatch =>{
+const resetPassword = (userObj) => async dispatch =>{
     dispatch({
         type: actionTypes.RESET_PASSWORD
     })
-    axios({
+    await axios({
         method:'post',
         url: process.env.REACT_APP_RESET_PASSWORD_API,
         data: {

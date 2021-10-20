@@ -14,6 +14,7 @@ export const AuthErrorAlert = React.memo(()=>{
     function Log(){
         
         toast({ status: "error",description: error, position:'top' ,duration:2000 })
+        console.log('alert')
 
         dispatch(authCreator.disableAuthError());
     }

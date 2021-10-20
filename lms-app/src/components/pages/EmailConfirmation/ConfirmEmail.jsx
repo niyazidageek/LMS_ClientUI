@@ -19,6 +19,7 @@ import axios from 'axios';import {
 
 const ConfirmEmail = () => {
     const isFetching = useSelector(state=>state.authReducer.isFetching)
+    const [confirmDone, setConfirmDone] = useState(false);
     const {id, token} = useParams();
     const dispatch = useDispatch();
 

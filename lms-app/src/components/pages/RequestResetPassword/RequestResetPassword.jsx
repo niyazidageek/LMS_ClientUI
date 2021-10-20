@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import {authCreator} from '../../../redux/authCreator'
@@ -28,16 +28,18 @@ import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
 
 const RequestResetPassword = () => {
     const dispatch = useDispatch();
+    const [requestDone, setRequestDone] = useState(false);
     const isFetching = useSelector(state=>state.authReducer.isFetching)
-    function handleSubmit(values) {
-        dispatch(authCreator.requestResetPassword(values));
+    async function handleSubmit(values) {
+        await dispatch(authCreator.requestResetPassword(values));
+        setRequestDone(true);
     }
     let history = useHistory();
 
+    if(requestDone) return <Redirect to='/' />
+
     return (
         <> 
-        <AuthErrorAlert />
-        <AuthMessageAlert />
         <Flex
             minH={'100vh'}
             align={'center'}

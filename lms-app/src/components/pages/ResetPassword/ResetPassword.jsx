@@ -1,9 +1,10 @@
 import React,{useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
+import { useHistory } from 'react-router';
 import {authCreator} from '../../../redux/authCreator'
 import resetPasswordSchema from '../../../validations/resetPasswordSchema';
-import { Redirect } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
 import validatePassword from '../../../validations/validatePassword';
 import {
@@ -23,9 +24,12 @@ import {
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 import { actionTypes } from '../../../redux/actionTypes';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
+import { useValidateToken } from '../../../hooks/useValidateToken';
 
 
 const ResetPassword = () => {
+    const history = useHistory();
+    useValidateToken()
     const dispatch = useDispatch();
     const isFetching = useSelector(state=>state.authReducer.isFetching)
     const [resetDone, setResetDone] = useState(false);
@@ -38,13 +42,11 @@ const ResetPassword = () => {
 
     return (
         <> 
-        <AuthErrorAlert />
-        <AuthMessageAlert />
         <Flex
             minH={'100vh'}
             align={'center'}
             justify={'center'}
-            >
+        >
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'}>Reset your password</Heading>
@@ -56,6 +58,7 @@ const ResetPassword = () => {
                     alignSelf={'center'}
                     boxSize={'lg'}
                     rounded={'lg'}
+                    height={'max-content'}
                     boxShadow={'lg'}
                     p={8}>
                     <Formik
@@ -132,6 +135,9 @@ const ResetPassword = () => {
                                 }}>
                                 Reset
                             </Button>
+                            <Link fontSize="sm" color={'blue.400'} onClick={()=>history.goBack()}>
+                            Go back
+                            </Link>
                         </Stack>
                     </Stack>
                     </Form>

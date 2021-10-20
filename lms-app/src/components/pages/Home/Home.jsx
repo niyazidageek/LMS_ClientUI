@@ -1,8 +1,10 @@
 import React,{useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { useValidateToken } from '../../../hooks/useValidateToken';
 import {authCreator} from '../../../redux/authCreator'
 const Home = () => {
-
+    useValidateToken()
     const dispatch = useDispatch();
     const[count, setCount] = useState(0);
     
