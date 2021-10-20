@@ -7,7 +7,8 @@ const initialState = {
     jwt: null,
     jwtExpiryDate:null,
     error:null,
-    message:null
+    message:null,
+    isMailConfirmed:false
 }
 
 const authReducer = ( state = initialState, action) => {
@@ -29,6 +30,27 @@ const authReducer = ( state = initialState, action) => {
                 ...state,
                 isFetching: true,
                 error: null
+            }
+        case actionTypes.SEND_CONFIRM_EMAIL:
+            return{
+                ...state,
+                isFetching: true,
+            }
+        case actionTypes.CONFIRM_EMAIL:
+        return{
+            ...state,
+            isFetching: true,
+        }
+        case actionTypes.SEND_CONFIRM_EMAIL_COMPLETE:
+            return{
+                ...state,
+                isFetching:false
+            }
+        case actionTypes.CONFIRM_EMAIL_COMPLETE:
+            return{
+                ...state,
+                isFetching:false,
+                isMailConfirmed:true
             }
         case actionTypes.SIGN_UP:
             return {

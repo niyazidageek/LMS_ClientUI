@@ -9,7 +9,7 @@ import Home from "./components/pages/Home/Home";
 import Register from "./components/pages/Register/Register";
 import RequestResetPassword from "./components/pages/RequestResetPassword/RequestResetPassword";
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
-import ConfirmationSuccess from "./components/pages/EmailConfirmation/ConfirmationSuccess";
+import ConfirmEmail from "./components/pages/EmailConfirmation/ConfirmEmail";
 
 
 function App() {
@@ -19,12 +19,12 @@ function App() {
     <Router>
           <Switch>
             <ChakraProvider>
-              <PrivateRoute exact path="/home" component={Home}/>
-              <Route exact path="/login" component={Login}/>
-              <Route exact path="/register" component={Register}/>
-              <Route exact path="/requestresetpassword" component={RequestResetPassword}/>
-              <Route exact path="/resetpassword" component={ResetPassword}/>
-              <Route exact path="/confirmationsuccess/:id/:token" component={ConfirmationSuccess} />
+              <PrivateRoute exact path="/" component={Home}/>
+              <Route path="/login" component={Login}/>
+              <Route path="/register" component={Register}/>
+              <Route path="/requestresetpassword" component={RequestResetPassword}/>
+              <Route path="/resetpassword" component={ResetPassword}/>
+              <Route path="/confirmemail/:id/:token" component={ConfirmEmail} />
             </ChakraProvider>
           </Switch>
       </Router>

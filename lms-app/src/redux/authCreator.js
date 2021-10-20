@@ -130,7 +130,60 @@ const requestResetPassword = (userObj) => dispatch =>{
     })
 }
 
+const sendConfirmEmail = (userbObj) => dispatch =>{
+    dispatch({
+        type: actionTypes.SEND_CONFIRM_EMAIL
+    })
+    axios({
+        method:'post',
+        url: process.env.REACT_APP_SEND_CONFIRM_EMAIL_API,
+        data: {
+            email:userbObj.email
+        }
+    })
+    .then(function(response){
+        dispatch({
+            type: actionTypes.SEND_CONFIRM_EMAIL_COMPLETE
+        })
+        dispatch(setAuthMessage(response.data.message))
+    })
+    .catch(function(error){
+        if(error.message == "Network Error"){
+            dispatch(setAuthError(error.message))
+        }
+        else{
+            dispatch(setAuthError(error.response.data.message))
+        }
+    })
+}
 
+const confirmEmail = (userObj) => dispatch =>{
+    dispatch({
+        type: actionTypes.CONFIRM_EMAIL
+    })
+    axios({
+        method: 'post',
+        url: process.env.REACT_APP_CONFIRM_EMAIL_API,
+        data: {
+            userId:userObj.userId,
+            token:userObj.token
+        }
+    })
+    .then(function(response){
+        dispatch({
+            type: actionTypes.CONFIRM_EMAIL_COMPLETE
+        })
+        dispatch(setAuthMessage(response.data.message))
+    })
+    .catch(function(error){
+        if(error.message == "Network Error"){
+            dispatch(setAuthError(error.message))
+        }
+        else{
+            dispatch(setAuthError(error.response.data.message))
+        }
+    })
+}
 
 const resetPassword = (userObj) => dispatch =>{
     dispatch({
@@ -185,5 +238,7 @@ export const authCreator = {
     disableAuthError,
     requestResetPassword,
     resetPassword,
-    disableAuthMessage
+    disableAuthMessage,
+    sendConfirmEmail,
+    confirmEmail
 }

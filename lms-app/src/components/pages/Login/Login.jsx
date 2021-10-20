@@ -21,7 +21,6 @@ import {
     Text,
 } from "@chakra-ui/react"
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
-import { actionTypes } from '../../../redux/actionTypes';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
 import RequestResetPassword from '../RequestResetPassword/RequestResetPassword';
 
@@ -34,7 +33,7 @@ const Login = () => {
         dispatch(authCreator.signIn(values));
     }
 
-    if (isLoggedIn) return <Redirect to="/home" />;
+    if (isLoggedIn) return <Redirect to="/" />;
 
 
     return (
