@@ -2,7 +2,6 @@ import React,{useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router';
-import {authCreator} from '../../../redux/authCreator'
 import resetPasswordSchema from '../../../validations/resetPasswordSchema';
 import { NavLink, Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
@@ -22,9 +21,9 @@ import {
     Text,
 } from "@chakra-ui/react"
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
-import { actionTypes } from '../../../redux/actionTypes';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
 import { useValidateToken } from '../../../hooks/useValidateToken';
+import { resetPasswordAction } from '../../../actions/authActions';
 
 
 const ResetPassword = () => {
@@ -34,7 +33,7 @@ const ResetPassword = () => {
     const isFetching = useSelector(state=>state.authReducer.isFetching)
     const [resetDone, setResetDone] = useState(false);
     async function handleSubmit(values) {
-        await dispatch(authCreator.resetPassword(values));
+        await dispatch(resetPasswordAction(values));
         setResetDone(true);
     }
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import axios from 'axios'
 import { useSelector, useDispatch } from "react-redux";
-import { authCreator } from "./redux/authCreator";
 import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import {PrivateRoute} from "./utils/PrivateRoute";
@@ -12,22 +11,51 @@ import RequestResetPassword from "./components/pages/RequestResetPassword/Reques
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 import ConfirmEmail from "./components/pages/EmailConfirmation/ConfirmEmail";
 import { useValidateToken } from "./hooks/useValidateToken";
+import { roles } from "./utils/roles";
 
 
 function App() {
+  const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
+  const userRoles = useSelector((state) => state.authReducer.roles);
   
   useValidateToken();
-
-  useEffect(()=>{
-    console.log('renderMain')
-  })
 
   return (
     <>
     <Router>
           <Switch>
             <ChakraProvider>
-              <PrivateRoute exact path="/" component={Home}/>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return isLoggedIn ? (
+                  userRoles.some(r=>r==roles.Teacher || r==roles.SuperAdmin || r==roles.Admin)?
+                  <Redirect to="/teacher/home"/> :
+                  <Redirect to="/student/home"/>
+                ) : (
+                  <Redirect to="/login" />
+                );
+              }}
+            />
+
+             
+             <Route path="/student">
+                <PrivateRoute exact path="/student/home" 
+                  rolesRestriction={[roles.Student]}
+                  component={Home}
+                  />
+             </Route>
+
+             <Route path="/teacher">
+              <PrivateRoute exact path="/teacher/home" 
+                rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
+                component={Home}
+                />
+             </Route>
+
+              
+
               <Route path="/login" component={Login}/>
               <Route path="/register" component={Register}/>
               <Route path="/requestresetpassword" component={RequestResetPassword}/>

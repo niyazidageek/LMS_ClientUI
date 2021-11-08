@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import {authCreator} from '../../../redux/authCreator'
 import signInSchema from '../../../validations/signInSchema';
 import { NavLink, Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
@@ -23,6 +22,7 @@ import {
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
 import RequestResetPassword from '../RequestResetPassword/RequestResetPassword';
+import { signInAction } from '../../../actions/authActions';
 
 
 const Login = () => {
@@ -30,8 +30,7 @@ const Login = () => {
     const isFetching = useSelector(state=>state.authReducer.isFetching)
     const isLoggedIn = useSelector(state=>state.authReducer.isLoggedIn)
     function handleSubmit(values) {
-        dispatch(authCreator.signIn(values));
-        // console.log(values)
+       dispatch(signInAction(values))
     }
 
 

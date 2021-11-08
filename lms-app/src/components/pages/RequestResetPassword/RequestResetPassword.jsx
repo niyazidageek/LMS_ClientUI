@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import {authCreator} from '../../../redux/authCreator'
 import requestResetPasswordSchema from '../../../validations/requestResetPasswordSchema';
 import { Redirect } from 'react-router-dom';
 import validateEmail from '../../../validations/validateEmail';
@@ -22,8 +21,8 @@ import {
     Text,
 } from "@chakra-ui/react"
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
-import { actionTypes } from '../../../redux/actionTypes';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
+import { requestResetPasswordAction } from '../../../actions/authActions';
 
 
 const RequestResetPassword = () => {
@@ -31,7 +30,7 @@ const RequestResetPassword = () => {
     const [requestDone, setRequestDone] = useState(false);
     const isFetching = useSelector(state=>state.authReducer.isFetching)
     async function handleSubmit(values) {
-        await dispatch(authCreator.requestResetPassword(values));
+        await dispatch(requestResetPasswordAction(values));
         setRequestDone(true);
     }
     let history = useHistory();

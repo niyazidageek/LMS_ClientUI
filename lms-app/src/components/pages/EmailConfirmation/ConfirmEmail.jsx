@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {useParams, NavLink, Link} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {authCreator} from '../../../redux/authCreator'
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
 
@@ -16,6 +15,7 @@ import axios from 'axios';import {
     useColorModeValue,
     createIcon,
   } from '@chakra-ui/react';
+import { confirmEmailAction } from '../../../actions/authActions';
 
 const ConfirmEmail = () => {
     const isFetching = useSelector(state=>state.authReducer.isFetching)
@@ -25,7 +25,7 @@ const ConfirmEmail = () => {
 
     function handleSubmit(){
       const values = {userId:id,token};
-      dispatch(authCreator.confirmEmail(values));
+      dispatch(confirmEmailAction(values));
     }
 
     return (

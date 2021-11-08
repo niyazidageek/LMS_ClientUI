@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { authCreator } from "../redux/authCreator";
+import { logOutAction } from "../actions/authActions";
 
 export function useValidateToken(){
 
@@ -12,7 +12,7 @@ export function useValidateToken(){
         expiryDate = Date.parse(expiryDate);
         let currentDate = new Date;
         if(expiryDate<currentDate.getTime()){
-            dispatch(authCreator.logOut());
+            dispatch(logOutAction);
         }
     });
 
