@@ -1,32 +1,38 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
-import signInSchema from '../../../validations/signInSchema';
-import { NavLink, Redirect } from 'react-router-dom';
-import validateEmail from '../../../validations/validateEmail';
-import validatePassword from '../../../validations/validatePassword';
-import {
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    Flex,
-    Box,
-    Input,
-    Checkbox,
-    Stack,
-    Link,
-    Button,
-    Heading,
-    Text,
-} from "@chakra-ui/react"
+import React from "react";
+// Chakra imports
+import { useDispatch, useSelector } from "react-redux";
+import { Formik, Form, Field } from "formik";
+import signInSchema from "../../../validations/signInSchema";
+import { NavLink, Redirect } from "react-router-dom";
+import validateEmail from "../../../validations/validateEmail";
+import validatePassword from "../../../validations/validatePassword";
 import { AuthErrorAlert } from '../../alerts/AuthErrorAlert';
 import { AuthMessageAlert } from '../../alerts/AuthMessageAlert';
-import RequestResetPassword from '../RequestResetPassword/RequestResetPassword';
 import { signInAction } from '../../../actions/authActions';
+import {
+  Box,
+  FormErrorMessage,
+  SwitchControl,
+  Flex,
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Switch,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+// Assets
+import signInImage from "../../../assets/img/signInImage.png";
 
+export function Login() {
+  // Chakra color mode
+  const titleColor = useColorModeValue("teal.300", "teal.200");
+  const textColor = useColorModeValue("gray.400", "white");
 
-const Login = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
     const isFetching = useSelector(state=>state.authReducer.isFetching)
     const isLoggedIn = useSelector(state=>state.authReducer.isLoggedIn)
     function handleSubmit(values) {
@@ -34,116 +40,201 @@ const Login = () => {
     }
 
 
-    if (isLoggedIn) return <Redirect to="/" />;
+  if (isLoggedIn) return <Redirect to="/" />;
 
-
-    return (
-        <> 
-        <AuthErrorAlert />
-        <AuthMessageAlert />
+  return (
+    <>
+     <AuthErrorAlert />
+    <AuthMessageAlert />
+    <Flex position="relative" mb="40px">
+      <Flex
+        h={{ sm: "initial", md: "75vh", lg: "85vh" }}
+        w="100%"
+        maxW="1044px"
+        mx="auto"
+        justifyContent="space-between"
+        mb="30px"
+        pt={{ sm: "100px", md: "0px" }}
+      >
         <Flex
-            minH={'100vh'}
-            align={'center'}
-            justify={'center'}
+          alignItems="center"
+          justifyContent="start"
+          style={{ userSelect: "none" }}
+          w={{ base: "100%", md: "50%", lg: "42%" }}
+        >
+          <Flex
+            direction="column"
+            w="100%"
+            background="transparent"
+            p="48px"
+            mt={{ md: "150px", lg: "80px" }}
+          >
+            <Heading color={titleColor} fontSize="32px" mb="10px">
+              Welcome Back
+            </Heading>
+            <Text
+              mb="36px"
+              ms="4px"
+              color={textColor}
+              fontWeight="bold"
+              fontSize="14px"
             >
-            <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-                <Stack align={'center'}>
-                    <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-                    <Text fontSize={'lg'} color={'gray.600'}>
-                        to start learning!
-                    </Text>
-                </Stack>
-                <Box
-                    boxSize={'md'}
-                    rounded={'lg'}
-                    boxShadow={'lg'}
-                    height={'max-content'}
-                    p={8}>
-                    <Formik
-                    initialValues={
-                        {
-                            email: '',
-                            password:'',
-                            rememberMe:false
+              Enter your email and password to sign in
+            </Text>
+
+            <Formik
+              initialValues={{
+                email: "",
+                password: "",
+                rememberMe: false,
+              }}
+              validationSchema={signInSchema}
+                onSubmit={handleSubmit}
+            >
+              <Form>
+                <FormControl>
+                  <Field name="email" validate={validateEmail}>
+                    {({ field, form }) => (
+                      <FormControl
+                        mb="24px"
+                        isInvalid={form.errors.email && form.touched.email}
+                      >
+                        <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                          Email
+                        </FormLabel>
+                        <Input
+                          borderRadius="15px"
+                          fontSize="sm"
+                          type="text"
+                          placeholder="Your email adress"
+                          size="lg"
+                          type="email"
+                          {...field}
+                        />
+                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <Field name="password" validate={validatePassword}>
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.password && form.touched.password
                         }
-                    }
-                    validationSchema={signInSchema}
-                    onSubmit={handleSubmit}
-                    >
-                    <Form>
-                    <Stack spacing={6}>
-                        <FormControl id="email">
-                        <Field name="email" validate={validateEmail}>
-                            {({ field, form }) => (
-                                <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                    <FormLabel htmlFor="email">E-mail</FormLabel>
-                                    <Input type='email' {...field} placeholder="E-mail" />
-                                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
-                                </FormControl>
-                            )
-                            }
-                        </Field>
-                        </FormControl>
-                        <FormControl id="password">
-                        <Field name="password" validate={validatePassword}>
-                            {({ field, form }) => (
-                                <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
-                                    <Input type='password' {...field} placeholder="Password" />
-                                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
-                                </FormControl>
-                            )
-                            }
-                        </Field>
-                        </FormControl>
-                        <Stack spacing={8}>
-                            <Stack
-                                direction={{ base: 'column', sm: 'row' }}
-                                align={'start'}
-                                justify={'space-between'}>
-                                    
-                            <Field  name="rememberMe">
-                                {({ field }) => (
-                                    <Checkbox {...field}>
-                                        <Text fontSize="sm" textAlign="left">
-                                            Remember me
-                                        </Text>
-                                    </Checkbox>
-                                    
-                                )
-                                }
-                            </Field>  
-                                
-                                <NavLink exact to="/requestresetpassword" >
-                                        <Link fontSize="sm" color={'blue.400'}>
-                                            Forgot password
-                                        </Link>
-                                </NavLink>
-                            </Stack>
-                            <Button
-                                isLoading={isFetching}
-                                type="submit"
-                                bg={'blue.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
-                                Sign in
-                            </Button>
-                        </Stack>
-                        <NavLink path to="/register">
-                            <Link fontSize="sm" color={'blue.400'}>
-                                Don't have an account? Create one!
-                            </Link>
-                        </NavLink>
-                    </Stack>
-                    </Form>
-                    </Formik>
-                </Box>
-            </Stack>
+                        mb="36px"
+                      >
+                        <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                          Password
+                        </FormLabel>
+                        <Input
+                          type="password"
+                          {...field}
+                          borderRadius="15px"
+                          fontSize="sm"
+                          placeholder="Your password"
+                          size="lg"
+                        />
+                        <FormErrorMessage>
+                          {form.errors.password}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <Field name='rememberMe'>
+                    {({ field, form }) => (
+                      <FormControl display="flex" alignItems="center">
+                        <Switch
+                          id="remember-login"
+                          {...field}
+                          colorScheme="teal"
+                          me="10px"
+                        />
+                        <FormLabel
+                          htmlFor="remember-login"
+                          mb="0"
+                          ms="1"
+                          fontWeight="normal"
+                        >
+                          Remember me
+                        </FormLabel>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <Button
+                    fontSize="13px"
+                    type="submit"
+                    bg="teal.300"
+                    isLoading={isFetching}
+                    w="100%"
+                    h="45"
+                    mb="20px"
+                    color="white"
+                    mt="20px"
+                    _hover={{
+                      bg: "teal.200",
+                    }}
+                    _active={{
+                      bg: "teal.400",
+                    }}
+                  >
+                    SIGN IN
+                  </Button>
+                </FormControl>
+              </Form>
+            </Formik>
+
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              maxW="100%"
+              mt="0px"
+            >
+              <Text color={textColor} fontWeight="medium">
+                Don't have an account?
+                <NavLink path to="/register">
+                    <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
+                    Sign Up!
+                    </Link>
+                </NavLink>
+              </Text>
+
+              <Text color={textColor} fontWeight="medium">
+              Forgot password?
+                <NavLink path to="/requestresetpassword">
+                    <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
+                    Reset it!
+                    </Link>
+                </NavLink>
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
-        </>
-    );
+        <Box
+          display={{ base: "none", md: "block" }}
+          overflowX="hidden"
+          h="100%"
+          w="40vw"
+          position="absolute"
+          right="0px"
+        >
+          <Box
+            bgImage={signInImage}
+            w="100%"
+            h="100%"
+            bgSize="cover"
+            bgPosition="50%"
+            position="absolute"
+            borderBottomLeftRadius="20px"
+          ></Box>
+        </Box>
+      </Flex>
+    </Flex>
+    </>
+  );
 }
 
 export default Login;

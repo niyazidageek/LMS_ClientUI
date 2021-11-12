@@ -14,6 +14,7 @@ import { useValidateToken } from "./hooks/useValidateToken";
 import { roles } from "./utils/roles";
 
 
+
 function App() {
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
   const userRoles = useSelector((state) => state.authReducer.roles);
@@ -25,6 +26,7 @@ function App() {
     <Router>
           <Switch>
             <ChakraProvider>
+
             <Route
               exact
               path="/"
