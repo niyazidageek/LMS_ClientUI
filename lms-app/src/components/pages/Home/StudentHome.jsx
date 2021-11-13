@@ -52,10 +52,17 @@ import { useDispatch, useSelector } from "react-redux";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { useValidateToken } from "../../../hooks/useValidateToken";
 // react icons
-import { FaChalkboardTeacher, FaFile, FaChartPie, FaFileAlt } from "react-icons/fa";
+import {
+  FaChalkboardTeacher,
+  FaFile,
+  FaChartPie,
+  FaFileAlt,
+  FaBook,
+} from "react-icons/fa";
 import { BsArrowRight, BsTypeH1 } from "react-icons/bs";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { getStudentHomeAction } from "../../../actions/studentHomeActions";
+import { dateHelper } from "../../../utils/dateHelper";
 
 export default function StudentHome() {
   const value = "$100.000";
@@ -85,6 +92,11 @@ export default function StudentHome() {
   const homeContent = useSelector((state) => state.studentHomeReducer);
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
+  const [lessons, setLessons] = useState([]);
+
+  useEffect(() => {
+    setLessons(homeContent.lessons);
+  }, [homeContent]);
 
   useEffect(() => {
     dispatch(getStudentHomeAction(token));
@@ -93,19 +105,19 @@ export default function StudentHome() {
   return isFetching || !homeContent ? (
     <SpinnerComponent />
   ) : (
-    (console.log(homeContent),
+    (console.log(lessons),
     (
       <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-        <SimpleGrid columns={{ sm: 1, md: 3, xl: 3 }} spacing="24px">
-          <Card minH="83px">
-            <CardBody>
+        <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
+          <Card minH="83px" justifyContent="center">
+            <CardBody height="100%">
               <Flex
                 flexDirection="row"
                 align="center"
                 justify="center"
                 w="100%"
               >
-                <Stat me="auto">
+                <Stat me="auto" height="100%">
                   <StatLabel
                     fontSize="sm"
                     color="gray.400"
@@ -115,30 +127,27 @@ export default function StudentHome() {
                     Teacher
                   </StatLabel>
                   <Flex>
-                    <StatNumber fontSize="xl" color={textColor}>
+                    <StatNumber fontSize="md" color={textColor}>
                       {(homeContent.teacher && homeContent.teacher.name) ??
                         "No teacher"}
                     </StatNumber>
                   </Flex>
                 </Stat>
                 <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
-                  <FaChalkboardTeacher
-                    size={24}
-                    color={iconBoxInside}
-                  />
+                  <FaChalkboardTeacher size={24} color={iconBoxInside} />
                 </IconBox>
               </Flex>
             </CardBody>
           </Card>
-          <Card minH="83px">
-            <CardBody>
+          <Card minH="83px" justifyContent="center">
+            <CardBody height="100%">
               <Flex
                 flexDirection="row"
                 align="center"
                 justify="center"
                 w="100%"
               >
-                <Stat mr='1rem'>
+                <Stat height="100%" mr="1rem">
                   <StatLabel
                     fontSize="sm"
                     color="gray.400"
@@ -147,15 +156,15 @@ export default function StudentHome() {
                   >
                     Progress
                   </StatLabel>
-                  <Text fontWeight="bold" fontSize="lg">
-                      {homeContent.progressPercentage}%
-                    </Text>
+                  <Text fontWeight="bold" fontSize="md">
+                    {homeContent.progressPercentage}%
+                  </Text>
                   <Progress
-                      colorScheme="teal"
-                      borderRadius="12px"
-                      h="5px"
-                      value={homeContent.progressPercentage}
-                    />
+                    colorScheme="teal"
+                    borderRadius="12px"
+                    h="5px"
+                    value={homeContent.progressPercentage}
+                  />
                 </Stat>
                 <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <FaChartPie size={24} color={iconBoxInside} />
@@ -163,15 +172,15 @@ export default function StudentHome() {
               </Flex>
             </CardBody>
           </Card>
-          <Card minH="83px">
-            <CardBody>
+          <Card minH="83px" justifyContent="center">
+            <CardBody height="100%">
               <Flex
                 flexDirection="row"
                 align="center"
                 justify="center"
                 w="100%"
               >
-                <Stat>
+                <Stat height="100%">
                   <StatLabel
                     fontSize="sm"
                     color="gray.400"
@@ -181,14 +190,56 @@ export default function StudentHome() {
                     Assignments
                   </StatLabel>
                   <Flex>
-                    <StatNumber fontSize="lg" color={textColor}>
-                      23/50
+                    <StatNumber fontSize="md" color={textColor}>
+                      {homeContent.submittedAssignmentsCount ==
+                      homeContent.totalAssignments
+                        ? homeContent.submittedAssignmentsCount == 0 &&
+                          homeContent.totalAssignments == 0
+                          ? "No assignments yet!"
+                          : "You have completed all assignments!"
+                        : `${homeContent.submittedAssignmentsCount}/${homeContent.totalAssignments}`}
                     </StatNumber>
                   </Flex>
                 </Stat>
-                <Spacer />
+
                 <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <FaFileAlt size={24} color={iconBoxInside} />
+                </IconBox>
+              </Flex>
+            </CardBody>
+          </Card>
+          <Card minH="83px" justifyContent="center">
+            <CardBody height="100%">
+              <Flex
+                flexDirection="row"
+                align="center"
+                justify="center"
+                w="100%"
+              >
+                <Stat height="100%">
+                  <StatLabel
+                    fontSize="sm"
+                    color="gray.400"
+                    fontWeight="bold"
+                    pb=".1rem"
+                  >
+                    Theory
+                  </StatLabel>
+                  <Flex>
+                    <StatNumber fontSize="lg" color={textColor}>
+                    {homeContent.readTheoriesCount ==
+                      homeContent.totalTheories
+                        ? homeContent.readTheoriesCount == 0 &&
+                          homeContent.totalTheories == 0
+                          ? "No theory yet!"
+                          : "You have read all materials!"
+                        : `${homeContent.readTheoriesCount}/${homeContent.totalTheories}`}
+                    </StatNumber>
+                  </Flex>
+                </Stat>
+
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
+                  <FaBook size={24} color={iconBoxInside} />
                 </IconBox>
               </Flex>
             </CardBody>
@@ -218,8 +269,14 @@ export default function StudentHome() {
               height="500px"
               overflowY="scroll"
             >
-              {dashboardTableData.map((row, index) => {
+              {lessons.map((lesson, index) => {
+                let startDate = dateHelper.normalizeDateToWeekDayAndDate(lesson.startDate);
+                let startTime = dateHelper.normalizeDateToTimeOnly(lesson.startDate)
+                let endTime = dateHelper.normalizeDateToTimeOnly(lesson.endDate)
+                let isLessonInProgress = dateHelper.isLessonInProgress(lesson.startDate,lesson.endDate);
+                let isLessonOver = dateHelper.isLessonOver(lesson.endDate);
                 return (
+                  
                   <>
                     <Card
                       justifyContent="space-between"
@@ -240,7 +297,7 @@ export default function StudentHome() {
                             color={textColor}
                             fontWeight="bold"
                           >
-                            Lesson: Derivatives
+                            Lesson: {lesson.name}
                           </Text>
                         </CardHeader>
                         <CardBody>
@@ -279,9 +336,7 @@ export default function StudentHome() {
                                       </StatNumber>
                                     </Flex>
                                   </Stat>
-                                  <FaFileAlt
-                                    color="gray"
-                                  />
+                                  <FaFileAlt color="gray" />
                                 </Flex>
                               </CardBody>
                             </Card>
@@ -304,7 +359,7 @@ export default function StudentHome() {
                                       color="gray.400"
                                       fontWeight="bold"
                                     >
-                                      Materials
+                                      Theory
                                     </StatLabel>
                                     <Flex>
                                       <StatNumber
@@ -312,13 +367,11 @@ export default function StudentHome() {
                                         fontSize="sm"
                                         color={textColor}
                                       >
-                                        0/2
+                                        {lesson.theories.length}
                                       </StatNumber>
                                     </Flex>
                                   </Stat>
-                                  <FaFileAlt
-                                    color="gray"
-                                  />
+                                  <FaFileAlt color="gray" />
                                 </Flex>
                               </CardBody>
                             </Card>
@@ -339,7 +392,7 @@ export default function StudentHome() {
                           fontSize="md"
                           marginBottom="0.5rem"
                         >
-                          Sunday 11.06
+                          {startDate}
                         </Text>
 
                         <Text
@@ -348,7 +401,7 @@ export default function StudentHome() {
                           fontWeight="bold"
                           m="0.3rem 0"
                         >
-                          12:00-14:00
+                           {startTime}-{endTime}
                         </Text>
 
                         <Text textAlign="center" fontSize="sm" m="0.3rem 0">
@@ -363,7 +416,10 @@ export default function StudentHome() {
                           width="max-content"
                         >
                           <Text color="white" textAlign="center" fontSize="sm">
-                            Hasn't started yet
+                            {
+                              isLessonInProgress ? 'In progress' 
+                              : (isLessonOver ? "Lesson is over" : "Hasn't started yet")
+                            }
                           </Text>
                         </Box>
                       </Flex>

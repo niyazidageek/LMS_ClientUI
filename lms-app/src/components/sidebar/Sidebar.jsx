@@ -279,14 +279,164 @@ export function SidebarResponsive(props) {
   // to check for active links and opened collapses
   // this is for the rest of the collapses
   const [state, setState] = React.useState({});
+  let location = useLocation();
   const mainPanel = React.useRef();
+  const activeRoute = (routeName) => {
+    return location.pathname === routeName ? "active" : "";
+  };
+
+  const {routes, sidebarVariant } = props;
   // verifies if routeName is the one active (in browser input)
+  const createLinks = (routes) => {
+    // Chakra Color Mode
+    const activeBg = useColorModeValue("white", "gray.700");
+    const inactiveBg = useColorModeValue("white", "gray.700");
+    const activeColor = useColorModeValue("gray.700", "white");
+    const inactiveColor = useColorModeValue("gray.400", "gray.400");
+
+    return routes.map((prop, key) => {
+      if (prop.redirect) {
+        return null;
+      }
+      if (prop.category) {
+        var st = {};
+        st[prop["state"]] = !state[prop.state];
+        return (
+          <>
+            <Text
+              color={activeColor}
+              fontWeight="bold"
+              mb={{
+                xl: "12px",
+              }}
+              mx="auto"
+              ps={{
+                sm: "10px",
+                xl: "16px",
+              }}
+              py="12px"
+            >
+              {document.documentElement.dir === "rtl"
+                ? prop.rtlName
+                : prop.name}
+            </Text>
+            {createLinks(prop.views)}
+          </>
+        );
+      }
+      return (
+        <NavLink to={prop.layout + prop.path}>
+          {activeRoute(prop.layout + prop.path) === "active" ? (
+            <Button
+              boxSize="initial"
+              justifyContent="flex-start"
+              alignItems="center"
+              bg={activeBg}
+              mb={{
+                xl: "12px",
+              }}
+              mx={{
+                xl: "auto",
+              }}
+              ps={{
+                sm: "10px",
+                xl: "16px",
+              }}
+              py="12px"
+              borderRadius="15px"
+              _hover="none"
+              w="100%"
+              _active={{
+                bg: "inherit",
+                transform: "none",
+                borderColor: "transparent",
+              }}
+              _focus={{
+                boxShadow: "none",
+              }}
+            >
+              <Flex>
+                {typeof prop.icon === "string" ? (
+                  <Icon>{prop.icon}</Icon>
+                ) : (
+                  <IconBox
+                    bg="teal.300"
+                    color="white"
+                    h="30px"
+                    w="30px"
+                    me="12px"
+                  >
+                    {prop.icon}
+                  </IconBox>
+                )}
+                <Text color={activeColor} my="auto" fontSize="sm">
+                  {document.documentElement.dir === "rtl"
+                    ? prop.rtlName
+                    : prop.name}
+                </Text>
+              </Flex>
+            </Button>
+          ) : (
+            <Button
+              boxSize="initial"
+              justifyContent="flex-start"
+              alignItems="center"
+              bg="transparent"
+              mb={{
+                xl: "12px",
+              }}
+              mx={{
+                xl: "auto",
+              }}
+              py="12px"
+              ps={{
+                sm: "10px",
+                xl: "16px",
+              }}
+              borderRadius="15px"
+              _hover="none"
+              w="100%"
+              _active={{
+                bg: "inherit",
+                transform: "none",
+                borderColor: "transparent",
+              }}
+              _focus={{
+                boxShadow: "none",
+              }}
+            >
+              <Flex>
+                {typeof prop.icon === "string" ? (
+                  <Icon>{prop.icon}</Icon>
+                ) : (
+                  <IconBox
+                    bg={inactiveBg}
+                    color="teal.300"
+                    h="30px"
+                    w="30px"
+                    me="12px"
+                  >
+                    {prop.icon}
+                  </IconBox>
+                )}
+                <Text color={inactiveColor} my="auto" fontSize="sm">
+                  {document.documentElement.dir === "rtl"
+                    ? prop.rtlName
+                    : prop.name}
+                </Text>
+              </Flex>
+            </Button>
+          )}
+        </NavLink>
+      );
+    });
+  };
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
 
   
-  const { logoText, routes, ...rest } = props;
-
+ 
+  var links = <>{createLinks(routes)}</>;
   //  BRAND
   //  Chakra Color Mode
   const mainText = useColorModeValue("gray.700", "gray.200");
@@ -318,6 +468,8 @@ export function SidebarResponsive(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   // Color variables
+
+
   return (
     <Flex
       display={{ sm: "flex", xl: "none" }}
@@ -358,7 +510,7 @@ export function SidebarResponsive(props) {
             <Box maxW="100%" h="100vh">
               <Box>{brand}</Box>
               <Stack direction="column" mb="40px">
-                <Box></Box>
+                <Box>{links}</Box>
               </Stack>
             </Box>
           </DrawerBody>
@@ -369,14 +521,14 @@ export function SidebarResponsive(props) {
 }
 // PROPS
 
-Sidebar.propTypes = {
-  logoText: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.object),
-  variant: PropTypes.string,
-};
-SidebarResponsive.propTypes = {
-  logoText: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.object),
-};
+// Sidebar.propTypes = {
+//   logoText: PropTypes.string,
+//   routes: PropTypes.arrayOf(PropTypes.object),
+//   variant: PropTypes.string,
+// };
+// SidebarResponsive.propTypes = {
+//   logoText: PropTypes.string,
+//   routes: PropTypes.arrayOf(PropTypes.object),
+// };
 
 export default Sidebar;

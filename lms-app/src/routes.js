@@ -27,6 +27,13 @@ var dashRoutes = [
     layout: "/teacher",
   },
   {
+    path: "/home",
+    name: "Home",
+    icon: <HomeIcon color="inherit" />,
+    component: StudentHome,
+    layout: "/student",
+  },
+  {
     path: "/fig",
     name: "Home",
     icon: <HomeIcon color="inherit" />,
