@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/form-control": "^1.4.2",
+    "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.6.10",
     "@craco/craco": "^6.4.0",
     "@emotion/react": "^11.5.0",

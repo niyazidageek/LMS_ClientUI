@@ -12,7 +12,8 @@ import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 import ConfirmEmail from "./components/pages/EmailConfirmation/ConfirmEmail";
 import { useValidateToken } from "./hooks/useValidateToken";
 import { roles } from "./utils/roles";
-
+import MainLayout from "./components/layouts/MainLayout";
+import StudentHome from "./components/pages/Home/StudentHome";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     <Router>
           <Switch>
             <ChakraProvider>
+
 
             <Route
               exact
@@ -41,19 +43,27 @@ function App() {
               }}
             />
 
-             
              <Route path="/student">
-                <PrivateRoute exact path="/student/home" 
-                  rolesRestriction={[roles.Student]}
-                  component={Home}
-                  />
+               <MainLayout>
+                  <PrivateRoute exact path="/student/home" 
+                    rolesRestriction={[roles.Student]}
+                    component={StudentHome}
+                    />
+               </MainLayout>
              </Route>
 
+            {/* <MainLayout>
+             
+             </MainLayout> */}
+
              <Route path="/teacher">
-              <PrivateRoute exact path="/teacher/home" 
-                rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
-                component={Home}
-                />
+               <MainLayout>
+                  <PrivateRoute exact path="/teacher/home" 
+                    rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
+                    component={StudentHome}
+                    />
+                    <Route exact path="teacher/fig" component={Home}/>
+                </MainLayout>
              </Route>
 
               

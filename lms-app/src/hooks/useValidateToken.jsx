@@ -12,7 +12,7 @@ export function useValidateToken(){
         expiryDate = Date.parse(expiryDate);
         let currentDate = new Date;
         if(expiryDate<currentDate.getTime()){
-            dispatch(logOutAction);
+            dispatch(logOutAction());
         }
     });
 
