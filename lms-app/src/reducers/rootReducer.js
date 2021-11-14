@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import authReducer from "../reducers/authReducer";
 import studentHomeReducer from "./studentHomeReducer";
+import lessonReducer from "./lessonReducer";
 
 const persistConfig = {
     key: "root",
@@ -13,7 +14,8 @@ const persistConfig = {
 
   const rootReducer = combineReducers({
     authReducer,
-    studentHomeReducer
+    studentHomeReducer,
+    lessonReducer
   });
   
 

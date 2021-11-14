@@ -8,15 +8,20 @@ export const getStudentHomeAction = (token, id) => async (dispatch) => {
     });
 
     let resp = await getStudentHome(token, id);
+
+    let payload = {
+      data: resp.data,
+      count: resp.header["Count"],
+    };
+    console.log(resp.header);
     dispatch({
       type: actionTypes.GET_STUDENT_HOME_CONTENT,
-      payload: resp.data,
+      payload: payload,
     });
 
     dispatch({
       type: actionTypes.DISABLE_IS_FETCHING,
     });
-
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({
