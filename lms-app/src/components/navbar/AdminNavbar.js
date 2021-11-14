@@ -15,6 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AdminNavbarLinks from "./AdminNavbarLinks";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudentHomeAction } from "../../actions/studentHomeActions";
+import { setOnBoardGroupId } from "../../actions/onBoardActions";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
@@ -58,14 +59,7 @@ export default function AdminNavbar(props) {
     secondaryMargin = "22px";
     paddingX = "30px";
   }
-  const changeNavbar = () => {
-    if (window.scrollY > 1) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-  };
-  window.addEventListener("scroll", changeNavbar);
+
 
   const groups = useSelector((state) => state.studentHomeReducer.groups);
   const token = useSelector(state=>state.authReducer.jwt);
@@ -82,7 +76,7 @@ export default function AdminNavbar(props) {
   },[currentGroupId])
   
   function handleChange(id){
-    dispatch(getStudentHomeAction(token, id));
+    dispatch(setOnBoardGroupId(id));
   }
 
   return (
@@ -131,14 +125,15 @@ export default function AdminNavbar(props) {
       >
         <Box width="100%" marginRight="1rem">
           {groups && currentGroup ? (
+            console.log(currentGroupId),
             <Select
               width="500px"
               name="subjectId"
               closeMenuOnSelect={true}
               placeholder="Select subjects"
-              value={{ label: currentGroup.name, value: currentGroup.id }}
+              value={{ label: `${currentGroup.name}  ${currentGroup.subject.name}`, value: currentGroup.id }}
               onChange={(value)=>handleChange(value.value)}
-              options={groups.map((gr) => ({ label: gr.name, value: gr.id }))}
+              options={groups.map((gr) => ({ label: `${gr.name}  ${gr.subject.name}`, value: gr.id }))}
             />
           ) : (
             <Select

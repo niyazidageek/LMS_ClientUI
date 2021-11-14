@@ -97,6 +97,10 @@ export default function StudentHome() {
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const newLessons = useSelector((state) => state.lessonReducer.lessons);
+  const currentGroupId = useSelector(
+    (state) => state.studentHomeReducer.currentGroupId
+  );
+  const onBoardGroupId = useSelector((state) => state.onBoardReducer.groupId);
   const [lessonsCount, setLessonsCount] = useState(0);
   const [lessons, setLessons] = useState([]);
   const [paging, setPaging] = useState(1);
@@ -110,8 +114,8 @@ export default function StudentHome() {
   }, [homeContent]);
 
   useEffect(() => {
-    dispatch(getStudentHomeAction(token));
-  }, []);
+    dispatch(getStudentHomeAction(token, onBoardGroupId));
+  }, [onBoardGroupId]);
 
   const fetchMoreData = () => {
     if (lessons.length >= lessonsCount) {
@@ -263,7 +267,7 @@ export default function StudentHome() {
             color={textColor}
             fontWeight="bold"
           >
-            Upcoming lessons
+            Upcoming lessons:
           </Text>
         </CardHeader>
         <Box variant="simple" color={textColor}>
@@ -274,183 +278,249 @@ export default function StudentHome() {
             p="0 1rem"
             height="500px"
             overflowY="scroll"
+            pos="relative"
           >
-            <InfiniteScroll
-              style={{ overflow: "unset" }}
-              dataLength={lessons.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              loader={<SpinnerComponent />}
-              scrollableTarget="scrollableDiv"
-            >
-              {lessons.map((lesson, index) => {
-                let startDate = dateHelper.normalizeDateToWeekDayAndDate(
-                  lesson.startDate
-                );
-                let startTime = dateHelper.normalizeDateToTimeOnly(
-                  lesson.startDate
-                );
-                let endTime = dateHelper.normalizeDateToTimeOnly(
-                  lesson.endDate
-                );
-                let isLessonInProgress = dateHelper.isLessonInProgress(
-                  lesson.startDate,
-                  lesson.endDate
-                );
-                let isLessonOver = dateHelper.isLessonOver(lesson.endDate);
-                return (
-                  <>
-                    <Card
-                      justifyContent="space-between"
-                      flexDirection="row"
-                      m="1rem 0"
-                      boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                    >
-                      <Flex
+            {lessons.length != 0 ? (
+              <InfiniteScroll
+                style={{ overflow: "unset" }}
+                dataLength={lessons.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<SpinnerComponent />}
+                scrollableTarget="scrollableDiv"
+              >
+                {lessons.map((lesson, index) => {
+                  let startDate = dateHelper.normalizeDateToWeekDayAndDate(
+                    lesson.startDate
+                  );
+                  let startTime = dateHelper.normalizeDateToTimeOnly(
+                    lesson.startDate
+                  );
+                  let endTime = dateHelper.normalizeDateToTimeOnly(
+                    lesson.endDate
+                  );
+                  let isLessonInProgress = dateHelper.isLessonInProgress(
+                    lesson.startDate,
+                    lesson.endDate
+                  );
+                  let isLessonOver = dateHelper.isLessonOver(lesson.endDate);
+                  return (
+                    <>
+                      <Card
                         justifyContent="space-between"
-                        flex="5"
-                        flexDirection="column"
+                        flexDirection="row"
+                        m="1rem 0"
+                        boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                       >
-                        <CardHeader>
+                        <Flex
+                          justifyContent="space-between"
+                          flex="5"
+                          flexDirection="column"
+                        >
+                          <CardHeader>
+                            <Text
+                              textAlign="center"
+                              fontSize="lg"
+                              marginBottom="1rem"
+                              color={textColor}
+                              fontWeight="bold"
+                            >
+                              Lesson: {lesson.name}
+                            </Text>
+                          </CardHeader>
+                          <CardBody>
+                            <SimpleGrid
+                              width="100%"
+                              columns={{ sm: 3, md: 3, xl: 3 }}
+                              spacing="12px  "
+                            >
+                              <Card
+                                p="0.4rem"
+                                height="max-content"
+                                boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                              >
+                                <CardBody>
+                                  <Flex
+                                    flexDirection="row"
+                                    align="center"
+                                    justify="center"
+                                    w="100%"
+                                  >
+                                    <Stat me="auto">
+                                      <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                      >
+                                        Assignments
+                                      </StatLabel>
+                                      <Flex>
+                                        <StatNumber
+                                          fontWeight="medium"
+                                          fontSize="sm"
+                                          color={textColor}
+                                        >
+                                          {lesson.assignments.length > 0 ? (
+                                            lesson.assignments.length > 1 ? (
+                                              <h1>
+                                                {lesson.assignments.reduce(
+                                                  (accumulator, curr) =>
+                                                    accumulator
+                                                      .assignmentAppUsers
+                                                      .length +
+                                                    curr.assignmentAppUsers
+                                                      .length
+                                                )}
+                                                /{lesson.assignments.length}
+                                              </h1>
+                                            ) : (
+                                              <h1>
+                                                {lesson.assignments.map(
+                                                  (a) =>
+                                                    a.assignmentAppUsers.length
+                                                )}
+                                                /{lesson.assignments.length}
+                                              </h1>
+                                            )
+                                          ) : (
+                                            <h1>No assingments</h1>
+                                          )}
+                                        </StatNumber>
+                                      </Flex>
+                                    </Stat>
+                                    <FaFileAlt color="gray" />
+                                  </Flex>
+                                </CardBody>
+                              </Card>
+
+                              <Card
+                                p="0.4rem"
+                                height="max-content"
+                                boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                              >
+                                <CardBody>
+                                  <Flex
+                                    flexDirection="row"
+                                    align="center"
+                                    justify="center"
+                                    w="100%"
+                                  >
+                                    <Stat me="auto">
+                                      <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                      >
+                                        Theory
+                                      </StatLabel>
+                                      <Flex>
+                                        <StatNumber
+                                          fontWeight="medium"
+                                          fontSize="sm"
+                                          color={textColor}
+                                        >
+                                          {lesson.theories.length > 0 ? (
+                                            lesson.theories.length > 1 ? (
+                                              <h1>
+                                                {lesson.theories.reduce(
+                                                  (accumulator, curr) =>
+                                                    accumulator
+                                                      .theoryAppUsers
+                                                      .length +
+                                                    curr.theoryAppUsers
+                                                      .length
+                                                )}
+                                                /{lesson.theories.length}
+                                              </h1>
+                                            ) : (
+                                              <h1>
+                                                {lesson.theories.map(
+                                                  (a) =>
+                                                    a.theoryAppUsers.length
+                                                )}
+                                                /{lesson.theories.length}
+                                              </h1>
+                                            )
+                                          ) : (
+                                            <h1>No theory</h1>
+                                          )}
+                                        </StatNumber>
+                                      </Flex>
+                                    </Stat>
+                                    <FaBook color="gray" />
+                                  </Flex>
+                                </CardBody>
+                              </Card>
+                            </SimpleGrid>
+                          </CardBody>
+                        </Flex>
+
+                        <Flex
+                          borderRight="1px"
+                          borderLeft="1px"
+                          borderColor="lightgray"
+                          flex="1"
+                          flexDirection="column"
+                          alignItems="center"
+                        >
+                          <Text
+                            textAlign="center"
+                            fontSize="md"
+                            marginBottom="0.5rem"
+                          >
+                            {startDate}
+                          </Text>
+
                           <Text
                             textAlign="center"
                             fontSize="lg"
-                            marginBottom="1rem"
-                            color={textColor}
                             fontWeight="bold"
+                            m="0.3rem 0"
                           >
-                            Lesson: {lesson.name}
+                            {startTime}-{endTime}
                           </Text>
-                        </CardHeader>
-                        <CardBody>
-                          <SimpleGrid
-                            width="100%"
-                            columns={{ sm: 3, md: 3, xl: 3 }}
-                            spacing="12px  "
+
+                          <Text textAlign="center" fontSize="sm" m="0.3rem 0">
+                            Online
+                          </Text>
+
+                          <Box
+                            marginTop="0.5rem"
+                            p="0.4rem"
+                            borderRadius="10px"
+                            bg="lightgray"
+                            width="max-content"
                           >
-                            <Card
-                              p="0.4rem"
-                              height="max-content"
-                              boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                            <Text
+                              color="white"
+                              textAlign="center"
+                              fontSize="sm"
                             >
-                              <CardBody>
-                                <Flex
-                                  flexDirection="row"
-                                  align="center"
-                                  justify="center"
-                                  w="100%"
-                                >
-                                  <Stat me="auto">
-                                    <StatLabel
-                                      fontSize="sm"
-                                      color="gray.400"
-                                      fontWeight="bold"
-                                    >
-                                      Assignments
-                                    </StatLabel>
-                                    <Flex>
-                                      <StatNumber
-                                        fontWeight="medium"
-                                        fontSize="sm"
-                                        color={textColor}
-                                      >
-                                        0/2
-                                      </StatNumber>
-                                    </Flex>
-                                  </Stat>
-                                  <FaFileAlt color="gray" />
-                                </Flex>
-                              </CardBody>
-                            </Card>
-
-                            <Card
-                              p="0.4rem"
-                              height="max-content"
-                              boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                            >
-                              <CardBody>
-                                <Flex
-                                  flexDirection="row"
-                                  align="center"
-                                  justify="center"
-                                  w="100%"
-                                >
-                                  <Stat me="auto">
-                                    <StatLabel
-                                      fontSize="sm"
-                                      color="gray.400"
-                                      fontWeight="bold"
-                                    >
-                                      Theory
-                                    </StatLabel>
-                                    <Flex>
-                                      <StatNumber
-                                        fontWeight="medium"
-                                        fontSize="sm"
-                                        color={textColor}
-                                      >
-                                        {lesson.theories.length}
-                                      </StatNumber>
-                                    </Flex>
-                                  </Stat>
-                                  <FaFileAlt color="gray" />
-                                </Flex>
-                              </CardBody>
-                            </Card>
-                          </SimpleGrid>
-                        </CardBody>
-                      </Flex>
-
-                      <Flex
-                        borderRight="1px"
-                        borderLeft="1px"
-                        borderColor="lightgray"
-                        flex="1"
-                        flexDirection="column"
-                        alignItems="center"
-                      >
-                        <Text
-                          textAlign="center"
-                          fontSize="md"
-                          marginBottom="0.5rem"
-                        >
-                          {startDate}
-                        </Text>
-
-                        <Text
-                          textAlign="center"
-                          fontSize="lg"
-                          fontWeight="bold"
-                          m="0.3rem 0"
-                        >
-                          {startTime}-{endTime}
-                        </Text>
-
-                        <Text textAlign="center" fontSize="sm" m="0.3rem 0">
-                          Online
-                        </Text>
-
-                        <Box
-                          marginTop="0.5rem"
-                          p="0.4rem"
-                          borderRadius="10px"
-                          bg="lightgray"
-                          width="max-content"
-                        >
-                          <Text color="white" textAlign="center" fontSize="sm">
-                            {isLessonInProgress
-                              ? "In progress"
-                              : isLessonOver
-                              ? "Lesson is over"
-                              : "Hasn't started yet"}
-                          </Text>
-                        </Box>
-                      </Flex>
-                    </Card>
-                  </>
-                );
-              })}
-            </InfiniteScroll>
+                              {isLessonInProgress
+                                ? "In progress"
+                                : isLessonOver
+                                ? "Lesson is over"
+                                : "Hasn't started yet"}
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </Card>
+                    </>
+                  );
+                })}
+              </InfiniteScroll>
+            ) : (
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                pos="absolute"
+                top="50%"
+                left="50%"
+                style={{ transform: "translate(-50%,-50%)" }}
+              >
+                You have no upcoming lessons..
+              </Text>
+            )}
           </Box>
         </Box>
       </Card>
