@@ -9,7 +9,7 @@ export const getMoreLessonsAction = (token, groupId, page, size) => async (dispa
         data:resp.data,
         count:resp.headers['Count']
     }
-
+    
     dispatch({
       type: actionTypes.GET_MORE_LESSONS,
       payload: payload,

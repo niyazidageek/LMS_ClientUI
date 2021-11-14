@@ -9,7 +9,7 @@ const initialState = {
   readTheoriesCount:null,
   currentPoint:null,
   lessons:[],
-  groups:[],
+  groups:null,
   currentGroupId:null,
   lessonsCount:null
 };
@@ -17,9 +17,8 @@ const initialState = {
 const studentHomeReducer = (state = initialState, action) =>{
     switch (action.type) {
         case actionTypes.GET_STUDENT_HOME_CONTENT:
-            console.log(action.payload.count);
+            console.log(action.payload);
             return {
-                ...state,
                 teacher:action.payload.data.teacher,
                 progressPercentage:action.payload.data.progressPercentage,
                 totalAssignments:action.payload.data.totalAssignments,

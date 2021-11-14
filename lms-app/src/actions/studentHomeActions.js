@@ -11,9 +11,17 @@ export const getStudentHomeAction = (token, id) => async (dispatch) => {
 
     let payload = {
       data: resp.data,
-      count: resp.header["Count"],
+      count: resp.headers["count"],
     };
-    console.log(resp.header);
+
+
+    dispatch({
+      type: actionTypes.SET_ONBOARD_GROUP_ID,
+      payload:payload.data.currentGroupId
+    })
+
+    console.log(payload.data.currentGroupId);
+
     dispatch({
       type: actionTypes.GET_STUDENT_HOME_CONTENT,
       payload: payload,

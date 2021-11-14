@@ -8,23 +8,19 @@ import {
   Flex,
   Link,
   useColorModeValue,
-  Button
+  Button,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AdminNavbarLinks from "./AdminNavbarLinks";
+import { useDispatch, useSelector } from "react-redux";
+import { getStudentHomeAction } from "../../actions/studentHomeActions";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
-  const {
-    variant,
-    children,
-    fixed,
-    secondary,
-    brandText,
-    onOpen,
-    ...rest
-  } = props;
+  const dispatch = useDispatch();
+  const { variant, children, fixed, secondary, brandText, onOpen, ...rest } =
+    props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("gray.700", "gray.200");
@@ -70,6 +66,25 @@ export default function AdminNavbar(props) {
     }
   };
   window.addEventListener("scroll", changeNavbar);
+
+  const groups = useSelector((state) => state.studentHomeReducer.groups);
+  const token = useSelector(state=>state.authReducer.jwt);
+  const currentGroupId = useSelector(
+    (state) => state.studentHomeReducer.currentGroupId
+  );
+
+  const [currentGroup, setCurrentGroup] = useState(null);
+
+  useEffect(()=>{
+    if(groups&&currentGroupId){
+      setCurrentGroup(groups.find(gr=>gr.id == currentGroupId))
+    }
+  },[currentGroupId])
+  
+  function handleChange(id){
+    dispatch(getStudentHomeAction(token, id));
+  }
+
   return (
     <Flex
       position={navbarPosition}
@@ -114,25 +129,26 @@ export default function AdminNavbar(props) {
         }}
         alignItems={{ xl: "center" }}
       >
-        <Box width="100%"
-        marginRight='1rem'
-        >
-        
-        <Select
-          width="500px"
-          name="subjectId"
-          closeMenuOnSelect={false}
-          placeholder="Select subjects"
-          // onChange={(option) => {
-          //   form.setFieldValue(field.name, option.value);
-          // }}
-          // options={subjects.map((s) => ({
-          //   label: s.name,
-          //   value: s.id,
-          // }))}
-          options={[{label:'aa',value:'bb'},{label:'zz',value:'kk'},{label:'ee',value:'tt'}]}
-        />
-          
+        <Box width="100%" marginRight="1rem">
+          {groups && currentGroup ? (
+            <Select
+              width="500px"
+              name="subjectId"
+              closeMenuOnSelect={true}
+              placeholder="Select subjects"
+              value={{ label: currentGroup.name, value: currentGroup.id }}
+              onChange={(value)=>handleChange(value.value)}
+              options={groups.map((gr) => ({ label: gr.name, value: gr.id }))}
+            />
+          ) : (
+            <Select
+              width="500px"
+              name="subjectId"
+              closeMenuOnSelect={true}
+              placeholder="Select subjects"
+              isDisabled={true}
+            />
+          )}
         </Box>
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
           <AdminNavbarLinks

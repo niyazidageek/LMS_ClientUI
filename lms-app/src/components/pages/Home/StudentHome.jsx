@@ -103,35 +103,38 @@ export default function StudentHome() {
   const size = 3;
 
   useEffect(() => {
-    setLessons(homeContent.lessons);
-    setLessonsCount(homeContent.lessonsCount)
+    if (homeContent) {
+      setLessons(homeContent.lessons);
+      setLessonsCount(homeContent.lessonsCount);
+    }
   }, [homeContent]);
 
   useEffect(() => {
     dispatch(getStudentHomeAction(token));
   }, []);
 
-
   const fetchMoreData = () => {
     if (lessons.length >= lessonsCount) {
       setHasMore(false);
+      console.log("ss");
       return;
     }
     dispatch(getMoreLessonsAction(token, 1021, paging, size));
 
-    setPaging(paging+1);
+    setPaging(paging + 1);
   };
 
-  useEffect(()=>{
-    setLessons(lessons.concat(newLessons));
-  },[newLessons])
+  useEffect(() => {
+    if (newLessons) {
+      setLessons(lessons.concat(newLessons));
+    }
+  }, [newLessons]);
 
   return isFetching || !homeContent ? (
     <SpinnerComponent />
   ) : (
-    console.log(newLessons),
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
+      <SimpleGrid zIndex="-1" columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <Card minH="83px" justifyContent="center">
           <CardBody height="100%">
             <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -273,10 +276,10 @@ export default function StudentHome() {
             overflowY="scroll"
           >
             <InfiniteScroll
-              style={{overflow:'unset'}}
+              style={{ overflow: "unset" }}
               dataLength={lessons.length}
               next={fetchMoreData}
-              hasMore={true}
+              hasMore={hasMore}
               loader={<SpinnerComponent />}
               scrollableTarget="scrollableDiv"
             >
