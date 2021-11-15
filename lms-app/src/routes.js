@@ -16,21 +16,26 @@ import {
   DocumentIcon,
   RocketIcon,
   SupportIcon,
+  ProfileIcon,
 } from "./components/icons/Icons";
 
 var dashRoutes = [
+  // {
+  //   path: "/home",
+  //   name: "Home",
+  //   icon: <HomeIcon color="inherit" />,
+  //   layout: "/teacher",
+  // },
   {
     path: "/home",
     name: "Home",
     icon: <HomeIcon color="inherit" />,
-    component: StudentHome,
-    layout: "/teacher",
+    layout: "/student",
   },
   {
-    path: "/home",
-    name: "Home",
-    icon: <HomeIcon color="inherit" />,
-    component: StudentHome,
+    path: "/profile",
+    name: "Profile",
+    icon: <ProfileIcon color="inherit" />,
     layout: "/student",
   },
   {

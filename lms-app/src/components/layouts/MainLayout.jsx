@@ -1,5 +1,6 @@
 import React from "react";
 import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
+
 import theme from '../../theme/theme'
 import Sidebar from "../sidebar/Sidebar";
 import PanelContainer from './PanelContainer'
@@ -23,7 +24,9 @@ function MainLayout({ children }) {
       >
         <AdminNavbar onOpen={onOpen} />
         <PanelContent>
-          <PanelContainer>{children}</PanelContainer>
+          <PanelContainer>
+            {children}
+          </PanelContainer>
         </PanelContent>
         {/* <Footer /> */}
       </MainPanel>

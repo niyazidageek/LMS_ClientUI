@@ -14,6 +14,7 @@ import { useValidateToken } from "./hooks/useValidateToken";
 import { roles } from "./utils/roles";
 import MainLayout from "./components/layouts/MainLayout";
 import StudentHome from "./components/pages/Home/StudentHome";
+import Profile from "./components/pages/Profile/Profile";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
                     rolesRestriction={[roles.Student]}
                     component={StudentHome}
                     />
+                  <PrivateRoute exact path="/student/profile" component={Profile}/>
                </MainLayout>
              </Route>
 
