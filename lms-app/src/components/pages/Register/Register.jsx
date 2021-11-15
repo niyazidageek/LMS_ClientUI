@@ -294,7 +294,7 @@ export function Register() {
                   isLoading={isFetching}
                   type="submit"
                   bg="teal.300"
-                  fontSize="10px"
+                  fontSize="13px"
                   color="white"
                   fontWeight="bold"
                   w="100%"

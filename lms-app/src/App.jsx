@@ -72,7 +72,7 @@ function App() {
               <Route path="/register" component={Register}/>
               <Route path="/requestresetpassword" component={RequestResetPassword}/>
               <Route path="/resetpassword" component={ResetPassword}/>
-              <Route path="/confirmemail/:id/:token" component={ConfirmEmail} />
+              <Route path="/confirmemail/:id/:token/:newEmail?" component={ConfirmEmail} />
             </ChakraProvider>
           </Switch>
       </Router>
