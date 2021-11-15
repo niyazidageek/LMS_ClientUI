@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const requestResetPasswordSchema = Yup.object().shape(
+const requestChangeEmailSchema = Yup.object().shape(
     {
 
         email: Yup.string()
@@ -9,4 +9,4 @@ const requestResetPasswordSchema = Yup.object().shape(
     }
 );
 
-export default requestResetPasswordSchema;
+export default requestChangeEmailSchema;

@@ -8,6 +8,8 @@ import PanelContent from './PanelContent'
 import MainPanel from './MainPanel'
 import AdminNavbar from "../navbar/AdminNavbar.js";
 import routes from '../../routes'
+import {AuthErrorAlert} from '../alerts/AuthErrorAlert'
+import {AuthMessageAlert} from '../alerts/AuthMessageAlert'
 
 function MainLayout({ children }) {
   const mainPanel = React.createRef();
@@ -25,6 +27,8 @@ function MainLayout({ children }) {
         <AdminNavbar onOpen={onOpen} />
         <PanelContent>
           <PanelContainer>
+          <AuthErrorAlert/>
+          <AuthMessageAlert/>
             {children}
           </PanelContainer>
         </PanelContent>

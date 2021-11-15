@@ -454,7 +454,6 @@ export default function StudentHome() {
                             </SimpleGrid>
                           </CardBody>
                         </Flex>
-
                         <Flex
                           borderRight="1px"
                           borderLeft="1px"

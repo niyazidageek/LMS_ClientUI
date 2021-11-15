@@ -18,9 +18,11 @@ import {
   createIcon,
 } from "@chakra-ui/react";
 import { confirmEmailAction } from "../../../actions/authActions";
+import { confirmNewEmailAction } from "../../../actions/profileActions";
 
 const ConfirmEmail = () => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
+  const jwt = useSelector((state) => state.authReducer.jwt);
   const [confirmDone, setConfirmDone] = useState(false);
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const { id, token, newEmail } = useParams();
@@ -29,7 +31,7 @@ const ConfirmEmail = () => {
   function handleSubmit() {
     if (newEmail) {
       const values = { userId: id, token, newEmail };
-      dispatch(confirmEmailAction(values));
+      dispatch(confirmNewEmailAction(values,jwt));
     } else {
       const values = { userId: id, token };
       dispatch(confirmEmailAction(values));

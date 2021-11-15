@@ -15,7 +15,7 @@ import { roles } from "./utils/roles";
 import MainLayout from "./components/layouts/MainLayout";
 import StudentHome from "./components/pages/Home/StudentHome";
 import Profile from "./components/pages/Profile/Profile";
-
+import RequestChangeEmail from "./components/pages/RequestChangeEmail/RequestChangeEmail";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
@@ -69,7 +69,7 @@ function App() {
              </Route>
 
               
-
+              <Route path="/requestchangeemail" component={RequestChangeEmail}/>
               <Route path="/login" component={Login}/>
               <Route path="/register" component={Register}/>
               <Route path="/requestresetpassword" component={RequestResetPassword}/>
