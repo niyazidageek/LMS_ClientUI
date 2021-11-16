@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 // Chakra imports
 import {
   Flex,
@@ -15,6 +15,7 @@ import {
 import { actionTypes } from "../../../actions/const";
 // Custom components
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
@@ -43,24 +44,11 @@ function StudentLessons() {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
-
+  let history = useHistory();
   let size = 3;
-
-  useEffect(() => {
-    dispatch({
-      type: actionTypes.SET_IS_FETCHING,
-    });
-    dispatch(getMoreLessonsAction(token, currentGroupId, currentPage, size));
-    setPageCount(Math.ceil(total / size));
-    setLessons(newLessons);
-  }, [currentGroupId]);
-
-  useEffect(() => {
-    if (newLessons) {
-      setLessons(newLessons);
-    }
-  }, [newLessons]);
-
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const page = searchParams.get("page");
   const {
     pages,
     pagesCount,
@@ -76,145 +64,172 @@ function StudentLessons() {
     initialState: {
       pageSize: size,
       isDisabled: false,
-      currentPage: 0,
+      currentPage: parseInt(page) ?? 0,
     },
   });
 
-  const handlePageClick = (number) => {
-    setCurrentPage(number);
-
+  useMemo(() => {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
+    dispatch(
+      getMoreLessonsAction(token, currentGroupId, currentPage - 1, size)
+    );
+    setPageCount(Math.ceil(total / size));
+    setLessons(newLessons);
+  }, [currentGroupId]);
 
+  useMemo(() => {
+    if (newLessons) {
+      setLessons(newLessons);
+    }
+  }, [newLessons]);
+
+  const handlePageClick = (number) => {
+    setCurrentPage(number);
+    let currentPath = history.location.pathname;
+    history.push(currentPath + `?page=${number}`);
+    dispatch({
+      type: actionTypes.SET_IS_FETCHING,
+    });
     dispatch(getMoreLessonsAction(token, currentGroupId, number - 1, size));
-
     setLessons(newLessons);
   };
 
+  function lessonClick(id) {
+    let path = history.location.pathname + "/" + id;
+    history.push(path);
+  }
+
   return isFetching || !lessons ? (
     <SpinnerComponent />
-  ) : (
-    lessons.length!=0 ? 
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-    <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px">
-        <Text fontSize="xl" color={textColor} fontWeight="bold">
-          Lessons
-        </Text>
-      </CardHeader>
-      <CardBody>
-        <Table variant="simple" color={textColor}>
-          <Thead>
-            <Tr color="gray.400">
-              <Th color="gray.400">Name</Th>
-              <Th color="gray.400">Start time</Th>
-              <Th color="gray.400">End time</Th>
-            </Tr>
-          </Thead>
-          <Tbody fontWeight="semibold">
-            {lessons.map((lesson) => {
-              let startDate = dateHelper.normalizedDateWithVerbalDateAndTime(
-                lesson.startDate
-              );
-              let endDate = dateHelper.normalizedDateWithVerbalDateAndTime(
-                lesson.endDate
-              );
-              return (
-                <Tr
-                  _hover={{
-                    bg: "whitesmoke",
-                  }}
-                >
-                  <Td>{lesson.name}</Td>
-                  <Td>{startDate}</Td>
-                  <Td>{endDate}</Td>
+  ) : lessons.length != 0 ? (
+    (
+    (
+      <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+        <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+          <CardHeader p="6px 0px 22px 0px">
+            <Text fontSize="xl" color={textColor} fontWeight="bold">
+              Lessons
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr color="gray.400">
+                  <Th color="gray.400">Name</Th>
+                  <Th color="gray.400">Start time</Th>
+                  <Th color="gray.400">End time</Th>
                 </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </CardBody>
-    </Card>
-    <Pagination
-      pagesCount={pagesCount}
-      currentPage={currentPage}
-      isDisabled={isDisabled}
-      onPageChange={handlePageClick}
-    >
-      <PaginationContainer
-        align="center"
-        justify="space-between"
-        p={4}
-        w="full"
-      >
-        <PaginationPrevious
-                lineHeight='none'
-          color="white"
-          borderRadius='6px'
-          _hover={{
-            bg: "teal.400",
-          }}
-          bg="teal.300"
+              </Thead>
+              <Tbody fontWeight="semibold">
+                {lessons.map((lesson) => {
+                  let startDate =
+                    dateHelper.normalizedDateWithVerbalDateAndTime(
+                      lesson.startDate
+                    );
+                  let endDate = dateHelper.normalizedDateWithVerbalDateAndTime(
+                    lesson.endDate
+                  );
+                  return (
+                    <Tr
+                      onClick={() => lessonClick(lesson.id)}
+                      _hover={{
+                        bg: "whitesmoke",
+                      }}
+                    >
+                      <Td>{lesson.name}</Td>
+                      <Td>{startDate}</Td>
+                      <Td>{endDate}</Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </CardBody>
+        </Card>
+        <Pagination
+          pagesCount={pagesCount}
+          currentPage={currentPage}
+          isDisabled={isDisabled}
+          onPageChange={handlePageClick}
         >
-          <Text>Previous</Text>
-        </PaginationPrevious>
-        <PaginationPageGroup
-          isInline
-          align="center"
-          separator={
-            <PaginationSeparator
-            lineHeight='none'
-              bg="blue.300"
-              fontSize="sm"
-              borderRadius='6px'
-              w={7}
-              jumpSize={11}
-            />
-          }
-        >
-          {pages.map((page) => (
-            <PaginationPage
-            lineHeight='none'
-              w={7}
-              h={7}
-              borderRadius='6px'
-              color='white'
-              bg="gray.300"
-              key={`pagination_page_${page}`}
-              page={page}
-              fontSize="sm"
+          <PaginationContainer
+            align="center"
+            justify="space-between"
+            p={4}
+            w="full"
+          >
+            <PaginationPrevious
+              lineHeight="none"
+              color="white"
+              borderRadius="6px"
               _hover={{
                 bg: "teal.400",
               }}
-              _current={{
-                bg: "teal.300",
-                fontSize: "sm",
-                w: 7,
+              bg="teal.300"
+            >
+              <Text>Previous</Text>
+            </PaginationPrevious>
+            <PaginationPageGroup
+              isInline
+              align="center"
+              separator={
+                <PaginationSeparator
+                  lineHeight="none"
+                  bg="blue.300"
+                  fontSize="sm"
+                  borderRadius="6px"
+                  w={7}
+                  jumpSize={11}
+                />
+              }
+            >
+              {pages.map((page) => (
+                <PaginationPage
+                  lineHeight="none"
+                  w={7}
+                  h={7}
+                  borderRadius="6px"
+                  color="white"
+                  bg="gray.300"
+                  key={`pagination_page_${page}`}
+                  page={page}
+                  fontSize="sm"
+                  _hover={{
+                    bg: "teal.400",
+                  }}
+                  _current={{
+                    bg: "teal.300",
+                    fontSize: "sm",
+                    w: 7,
+                  }}
+                />
+              ))}
+            </PaginationPageGroup>
+            <PaginationNext
+              lineHeight="none"
+              color="white"
+              _hover={{
+                bg: "teal.400",
               }}
-            />
-          ))}
-        </PaginationPageGroup>
-        <PaginationNext
-        lineHeight='none'
-          color="white"
-          _hover={{
-            bg: "teal.400",
-          }}
-          bg="teal.300"
-          borderRadius='6px'
-        >
-          <Text>Next</Text>
-        </PaginationNext>
-      </PaginationContainer>
-    </Pagination>
-  </Flex>
-  :
-  <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-  <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-    <Text textAlign='center' fontSize='xl' fontWeight='bold'>You have no lessons..</Text>
-  </Card>
-</Flex>
+              bg="teal.300"
+              borderRadius="6px"
+            >
+              <Text>Next</Text>
+            </PaginationNext>
+          </PaginationContainer>
+        </Pagination>
+      </Flex>
+    ))
+  ) : (
+    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+          You have no lessons..
+        </Text>
+      </Card>
+    </Flex>
   );
 }
 

@@ -36,10 +36,10 @@ function App() {
               exact
               path="/"
               render={() => {
-                return isLoggedIn ? (
+                return isLoggedIn && userRoles.length!=0 ? (
                   userRoles.some(r=>r==roles.Teacher || r==roles.SuperAdmin || r==roles.Admin)?
                   <Redirect to="/teacher/home"/> :
-                  <Redirect to="/student/home"/>
+                  ( userRoles.some(r=>r==roles.Student) &&  <Redirect to="/student/home"/>)
                 ) : (
                   <Redirect to="/login" />
                 );

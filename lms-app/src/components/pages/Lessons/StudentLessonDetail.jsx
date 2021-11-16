@@ -8,12 +8,13 @@ import {
   Th,
   Thead,
   Tr,
+  Button,
   Td,
   Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { actionTypes } from "../../../actions/const";
 // Custom components
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +30,7 @@ function StudentLessonDetail() {
   let { id } = useParams();
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
+  const history = useHistory()
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const lesson = useSelector((state) => state.lessonReducer.lesson);
 
@@ -249,6 +251,17 @@ function StudentLessonDetail() {
               </Card>
             </Grid>
           </CardBody>
+          <Button 
+          onClick={()=>history.goBack()}
+          lineHeight='unset'
+          bg='teal.300'
+          _hover={{
+              bg:'teal.400'
+          }}
+          color='white'
+          mt='2rem' width='max-content'>
+              Back
+          </Button>
         </Card>
       </Flex>
     ))
