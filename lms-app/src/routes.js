@@ -19,6 +19,8 @@ import {
   ProfileIcon,
 } from "./components/icons/Icons";
 
+import {MdPlayLesson} from 'react-icons/md'
+
 var dashRoutes = [
   // {
   //   path: "/home",
@@ -39,11 +41,10 @@ var dashRoutes = [
     layout: "/student",
   },
   {
-    path: "/fig",
-    name: "Home",
-    icon: <HomeIcon color="inherit" />,
-    component: Home,
-    layout: "/teacher",
+    path: "/lessons",
+    name: "Lessons",
+    icon: <MdPlayLesson color="inherit" />,
+    layout: "/student",
   },
 ];
 export default dashRoutes;

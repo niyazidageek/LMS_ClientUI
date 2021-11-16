@@ -24,13 +24,18 @@ import { ItemContent } from "../menu/ItemContent";
 import { SidebarResponsive } from "../sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import routes from '../../routes'
+import routes from "../../routes";
+import { logOutAction } from "../../actions/authActions";
+import { FaDoorOpen } from "react-icons/fa";
+import { IoLogIn } from "react-icons/io5";
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
 
   // Chakra Color Mode
+  const dispatch = useDispatch();
   let mainTeal = useColorModeValue("teal.300", "teal.300");
   let inputBg = useColorModeValue("white", "gray.800");
   let mainText = useColorModeValue("gray.700", "gray.200");
@@ -43,13 +48,9 @@ export default function HeaderLinks(props) {
   }
   const settingsRef = React.useRef();
   return (
-    <Flex
-      pe={{ sm: "0px", md: "16px" }}
-      w={{ sm: "100%", md: "auto" }}
-      alignItems="center"
-      flexDirection="row"
-    >
+    <Flex alignItems="center" justifyContent='space-between' flexDirection="row" mt={{ sm: "8px",md:"unset"}}>
       <InputGroup
+        width="100%"
         cursor="pointer"
         bg={inputBg}
         borderRadius="15px"
@@ -57,7 +58,7 @@ export default function HeaderLinks(props) {
           sm: "128px",
           md: "200px",
         }}
-        me={{ sm: "auto", md: "20px" }}
+        // me={{ sm: "auto", md: "20px" }}
         _focus={{
           borderColor: { mainTeal },
         }}
@@ -91,80 +92,68 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
-      <NavLink to="/auth/signin">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
-          color={navbarIcon}
-          variant="transparent-with-icon"
-          rightIcon={
-            document.documentElement.dir ? (
-              ""
-            ) : (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            )
-          }
-          leftIcon={
-            document.documentElement.dir ? (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            ) : (
-              ""
-            )
-          }
+
+      <Flex>
+        <IconButton
+          bg="none"
+          me={{ sm: "1px", md: "8px" }}
+          ml={{ sm: "1px", md: "8px" }}
         >
-          <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
-        </Button>
-      </NavLink>
-      <SidebarResponsive
-        logoText={props.logoText}
-        secondary={props.secondary}
-        routes={routes}
-        {...rest}
-      />
-      <SettingsIcon
-        cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        ref={settingsRef}
-        onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
-      <Menu>
-        <MenuButton>
-          <BellIcon color={navbarIcon} w="18px" h="18px" />
-        </MenuButton>
-        <MenuList p="16px 8px">
-          <Flex flexDirection="column">
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="13 minutes ago"
-                info="from Alicia"
-                boldInfo="New Message"
-                aName="Alicia"
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="2 days ago"
-                info="by Josh Henry"
-                boldInfo="New Album"
-                aName="Josh Henry"
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px">
-              <ItemContent
-                time="3 days ago"
-                info="Payment succesfully completed!"
-                boldInfo=""
-                aName="Kara"
-              />
-            </MenuItem>
-          </Flex>
-        </MenuList>
-      </Menu>
+          <IoLogIn
+            color="gray"
+            size={25}
+            onClick={() => {
+              dispatch(logOutAction());
+            }}
+          />
+        </IconButton>
+        <Menu>
+          <MenuButton
+            me={{ sm: "1px", md: "8px" }}
+            ml={{ sm: "1px", md: "8px" }}
+          >
+            <BellIcon color="gray" w="25px" h="25px" />
+          </MenuButton>
+          <MenuList>
+
+            <Flex flexDirection="column">
+              <MenuItem borderRadius="8px">
+                <ItemContent
+                  time="13 minutes ago"
+                  info="from Alicia"
+                  boldInfo="New Message"
+                  aName="Alicia"
+                />
+              </MenuItem>
+              <MenuItem borderRadius="8px">
+                <ItemContent
+                  time="2 days ago"
+                  info="by Josh Henry"
+                  boldInfo="New Album"
+                  aName="Josh Henry"
+                />
+              </MenuItem>
+              <MenuItem borderRadius="8px">
+                <ItemContent
+                  time="3 days ago"
+                  info="Payment succesfully completed!"
+                  boldInfo=""
+                  aName="Kara"
+                />
+              </MenuItem>
+            </Flex>
+          </MenuList>
+        </Menu>
+
+        <Flex me={{ sm: "1px", md: "8px" }} ml={{ sm: "1px", md: "8px" }}>
+          <SidebarResponsive
+            logoText={props.logoText}
+            secondary={props.secondary}
+            routes={routes}
+            {...rest}
+          />
+        </Flex>
+      </Flex>
     </Flex>
   );
 }

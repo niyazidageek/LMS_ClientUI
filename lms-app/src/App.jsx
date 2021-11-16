@@ -16,6 +16,8 @@ import MainLayout from "./components/layouts/MainLayout";
 import StudentHome from "./components/pages/Home/StudentHome";
 import Profile from "./components/pages/Profile/Profile";
 import RequestChangeEmail from "./components/pages/RequestChangeEmail/RequestChangeEmail";
+import StudentLessons from "./components/pages/Lessons/StudentLessons";
+import StudentLessonDetail from "./components/pages/Lessons/StudentLessonDetail";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
@@ -51,6 +53,8 @@ function App() {
                     component={StudentHome}
                     />
                   <PrivateRoute exact path="/student/profile" component={Profile}/>
+                  <PrivateRoute exact path="/student/lessons" component={StudentLessons}/>
+                  <PrivateRoute exact path="/student/lessons/:id" component={StudentLessonDetail}/>
                </MainLayout>
              </Route>
 

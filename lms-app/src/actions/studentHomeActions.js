@@ -15,12 +15,14 @@ export const getStudentHomeAction = (token, id) => async (dispatch) => {
     };
 
 
+    let onBoard = {
+      groupId:payload.data.currentGroupId,
+      groups: payload.data.groups.map(g=>({name:g.name,id:g.id}))
+    }
     dispatch({
-      type: actionTypes.SET_ONBOARD_GROUP_ID,
-      payload:payload.data.currentGroupId
+      type: actionTypes.SET_ONBOARD,
+      payload:onBoard
     })
-
-    console.log(payload.data.currentGroupId);
 
     dispatch({
       type: actionTypes.GET_STUDENT_HOME_CONTENT,

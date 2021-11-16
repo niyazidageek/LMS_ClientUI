@@ -30,6 +30,12 @@ class DateHelper{
     return moment(date).format('hh:mm');
   }
 
+  normalizedDateWithVerbalDateAndTime(date){
+    date = Date.parse(date);
+    date = new Date(date);
+    return moment(date).format('MMMM Do, h:mm:ss a');
+  }
+
   isLessonInProgress(startDate,endDate){
     let now = new Date();
     startDate = Date.parse(startDate);

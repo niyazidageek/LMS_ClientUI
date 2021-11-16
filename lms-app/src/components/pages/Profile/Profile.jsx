@@ -95,7 +95,7 @@ function Profile() {
   return !name || !surname || !username || !email || isFetching ? (
     <SpinnerComponent />
   ) : (
-    <Flex direction="column">
+    <Flex zIndex='-2' direction="column">
       <Box
         mb={{ sm: "205px", md: "75px", xl: "70px" }}
         borderRadius="15px"

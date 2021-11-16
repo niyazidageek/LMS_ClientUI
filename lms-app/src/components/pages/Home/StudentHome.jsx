@@ -97,9 +97,6 @@ export default function StudentHome() {
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const newLessons = useSelector((state) => state.lessonReducer.lessons);
-  const currentGroupId = useSelector(
-    (state) => state.studentHomeReducer.currentGroupId
-  );
   const onBoardGroupId = useSelector((state) => state.onBoardReducer.groupId);
   const [lessonsCount, setLessonsCount] = useState(0);
   const [lessons, setLessons] = useState([]);
@@ -123,7 +120,7 @@ export default function StudentHome() {
       console.log("ss");
       return;
     }
-    dispatch(getMoreLessonsAction(token, 1021, paging, size));
+    dispatch(getMoreLessonsAction(token, onBoardGroupId, paging, size));
 
     setPaging(paging + 1);
   };
@@ -139,8 +136,8 @@ export default function StudentHome() {
   ) : (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid zIndex="-1" columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
-        <Card minH="83px" justifyContent="center">
-          <CardBody height="100%">
+        <Card  minH="83px" justifyContent="center">
+          <CardBody  height="100%">
             <Flex flexDirection="row" align="center" justify="center" w="100%">
               <Stat me="auto" height="100%">
                 <StatLabel
