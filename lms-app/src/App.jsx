@@ -58,10 +58,6 @@ function App() {
                </MainLayout>
              </Route>
 
-            {/* <MainLayout>
-             
-             </MainLayout> */}
-
              <Route path="/teacher">
                <MainLayout>
                   <PrivateRoute exact path="/teacher/home" 

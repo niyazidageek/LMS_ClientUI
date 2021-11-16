@@ -10,3 +10,9 @@ export const getMoreLessons = (token, groupId, page, size) => {
     }
   );
 };
+
+export const getLessonById = (lessonId) => {
+  return httpClient.get(
+    "lesson/getlessonbyid/"+lessonId
+  );
+};

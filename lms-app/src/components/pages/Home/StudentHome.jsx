@@ -136,8 +136,8 @@ export default function StudentHome() {
   ) : (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid zIndex="-1" columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
-        <Card  minH="83px" justifyContent="center">
-          <CardBody  height="100%">
+        <Card minH="83px" justifyContent="center">
+          <CardBody height="100%">
             <Flex flexDirection="row" align="center" justify="center" w="100%">
               <Stat me="auto" height="100%">
                 <StatLabel
@@ -421,19 +421,16 @@ export default function StudentHome() {
                                               <h1>
                                                 {lesson.theories.reduce(
                                                   (accumulator, curr) =>
-                                                    accumulator
-                                                      .theoryAppUsers
+                                                    accumulator.theoryAppUsers
                                                       .length +
-                                                    curr.theoryAppUsers
-                                                      .length
+                                                    curr.theoryAppUsers.length
                                                 )}
                                                 /{lesson.theories.length}
                                               </h1>
                                             ) : (
                                               <h1>
                                                 {lesson.theories.map(
-                                                  (a) =>
-                                                    a.theoryAppUsers.length
+                                                  (a) => a.theoryAppUsers.length
                                                 )}
                                                 /{lesson.theories.length}
                                               </h1>

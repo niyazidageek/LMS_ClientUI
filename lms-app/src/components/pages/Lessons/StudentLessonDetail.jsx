@@ -9,9 +9,11 @@ import {
   Thead,
   Tr,
   Td,
+  Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { useParams } from "react-router";
 import { actionTypes } from "../../../actions/const";
 // Custom components
 import { useDispatch, useSelector } from "react-redux";
@@ -19,124 +21,237 @@ import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import ReactPaginate from "react-paginate";
-import {
-  Pagination,
-  usePagination,
-  PaginationPage,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationPageGroup,
-  PaginationContainer,
-  PaginationSeparator,
-} from "@ajna/pagination";
-import { getMoreLessonsAction } from "../../../actions/lessonActions";
+
 import SpinnerComponent from "../../spinners/SpinnerComponent";
+import { getLessonByIdAction } from "../../../actions/lessonActions";
 
 function StudentLessonDetail() {
+  let { id } = useParams();
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
-  const [lessons, setLessons] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
-  const newLessons = useSelector((state) => state.lessonReducer.lessons);
-  const total = useSelector((state) => state.lessonReducer.count);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
-  const token = useSelector((state) => state.authReducer.jwt);
-  const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
-
-  let size = 3;
+  const lesson = useSelector((state) => state.lessonReducer.lesson);
 
   useEffect(() => {
-    dispatch({
-      type: actionTypes.SET_IS_FETCHING,
-    });
-    dispatch(getMoreLessonsAction(token, currentGroupId, currentPage, size));
-    setPageCount(Math.ceil(total / size));
-    setLessons(newLessons);
-  }, [currentGroupId]);
+    dispatch(getLessonByIdAction(id));
+  }, []);
 
-  useEffect(() => {
-    if (newLessons) {
-      setLessons(newLessons);
-    }
-  }, [newLessons]);
+  function assignmentClick(id) {
+    console.log("ass click" + id);
+  }
 
-  const {
-    pages,
-    pagesCount,
-    offset,
-    currentPage,
-    setCurrentPage,
-    setIsDisabled,
-    isDisabled,
-    pageSize,
-    setPageSize,
-  } = usePagination({
-    total: total,
-    initialState: {
-      pageSize: size,
-      isDisabled: false,
-      currentPage: 0,
-    },
-  });
+  function theoryClick(id) {
+    console.log("theo click" + id);
+  }
 
-  const handlePageClick = (number) => {
-    setCurrentPage(number);
-
-    dispatch({
-      type: actionTypes.SET_IS_FETCHING,
-    });
-
-    dispatch(getMoreLessonsAction(token, currentGroupId, number - 1, size));
-
-    setLessons(newLessons);
-  };
-
-  return isFetching || !lessons ? (
+  return isFetching || !lesson ? (
     <SpinnerComponent />
   ) : (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-    <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px">
-        <Text fontSize="xl" color={textColor} fontWeight="bold">
-          Lessons
-        </Text>
-      </CardHeader>
-      <CardBody>
-        <Table variant="simple" color={textColor}>
-          <Thead>
-            <Tr color="gray.400">
-              <Th color="gray.400">Name</Th>
-              <Th color="gray.400">Start time</Th>
-              <Th color="gray.400">End time</Th>
-            </Tr>
-          </Thead>
-          <Tbody fontWeight="semibold">
-            {lessons.map((lesson) => {
-              let startDate = dateHelper.normalizedDateWithVerbalDateAndTime(
-                lesson.startDate
-              );
-              let endDate = dateHelper.normalizedDateWithVerbalDateAndTime(
-                lesson.endDate
-              );
-              return (
-                <Tr
-                  _hover={{
-                    bg: "whitesmoke",
-                  }}
-                >
-                  <Td>{lesson.name}</Td>
-                  <Td>{startDate}</Td>
-                  <Td>{endDate}</Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </CardBody>
-    </Card>
-   
-  </Flex>
+    (console.log(lesson),
+    (
+      <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+        <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+          <CardHeader p="6px 0px 22px 0px">
+            <Text fontSize="xl" color="gray.400" fontWeight="bold">
+              Lesson:{" "}
+              <Text
+                color={textColor}
+                display="inline-block"
+                fontSize="xl"
+                fontWeight="semi-bold"
+              >
+                {lesson.name}
+              </Text>
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <Grid
+              templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }}
+              gap="22px"
+            >
+              <Card boxShadow="xl" p="16px">
+                <CardHeader pb="1rem">
+                  <Text
+                    fontSize="xl"
+                    color="teal.400"
+                    fontWeight="bold"
+                    me="10px"
+                    borderBottom="2px solid"
+                  >
+                    Info
+                  </Text>
+                </CardHeader>
+                <CardBody px="5px">
+                  <Flex direction="column">
+                    <Flex align="start" mb="18px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Description:
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        Hi, I’m Esthera Jackson, Decisions: If you can’t decide,
+                        the answer is no. If two equally difficult paths, choose
+                        the one more painful in the short term (pain avoidance
+                        is creating an illusion of equality).
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="18px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Start time:
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        {dateHelper.normalizedDateWithVerbalDateAndTime(
+                          lesson.startDate
+                        )}
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="18px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        End time:
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        {dateHelper.normalizedDateWithVerbalDateAndTime(
+                          lesson.endDate
+                        )}
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="18px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Format:
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        Offline
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </CardBody>
+              </Card>
+
+              <Card pos="relative" boxShadow="xl" p="16px">
+                <CardHeader pb="1rem">
+                  <Text
+                    fontSize="xl"
+                    color="teal.400"
+                    fontWeight="bold"
+                    me="10px"
+                    borderBottom="2px solid"
+                  >
+                    Theory
+                  </Text>
+                </CardHeader>
+                <CardBody px="5px">
+                  <Flex direction="column" w="100%">
+                    {lesson.theories && lesson.theories.length != 0 ? (
+                      lesson.theories.map((t, index) => {
+                        return (
+                          <Card
+                            onClick={()=>theoryClick(t.id)}
+                            _hover={{
+                              bg: "gray.300",
+                            }}
+                            bg="whitesmoke"
+                            my="0.3rem"
+                            p="0.5rem"
+                            borderRadius="5px"
+                            boxShadow="md"
+                          >
+                            <Text fontWeight="bold">
+                              {++index}. {t.name}
+                            </Text>
+                          </Card>
+                        );
+                      })
+                    ) : (
+                      <Text
+                        fontSize="lg"
+                        textAlign="center"
+                        pos="absolute"
+                        left="50%"
+                        top="50%"
+                        style={{ transform: "translate(-50%,-50%)" }}
+                        fontWeight="bold"
+                      >
+                        This lesson doesn't have any theory
+                      </Text>
+                    )}
+                  </Flex>
+                </CardBody>
+              </Card>
+
+              <Card pos="relative" boxShadow="xl" p="16px">
+                <CardHeader pb="1rem">
+                  <Text
+                    fontSize="xl"
+                    color="teal.400"
+                    fontWeight="bold"
+                    me="10px"
+                    borderBottom="2px solid"
+                  >
+                    Assignments
+                  </Text>
+                </CardHeader>
+                <CardBody px="5px">
+                  <Flex direction="column" w="100%">
+                    {lesson.assignments && lesson.assignments.length != 0 ? (
+                      lesson.assignments.map((a, index) => {
+                        return (
+                          <Card
+                            onClick={()=>assignmentClick(a.id)}
+                            _hover={{
+                              bg: "gray.300",
+                            }}
+                            bg="whitesmoke"
+                            my="0.3rem"
+                            p="0.5rem"
+                            borderRadius="5px"
+                            boxShadow="md"
+                          >
+                            <Text fontWeight="bold">
+                              {++index}. {a.name}
+                            </Text>
+                          </Card>
+                        );
+                      })
+                    ) : (
+                      <Text
+                        fontSize="lg"
+                        textAlign="center"
+                        pos="absolute"
+                        left="50%"
+                        top="50%"
+                        style={{ transform: "translate(-50%,-50%)" }}
+                        fontWeight="bold"
+                      >
+                        This lesson doesn't have any assingments
+                      </Text>
+                    )}
+                  </Flex>
+                </CardBody>
+              </Card>
+            </Grid>
+          </CardBody>
+        </Card>
+      </Flex>
+    ))
   );
 }
 
