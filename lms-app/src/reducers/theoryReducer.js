@@ -11,11 +11,11 @@ const theoryReducer = (state = initialState, action) => {
       return {
         theories: action.payload,
       };
-    // case actionTypes.GET_LESSON_BY_ID:
-    //   return {
-    //     ...state,
-    //     lesson: action.payload,
-    //   };
+    case actionTypes.GET_THEORY_BY_ID:
+      return {
+        ...state,
+        theory: action.payload,
+      };
     default:
       return state;
   }

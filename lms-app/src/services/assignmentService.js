@@ -11,8 +11,12 @@ export const getUndoneAssignmentsByLessonId = (lessonId, token) => {
   );
 };
 
-export const getAssignmentById = (id) => {
-  return httpClient.get("assignment/getassignmentbyid/" + id);
+export const getStudentsAssignmentById = (id, token) => {
+  return httpClient.get("assignment/getstudentsassignmentbyid/" + id, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const submitAssignmentById = (id, data, token) => {

@@ -14,7 +14,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
-
 import { useHistory, useParams } from "react-router";
 import { actionTypes } from "../../../actions/const";
 // Custom components
@@ -55,7 +54,9 @@ function StudentLessonDetail() {
   }
 
   function theoryClick(id) {
-    console.log("theo click" + id);
+    let path = history.location.pathname.split("lessons")[0];
+    path=path.concat("theories/" + id);
+    history.push(path)
   }
 
   return isFetching || !lesson || !undoneAssignments || !studentsTheories ? (
@@ -173,7 +174,11 @@ function StudentLessonDetail() {
                     studentsTheories.map((t, index) => {
                       return(t.theoryAppUsers[0].isRead ? (
                         <Card
+                        onClick={() => theoryClick(t.id)}
                           flexDirection="row"
+                          _hover={{
+                            bg: "gray.300",
+                          }}
                           alignItems="center"
                           color="green"
                           bg="whitesmoke"
@@ -188,7 +193,7 @@ function StudentLessonDetail() {
                           </Text>
                           <Flex alignItems="center">
                             <Text mx="0.5rem" fontWeight="bold">
-                              Done!
+                              Read!
                             </Text>
                             <FaCheckCircle />
                           </Flex>

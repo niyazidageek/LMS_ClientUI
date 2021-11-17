@@ -19,6 +19,7 @@ import RequestChangeEmail from "./components/pages/RequestChangeEmail/RequestCha
 import StudentLessons from "./components/pages/Lessons/StudentLessons";
 import StudentLessonDetail from "./components/pages/Lessons/StudentLessonDetail";
 import StudentAssignmentDetail from "./components/pages/Assignments/StudentAssignmentDetail";
+import StudentTheoryDetail from "./components/pages/Theories/StudentTheoryDetail";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
@@ -57,6 +58,8 @@ function App() {
                   <PrivateRoute exact path="/student/lessons" component={StudentLessons}/>
                   <PrivateRoute exact path="/student/assignments" />
                   <PrivateRoute exact path="/student/assignments/:id" component={StudentAssignmentDetail}/>
+                  <PrivateRoute exact path="/student/theories" />
+                  <PrivateRoute exact path="/student/theories/:id" component={StudentTheoryDetail}/>
                   <PrivateRoute exact path="/student/lessons/:id" component={StudentLessonDetail}/>
                </MainLayout>
              </Route>
