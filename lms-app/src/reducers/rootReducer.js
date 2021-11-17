@@ -6,6 +6,8 @@ import studentHomeReducer from "./studentHomeReducer";
 import lessonReducer from "./lessonReducer";
 import onBoardReducer from "./onBoardReducer";
 import profileReducer from "./profileReducer";
+import assignmentReducer from "./assignmentReducer";
+import theoryReducer from "./theoryReducer"
 
 const persistConfig = {
     key: "root",
@@ -16,8 +18,11 @@ const persistConfig = {
   const rootReducer = combineReducers({
     profileReducer,
     authReducer,
+    theoryReducer,
     onBoardReducer,
     studentHomeReducer,
+    assignmentReducer,
+    
     lessonReducer
   });
   

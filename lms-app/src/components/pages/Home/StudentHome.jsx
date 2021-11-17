@@ -117,7 +117,6 @@ export default function StudentHome() {
   const fetchMoreData = () => {
     if (lessons.length >= lessonsCount) {
       setHasMore(false);
-      console.log("ss");
       return;
     }
     dispatch(getMoreLessonsAction(token, onBoardGroupId, paging, size));
@@ -360,13 +359,10 @@ export default function StudentHome() {
                                           {lesson.assignments.length > 0 ? (
                                             lesson.assignments.length > 1 ? (
                                               <h1>
-                                                {lesson.assignments.reduce(
+                                                 {lesson.assignments.reduce(
                                                   (accumulator, curr) =>
-                                                    accumulator
-                                                      .assignmentAppUsers
-                                                      .length +
-                                                    curr.assignmentAppUsers
-                                                      .length
+                                                    accumulator+
+                                                    curr.assignmentAppUsers.length,0
                                                 )}
                                                 /{lesson.assignments.length}
                                               </h1>
@@ -421,9 +417,8 @@ export default function StudentHome() {
                                               <h1>
                                                 {lesson.theories.reduce(
                                                   (accumulator, curr) =>
-                                                    accumulator.theoryAppUsers
-                                                      .length +
-                                                    curr.theoryAppUsers.length
+                                                    accumulator+
+                                                    curr.theoryAppUsers.length,0
                                                 )}
                                                 /{lesson.theories.length}
                                               </h1>
@@ -474,7 +469,7 @@ export default function StudentHome() {
                           </Text>
 
                           <Text textAlign="center" fontSize="sm" m="0.3rem 0">
-                            Online
+                          {lesson.isOnline ? 'Online' : 'Offline'}
                           </Text>
 
                           <Box

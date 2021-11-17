@@ -64,7 +64,7 @@ function StudentLessons() {
     initialState: {
       pageSize: size,
       isDisabled: false,
-      currentPage: parseInt(page) ?? 0,
+      currentPage: (page&&parseInt(page)) ?? 0,
     },
   });
 
@@ -72,8 +72,9 @@ function StudentLessons() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
+    let pageTake = page ? currentPage-1 : currentPage;
     dispatch(
-      getMoreLessonsAction(token, currentGroupId, currentPage - 1, size)
+      getMoreLessonsAction(token, currentGroupId, pageTake, size)
     );
     setPageCount(Math.ceil(total / size));
     setLessons(newLessons);
