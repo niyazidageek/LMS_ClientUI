@@ -6,18 +6,7 @@ import {
   Table,
   Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
   Button,
-  FormControl,
-  Box,
-  Input,
-  FormErrorMessage,
-  Icon,
-  Link,
-  Td,
-  Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
@@ -35,15 +24,11 @@ import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import { getStudentsAssignmentByIdAction } from "../../../actions/assignmentActions";
-import { fileHelper } from "../../../utils/fileHelper";
 import {
   getStudentsTheoryByIdAction,
   markTheoryAsReadAction,
 } from "../../../actions/theoryActions";
-import { getTheoryContent } from "../../../services/theoryService";
 
 function StudentTheoryDetail() {
   const [html, setHtml] = useState(null);

@@ -477,7 +477,7 @@ function Profile() {
           >
             <NavLink style={{width:'100%',height:'100%'}} path to="/requestchangeemail">
             <Button
-              bg="red"
+              bg="red.500"
               fontSize="13px"
               color="white"
               fontWeight="bold"

@@ -33,6 +33,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useHistory } from "react-router";
 // assets
 // Custom components
 import Card from "../../cards/Card";
@@ -40,6 +41,7 @@ import CardBody from "../../cards/CardBody";
 import CardHeader from "../../cards/CardHeader";
 import IconBox from "../../icons/IconBox";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { GoBrowser } from "react-icons/go";
 // Custom icons
 import {
   CartIcon,
@@ -59,6 +61,7 @@ import {
   FaChartPie,
   FaFileAlt,
   FaBook,
+  FaSchool
 } from "react-icons/fa";
 import { BsArrowRight, BsTypeH1 } from "react-icons/bs";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
@@ -72,6 +75,7 @@ export default function StudentHome() {
   useValidateToken();
   const dispatch = useDispatch();
   // Chakra Color Mode
+  const history = useHistory();
   const { colorMode, toggleColorMode } = useColorMode();
   const iconTeal = useColorModeValue("teal.300", "teal.300");
   const iconBoxInside = useColorModeValue("white", "white");
@@ -130,11 +134,17 @@ export default function StudentHome() {
     }
   }, [newLessons]);
 
+  function handleLessonClick(id){
+    let path = history.location.pathname.split("home")[0];
+    path=path.concat("lessons/" + id);
+    history.push(path)
+  }
+
   return isFetching || !homeContent ? (
     <SpinnerComponent />
   ) : (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid zIndex="-1" columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
+      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <Card minH="83px" justifyContent="center">
           <CardBody height="100%">
             <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -263,7 +273,7 @@ export default function StudentHome() {
             color={textColor}
             fontWeight="bold"
           >
-            Upcoming lessons:
+            Upcoming lessons
           </Text>
         </CardHeader>
         <Box variant="simple" color={textColor}>
@@ -301,8 +311,11 @@ export default function StudentHome() {
                   );
                   let isLessonOver = dateHelper.isLessonOver(lesson.endDate);
                   return (
-                    <>
                       <Card
+                        _hover={{
+                          cursor:'pointer'
+                        }}
+                        onClick={()=>handleLessonClick(lesson.id)}
                         justifyContent="space-between"
                         flexDirection="row"
                         m="1rem 0"
@@ -313,25 +326,39 @@ export default function StudentHome() {
                           flex="5"
                           flexDirection="column"
                         >
-                          <CardHeader>
+                          <CardHeader flexDirection="column">
                             <Text
-                              textAlign="center"
                               fontSize="lg"
-                              marginBottom="1rem"
-                              color={textColor}
+                              color="gray.400"
                               fontWeight="bold"
+                              marginBottom="1rem"
                             >
-                              Lesson: {lesson.name}
+                              Lesson:{" "}
+                              <Text display="inline-block" color={textColor}>
+                                {lesson.name}
+                              </Text>
+                            </Text>
+
+                            <Text
+                              fontSize="md"
+                              color="gray.400"
+                              fontWeight="bold"
+                              mb='1rem'
+                            >
+                              Description:{" "}
+                              <Text color={textColor}>
+                                {lesson.description}
+                              </Text>
                             </Text>
                           </CardHeader>
                           <CardBody>
                             <SimpleGrid
                               width="100%"
                               columns={{ sm: 3, md: 3, xl: 3 }}
-                              spacing="12px  "
+                              spacing="12px"
                             >
                               <Card
-                                p="0.4rem"
+                                p="0.5rem"
                                 height="max-content"
                                 boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                               >
@@ -358,25 +385,29 @@ export default function StudentHome() {
                                         >
                                           {lesson.assignments.length > 0 ? (
                                             lesson.assignments.length > 1 ? (
-                                              <h1>
-                                                 {lesson.assignments.reduce(
+                                              <Text fontWeight="bold">
+                                                {lesson.assignments.reduce(
                                                   (accumulator, curr) =>
-                                                    accumulator+
-                                                    curr.assignmentAppUsers.length,0
+                                                    accumulator +
+                                                    curr.assignmentAppUsers
+                                                      .length,
+                                                  0
                                                 )}
                                                 /{lesson.assignments.length}
-                                              </h1>
+                                              </Text>
                                             ) : (
-                                              <h1>
+                                              <Text fontWeight="bold">
                                                 {lesson.assignments.map(
                                                   (a) =>
                                                     a.assignmentAppUsers.length
                                                 )}
                                                 /{lesson.assignments.length}
-                                              </h1>
+                                              </Text>
                                             )
                                           ) : (
-                                            <h1>No assingments</h1>
+                                            <Text fontWeight="bold">
+                                              No assignments
+                                            </Text>
                                           )}
                                         </StatNumber>
                                       </Flex>
@@ -387,7 +418,7 @@ export default function StudentHome() {
                               </Card>
 
                               <Card
-                                p="0.4rem"
+                                p="0.5rem"
                                 height="max-content"
                                 boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                               >
@@ -414,24 +445,27 @@ export default function StudentHome() {
                                         >
                                           {lesson.theories.length > 0 ? (
                                             lesson.theories.length > 1 ? (
-                                              <h1>
+                                              <Text fontWeight="bold">
                                                 {lesson.theories.reduce(
                                                   (accumulator, curr) =>
-                                                    accumulator+
-                                                    curr.theoryAppUsers.length,0
+                                                    accumulator +
+                                                    curr.theoryAppUsers.length,
+                                                  0
                                                 )}
                                                 /{lesson.theories.length}
-                                              </h1>
+                                              </Text>
                                             ) : (
-                                              <h1>
+                                              <Text fontWeight="bold">
                                                 {lesson.theories.map(
                                                   (a) => a.theoryAppUsers.length
                                                 )}
                                                 /{lesson.theories.length}
-                                              </h1>
+                                              </Text>
                                             )
                                           ) : (
-                                            <h1>No theory</h1>
+                                            <Text fontWeight="bold">
+                                              No assignments
+                                            </Text>
                                           )}
                                         </StatNumber>
                                       </Flex>
@@ -444,6 +478,7 @@ export default function StudentHome() {
                           </CardBody>
                         </Flex>
                         <Flex
+                        justifyContent='space-between'
                           borderRight="1px"
                           borderLeft="1px"
                           borderColor="lightgray"
@@ -454,7 +489,7 @@ export default function StudentHome() {
                           <Text
                             textAlign="center"
                             fontSize="md"
-                            marginBottom="0.5rem"
+                            fontWeight='bold'
                           >
                             {startDate}
                           </Text>
@@ -462,38 +497,96 @@ export default function StudentHome() {
                           <Text
                             textAlign="center"
                             fontSize="lg"
+                            color='teal.500'
                             fontWeight="bold"
                             m="0.3rem 0"
                           >
                             {startTime}-{endTime}
                           </Text>
 
-                          <Text textAlign="center" fontSize="sm" m="0.3rem 0">
-                          {lesson.isOnline ? 'Online' : 'Offline'}
-                          </Text>
+                          {true ? (
+                            <Flex color='green.500'>
+                              <Text
+                                style={{lineHeight:'1 !important'}}
+                                fontWeight="bold"
+                                fontSize="sm"
+                                mr="0.3rem"
+                              >
+                                Online
+                              </Text>
+                              <GoBrowser style={{alignSelf:'center'}}/>
+                            </Flex>
+                          ) : (
+                            <Flex color='yellow.500'>
+                              <Text
+                                style={{lineHeight:'1 !important'}}
+                                fontWeight="bold"
+                                fontSize="sm"
+                                mr="0.3rem"
+                              >
+                                Offline
+                              </Text>
+                              <FaSchool/>
+                            </Flex>
+                          )}
 
-                          <Box
-                            marginTop="0.5rem"
-                            p="0.4rem"
-                            borderRadius="10px"
-                            bg="lightgray"
-                            width="max-content"
-                          >
-                            <Text
-                              color="white"
-                              textAlign="center"
-                              fontSize="sm"
+                          {isLessonInProgress ? (
+                            <Box
+                              marginTop="0.5rem"
+                              p="0.4rem"
+                              borderRadius="10px"
+                              bg="green.500"
+                              width="max-conten"
                             >
-                              {isLessonInProgress
-                                ? "In progress"
-                                : isLessonOver
-                                ? "Lesson is over"
-                                : "Hasn't started yet"}
-                            </Text>
-                          </Box>
+                              <Text
+                                color="white"
+                                textAlign="center"
+                                fontWeight="bold"
+                                fontSize="sm"
+                                px="0.3rem"
+                              >
+                                In progress
+                              </Text>
+                            </Box>
+                          ) : isLessonOver ? (
+                            <Box
+                              marginTop="0.5rem"
+                              p="0.4rem"
+                              borderRadius="10px"
+                              bg="red.500"
+                              width="max-conten"
+                            >
+                              <Text
+                                color="white"
+                                textAlign="center"
+                                fontWeight="bold"
+                                fontSize="sm"
+                                px="0.3rem"
+                              >
+                                Lesson is over
+                              </Text>
+                            </Box>
+                          ) : (
+                            <Box
+                              marginTop="0.5rem"
+                              p="0.4rem"
+                              borderRadius="10px"
+                              bg="lightgray"
+                              width="max-conten"
+                            >
+                              <Text
+                                color="white"
+                                textAlign="center"
+                                fontWeight="bold"
+                                fontSize="sm"
+                                px="0.3rem"
+                              >
+                                Hasn't started yet
+                              </Text>
+                            </Box>
+                          )}
                         </Flex>
                       </Card>
-                    </>
                   );
                 })}
               </InfiniteScroll>
