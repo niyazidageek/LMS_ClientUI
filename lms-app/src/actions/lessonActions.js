@@ -1,9 +1,10 @@
 import { getLessonById, getMoreLessons } from "../services/lessonService";
 import { actionTypes } from "./const";
 
-export const getMoreLessonsAction = (token, groupId, page, size) => async (dispatch) => {
+export const getMoreLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
   try {
-    let resp = await getMoreLessons(token,groupId, page, size);
+    
+    let resp = await getMoreLessons(token,groupId, page, size,futureDaysCount);
 
     let payload = {
         data:resp.data,

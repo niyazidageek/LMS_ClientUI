@@ -21,6 +21,8 @@ import StudentLessonDetail from "./components/pages/Lessons/StudentLessonDetail"
 import StudentAssignmentDetail from "./components/pages/Assignments/StudentAssignmentDetail";
 import StudentTheoryDetail from "./components/pages/Theories/StudentTheoryDetail";
 
+
+
 function App() {
   const isLoggedIn = useSelector((state) => state.authReducer.isLoggedIn);
   const userRoles = useSelector((state) => state.authReducer.roles);
@@ -32,7 +34,6 @@ function App() {
     <Router>
           <Switch>
             <ChakraProvider>
-
 
             <Route
               exact

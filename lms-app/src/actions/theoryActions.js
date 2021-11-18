@@ -48,6 +48,8 @@ export const getStudentsTheoryByIdAction = (id, token) => async (dispatch) => {
 
     let htmlResp = await getTheoryContent(resp.data.fileName);
 
+    console.log(htmlResp);
+
     dispatch({
       type: actionTypes.GET_THEORY_BY_ID,
       payload: resp.data,

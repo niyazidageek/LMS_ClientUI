@@ -123,7 +123,7 @@ export default function StudentHome() {
       setHasMore(false);
       return;
     }
-    dispatch(getMoreLessonsAction(token, onBoardGroupId, paging, size));
+    dispatch(getMoreLessonsAction(token, onBoardGroupId, paging, size,2));
 
     setPaging(paging + 1);
   };
@@ -159,8 +159,10 @@ export default function StudentHome() {
                 </StatLabel>
                 <Flex>
                   <StatNumber fontSize="md" color={textColor}>
-                    {(homeContent.teacher && homeContent.teacher.name) ??
-                      "No teacher"}
+                    {homeContent.teacher ?
+                        homeContent.teacher.name + " " + homeContent.teacher.surname :
+                        "No teacher"
+                    }       
                   </StatNumber>
                 </Flex>
               </Stat>
