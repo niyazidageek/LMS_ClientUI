@@ -8,6 +8,7 @@ import onBoardReducer from "./onBoardReducer";
 import profileReducer from "./profileReducer";
 import assignmentReducer from "./assignmentReducer";
 import theoryReducer from "./theoryReducer"
+import teacherHomeReducer from "./teacherHomeReducer"
 
 const persistConfig = {
     key: "root",
@@ -22,7 +23,7 @@ const persistConfig = {
     onBoardReducer,
     studentHomeReducer,
     assignmentReducer,
-    
+    teacherHomeReducer,
     lessonReducer
   });
   

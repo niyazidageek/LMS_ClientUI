@@ -67,8 +67,7 @@ import { BsArrowRight, BsTypeH1 } from "react-icons/bs";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { getStudentHomeAction } from "../../../actions/studentHomeActions";
 import { dateHelper } from "../../../utils/dateHelper";
-import { getMoreLessons } from "../../../services/lessonService";
-import { getMoreLessonsAction } from "../../../actions/lessonActions";
+import { getMoreStudentsLessonsAction } from "../../../actions/lessonActions";
 
 export default function StudentHome() {
   const value = "$100.000";
@@ -123,7 +122,7 @@ export default function StudentHome() {
       setHasMore(false);
       return;
     }
-    dispatch(getMoreLessonsAction(token, onBoardGroupId, paging, size,2));
+    dispatch(getMoreStudentsLessonsAction(token, onBoardGroupId, paging, size,2));
 
     setPaging(paging + 1);
   };

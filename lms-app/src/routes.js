@@ -1,13 +1,3 @@
-// import
-import StudentHome from "./components/pages/Home/StudentHome";
-import Home from "./components/pages/Home/Home";
-// import Tables from "views/Dashboard/Tables.js";
-// import Billing from "views/Dashboard/Billing.js";
-// import RTLPage from "views/RTL/RTLPage.js";
-// import Profile from "views/Dashboard/Profile.js";
-// import SignIn from "views/Pages/SignIn.js";
-// import SignUp from "views/Pages/SignUp.js";
-
 import {
   HomeIcon,
   StatsIcon,
@@ -21,13 +11,7 @@ import {
 
 import {MdPlayLesson} from 'react-icons/md'
 
-var dashRoutes = [
-  // {
-  //   path: "/home",
-  //   name: "Home",
-  //   icon: <HomeIcon color="inherit" />,
-  //   layout: "/teacher",
-  // },
+export const studentRoutes = [
   {
     path: "/home",
     name: "Home",
@@ -47,4 +31,24 @@ var dashRoutes = [
     layout: "/student",
   },
 ];
-export default dashRoutes;
+
+export const teacherRoutes = [
+  {
+    path: "/home",
+    name: "Home",
+    icon: <HomeIcon color="inherit" />,
+    layout: "/teacher",
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    icon: <ProfileIcon color="inherit" />,
+    layout: "/teacher",
+  },
+  {
+    path: "/lessons",
+    name: "Lessons",
+    icon: <MdPlayLesson color="inherit" />,
+    layout: "/teacher",
+  },
+]

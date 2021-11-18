@@ -21,6 +21,7 @@ export const signInAction = (data) => async (dispatch) =>{
             date = new Date(date.getTime()+30*60000);
             date = date.toISOString();
             resp.data.expiryDate = date;
+            console.log(resp.data);
             dispatch({
                 type:actionTypes.SET_USER,
                 payload:resp.data

@@ -31,8 +31,8 @@ import {
   PaginationContainer,
   PaginationSeparator,
 } from "@ajna/pagination";
-import { getMoreLessonsAction } from "../../../actions/lessonActions";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
+import { getMoreStudentsLessonsAction } from "../../../actions/lessonActions";
 
 function StudentLessons() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -74,7 +74,7 @@ function StudentLessons() {
     });
     let pageTake = page ? currentPage-1 : currentPage;
     dispatch(
-      getMoreLessonsAction(token, currentGroupId, pageTake, size)
+      getMoreStudentsLessonsAction(token, currentGroupId, pageTake, size)
     );
     setPageCount(Math.ceil(total / size));
     setLessons(newLessons);
@@ -93,7 +93,7 @@ function StudentLessons() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
-    dispatch(getMoreLessonsAction(token, currentGroupId, number - 1, size));
+    dispatch(getMoreStudentsLessonsAction(token, currentGroupId, number - 1, size));
     setLessons(newLessons);
   };
 

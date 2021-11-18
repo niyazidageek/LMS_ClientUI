@@ -20,6 +20,7 @@ import StudentLessons from "./components/pages/Lessons/StudentLessons";
 import StudentLessonDetail from "./components/pages/Lessons/StudentLessonDetail";
 import StudentAssignmentDetail from "./components/pages/Assignments/StudentAssignmentDetail";
 import StudentTheoryDetail from "./components/pages/Theories/StudentTheoryDetail";
+import TeacherHome from "./components/pages/Home/TeacherHome";
 
 
 
@@ -69,7 +70,7 @@ function App() {
                <MainLayout>
                   <PrivateRoute exact path="/teacher/home" 
                     rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
-                    component={StudentHome}
+                    component={TeacherHome}
                     />
                     <Route exact path="teacher/fig" component={Home}/>
                 </MainLayout>

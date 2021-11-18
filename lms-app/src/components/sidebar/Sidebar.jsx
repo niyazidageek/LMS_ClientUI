@@ -205,11 +205,7 @@ function Sidebar(props) {
   };
   var links = <>{createLinks(routes)}</>; 
 
-  let activeBg = useColorModeValue("white", "gray.700");
-  let inactiveBg = useColorModeValue("white", "gray.700");
-  let activeColor = useColorModeValue("gray.700", "white");
-  let inactiveColor = useColorModeValue("gray.400", "gray.400");
-  let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
+
   //  BRAND
   //  Chakra Color Mode
   const mainText = useColorModeValue("gray.700", "gray.200");

@@ -48,15 +48,12 @@ export default function AdminNavbar(props) {
 
   const groups = useSelector((state) => state.onBoardReducer.groups);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
-
-  var a = useSelector((state) => state.onBoardReducer);
   const [currentGroup, setCurrentGroup] = useState(null);
 
   useEffect(() => {
     if (groups && currentGroupId) {
       setCurrentGroup(groups.find((gr) => gr.id == currentGroupId));
     }
-    console.log(a);
   }, [currentGroupId]);
 
   function handleChange(id) {

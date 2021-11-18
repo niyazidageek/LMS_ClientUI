@@ -1,10 +1,10 @@
-import { getLessonById, getMoreLessons } from "../services/lessonService";
+import { getLessonById, getMoreStudentsLessons, getMoreTeachersLessons } from "../services/lessonService";
 import { actionTypes } from "./const";
 
-export const getMoreLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
+export const getMoreStudentsLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
   try {
     
-    let resp = await getMoreLessons(token,groupId, page, size,futureDaysCount);
+    let resp = await getMoreStudentsLessons(token,groupId, page, size,futureDaysCount);
 
     let payload = {
         data:resp.data,
@@ -38,6 +38,43 @@ export const getMoreLessonsAction = (token, groupId, page, size, futureDaysCount
   })
 };
 
+
+export const getMoreTeachersLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
+  try {
+    
+    let resp = await getMoreTeachersLessons(token,groupId, page, size,futureDaysCount);
+
+    let payload = {
+        data:resp.data,
+        count:resp.headers['count']
+    }
+    
+    dispatch({
+      type: actionTypes.GET_MORE_LESSONS,
+      payload: payload,
+    });
+
+    dispatch({
+      type:actionTypes.DISABLE_IS_FETCHING
+    })
+
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type:actionTypes.DISABLE_IS_FETCHING
+  })
+};
 
 export const getLessonByIdAction = (id) => async (dispatch) => {
   try {

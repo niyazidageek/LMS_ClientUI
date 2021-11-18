@@ -20,18 +20,21 @@ import {
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from "../icons/Icons";
 // Custom Components
+import { roles } from "../../utils/roles";
 import { ItemContent } from "../menu/ItemContent";
 import { SidebarResponsive } from "../sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import routes from "../../routes";
+import { studentRoutes, teacherRoutes } from "../../routes";
 import { logOutAction } from "../../actions/authActions";
 import { FaDoorOpen } from "react-icons/fa";
 import { IoLogIn } from "react-icons/io5";
 
 export default function HeaderLinks(props) {
+  const userRoles = useSelector((state) => state.authReducer.roles);
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
 
   // Chakra Color Mode
@@ -46,9 +49,14 @@ export default function HeaderLinks(props) {
     navbarIcon = "white";
     mainText = "white";
   }
-  const settingsRef = React.useRef();
+
   return (
-    <Flex alignItems="center" justifyContent='space-between' flexDirection="row" mt={{ sm: "8px",md:"unset"}}>
+    <Flex
+      alignItems="center"
+      justifyContent="space-between"
+      flexDirection="row"
+      mt={{ sm: "8px", md: "unset" }}
+    >
       <InputGroup
         width="100%"
         cursor="pointer"
@@ -115,7 +123,6 @@ export default function HeaderLinks(props) {
             <BellIcon color="gray" w="25px" h="25px" />
           </MenuButton>
           <MenuList>
-
             <Flex flexDirection="column">
               <MenuItem borderRadius="8px">
                 <ItemContent
@@ -149,7 +156,16 @@ export default function HeaderLinks(props) {
           <SidebarResponsive
             logoText={props.logoText}
             secondary={props.secondary}
-            routes={routes}
+            routes={
+              userRoles.some(
+                (r) =>
+                  r == roles.Teacher ||
+                  r == roles.SuperAdmin ||
+                  r == roles.Admin
+              )
+                ? teacherRoutes
+                : studentRoutes
+            }
             {...rest}
           />
         </Flex>
