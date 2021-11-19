@@ -67,3 +67,12 @@ export const getMoreTeachersLessons = (
 export const getLessonById = (lessonId) => {
   return httpClient.get("lesson/getlessonbyid/" + lessonId);
 };
+
+
+export const startLessonById = (lessonId, data, token)=>{
+  return httpClient.post("lesson/startlesson/" + lessonId, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

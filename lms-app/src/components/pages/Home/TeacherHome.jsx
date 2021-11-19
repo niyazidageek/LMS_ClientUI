@@ -65,7 +65,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { dateHelper } from "../../../utils/dateHelper";
-import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
+import { getMoreTeachersLessonsAction, startLessonByIdAction } from "../../../actions/lessonActions";
 import { getTeacherHomeAction } from "../../../actions/teacherHomeActions";
 
 export default function TeacherHome() {
@@ -88,6 +88,13 @@ export default function TeacherHome() {
   const [lessons, setLessons] = useState([]);
   const [paging, setPaging] = useState(1);
   const size = 3;
+
+  function handleStartLesson(id){
+    let data = {
+      joinLink:"adsdsadfsnlsanfl"
+    }
+      dispatch(startLessonByIdAction(id, data, token))
+  }
 
   useEffect(() => {
     if (homeContent) {
@@ -282,7 +289,7 @@ export default function TeacherHome() {
                       _hover={{
                         cursor: "pointer",
                       }}
-                      onClick={() => handleLessonClick(lesson.id)}
+                      // onClick={() => handleLessonClick(lesson.id)}
                       justifyContent="space-between"
                       flexDirection="row"
                       m="1rem 0"
@@ -406,6 +413,11 @@ export default function TeacherHome() {
                                   <FaBook color="gray" />
                                 </Flex>
                               </CardBody>
+                              
+                              <Button onClick={()=>handleStartLesson(lesson.id)}>
+                              {/* {lesson.lessonJoinLink && lesson.lessonJoinLink.joinLink} */}
+                              start lesson
+                              </Button>
                             </Card>
                           </SimpleGrid>
                         </CardBody>

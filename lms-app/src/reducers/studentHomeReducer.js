@@ -17,7 +17,6 @@ const initialState = {
 const studentHomeReducer = (state = initialState, action) =>{
     switch (action.type) {
         case actionTypes.GET_STUDENT_HOME_CONTENT:
-            console.log(action.payload);
             return {
                 teacher:action.payload.data.teacher,
                 progressPercentage:action.payload.data.progressPercentage,
