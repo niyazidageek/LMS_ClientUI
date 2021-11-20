@@ -27,3 +27,7 @@ export const submitAssignmentById = (id, data, token) => {
     },
   });
 };
+
+export const getAssignmentById = (id) => {
+  return httpClient.get("assignment/getassignmentbyid/" + id);
+};

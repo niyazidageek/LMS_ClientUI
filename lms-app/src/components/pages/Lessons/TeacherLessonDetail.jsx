@@ -25,10 +25,8 @@ import CardBody from "../../cards/CardBody";
 
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { getLessonByIdAction } from "../../../actions/lessonActions";
-import { getUndoneAssignmentsByLessonIdAction } from "../../../actions/assignmentActions";
-import { getStudentsTheoriesByLessonIdAction } from "../../../actions/theoryActions";
 
-function StudentLessonDetail() {
+function TeacherLessonDetail() {
   let { id } = useParams();
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
@@ -36,15 +34,9 @@ function StudentLessonDetail() {
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const lesson = useSelector((state) => state.lessonReducer.lesson);
-  const undoneAssignments = useSelector(
-    (state) => state.assignmentReducer.assignments
-  );
-  const studentsTheories = useSelector((state) => state.theoryReducer.theories);
 
   useEffect(() => {
     dispatch(getLessonByIdAction(id));
-    dispatch(getUndoneAssignmentsByLessonIdAction(id, token));
-    dispatch(getStudentsTheoriesByLessonIdAction(id, token));
   }, []);
 
   function assignmentClick(id) {
@@ -59,7 +51,7 @@ function StudentLessonDetail() {
     history.push(path)
   }
 
-  return isFetching || !lesson || !undoneAssignments || !studentsTheories ? (
+  return isFetching || !lesson ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -171,35 +163,9 @@ function StudentLessonDetail() {
               </CardHeader>
               <CardBody px="5px">
                 <Flex direction="column" w="100%">
-                  {studentsTheories && studentsTheories.length != 0 ? (
-                    studentsTheories.map((t, index) => {
-                      return(t.theoryAppUsers[0].isRead ? (
-                        <Card
-                        onClick={() => theoryClick(t.id)}
-                          flexDirection="row"
-                          _hover={{
-                            bg: "#c9c9c9",
-                          }}
-                          alignItems="center"
-                          color="green"
-                          bg="whitesmoke"
-                          my="0.3rem"
-                          p="0.5rem"
-                          borderRadius="5px"
-                          boxShadow="md"
-                          justifyContent="space-between"
-                        >
-                          <Text fontWeight="bold">
-                            {++index}. {t.name}
-                          </Text>
-                          <Flex alignItems="center">
-                            <Text mx="0.5rem" fontWeight="bold">
-                              Read!
-                            </Text>
-                            <FaCheckCircle />
-                          </Flex>
-                        </Card>
-                      ) : (
+                  {lesson.theories && lesson.theories.length!=0 ? (
+                    lesson.theories.map((t, index) => {
+                      return(
                         <Card
                           onClick={() => theoryClick(t.id)}
                           _hover={{
@@ -215,7 +181,7 @@ function StudentLessonDetail() {
                             {++index}. {t.name}
                           </Text>
                         </Card>
-                      ))
+                      )
                     })
                   ) : (
                     <Text
@@ -248,33 +214,11 @@ function StudentLessonDetail() {
               </CardHeader>
               <CardBody px="5px">
                 <Flex direction="column" w="100%">
-                  {undoneAssignments && undoneAssignments.length != 0 ? (
-                    undoneAssignments.map((ua, index) => {
-                      return ua.assignmentAppUsers[0].isSubmitted ? (
+                  {lesson.assignments && lesson.assignments.length != 0 ? (
+                   lesson.assignments.map((a, index) => {
+                      return(
                         <Card
-                          flexDirection="row"
-                          alignItems="center"
-                          color="green"
-                          bg="whitesmoke"
-                          my="0.3rem"
-                          p="0.5rem"
-                          borderRadius="5px"
-                          boxShadow="md"
-                          justifyContent="space-between"
-                        >
-                          <Text fontWeight="bold">
-                            {++index}. {ua.name}
-                          </Text>
-                          <Flex alignItems="center">
-                            <Text mx="0.5rem" fontWeight="bold">
-                              Done!
-                            </Text>
-                            <FaCheckCircle />
-                          </Flex>
-                        </Card>
-                      ) : (
-                        <Card
-                          onClick={() => assignmentClick(ua.id)}
+                          onClick={() => assignmentClick(a.id)}
                           _hover={{
                             bg: "#c9c9c9",
                           }}
@@ -285,10 +229,10 @@ function StudentLessonDetail() {
                           boxShadow="md"
                         >
                           <Text fontWeight="bold">
-                            {++index}. {ua.name}
+                            {++index}. {a.name}
                           </Text>
                         </Card>
-                      );
+                      )
                     })
                   ) : (
                     <Text
@@ -328,4 +272,4 @@ function StudentLessonDetail() {
   );
 }
 
-export default StudentLessonDetail;
+export default TeacherLessonDetail;

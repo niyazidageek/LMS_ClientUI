@@ -16,6 +16,7 @@ import {
   StatNumber,
   Table,
   Tbody,
+  Link,
   Text,
   Th,
   Thead,
@@ -54,6 +55,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { useValidateToken } from "../../../hooks/useValidateToken";
+import { HiCursorClick } from "react-icons/hi";
 // react icons
 import {
   FaChalkboardTeacher,
@@ -63,10 +65,12 @@ import {
   FaBook,
   FaSchool,
   FaUsers,
+  FaVideo
 } from "react-icons/fa";
 import { dateHelper } from "../../../utils/dateHelper";
 import { getMoreTeachersLessonsAction, startLessonByIdAction } from "../../../actions/lessonActions";
 import { getTeacherHomeAction } from "../../../actions/teacherHomeActions";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 export default function TeacherHome() {
   const value = "$100.000";
@@ -74,10 +78,12 @@ export default function TeacherHome() {
   const dispatch = useDispatch();
   // Chakra Color Mode
   const history = useHistory();
+  const [link, setLink] = useState(null);
   const iconTeal = useColorModeValue("teal.300", "teal.300");
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   const [hasMore, setHasMore] = useState(true);
+  const [connection, setConnection] = useState(null);
 
   const homeContent = useSelector((state) => state.teacherHomeReducer);
   const token = useSelector((state) => state.authReducer.jwt);
@@ -88,6 +94,34 @@ export default function TeacherHome() {
   const [lessons, setLessons] = useState([]);
   const [paging, setPaging] = useState(1);
   const size = 3;
+
+  useEffect(() => {
+    const connect = new HubConnectionBuilder()
+      .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
+        accessTokenFactory: () => token,
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(connect);
+    console.log(connect);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection
+        .start()
+        .then(() => {
+          connection.on("ReceiveMessage", (message) => {
+            console.log(message);
+            var link = JSON.parse(message);
+            console.log(link);
+            setLink(link);
+          });
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [connection]);
 
   function handleStartLesson(id){
     let data = {
@@ -325,13 +359,14 @@ export default function TeacherHome() {
                         </CardHeader>
                         <CardBody>
                           <SimpleGrid
+                          mr='12px'
                             width="100%"
                             columns={{ sm: 3, md: 3, xl: 3 }}
                             spacing="12px"
                           >
                             <Card
                               p="0.5rem"
-                              height="max-content"
+                              height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             >
                               <CardBody>
@@ -373,8 +408,9 @@ export default function TeacherHome() {
                             </Card>
 
                             <Card
+                            
                               p="0.5rem"
-                              height="max-content"
+                              height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             >
                               <CardBody>
@@ -413,11 +449,60 @@ export default function TeacherHome() {
                                   <FaBook color="gray" />
                                 </Flex>
                               </CardBody>
-                              
-                              <Button onClick={()=>handleStartLesson(lesson.id)}>
-                              {/* {lesson.lessonJoinLink && lesson.lessonJoinLink.joinLink} */}
-                              start lesson
-                              </Button>
+                            </Card>
+
+                            <Card
+                              p="0.5rem"
+                              height="100%"
+                              boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                            >
+                              <CardBody>
+                                <Flex
+                                  flexDirection="row"
+                                  align="center"
+                                  justify="center"
+                                  w="100%"
+                                >
+                                  <Stat me="auto">
+                                    <StatLabel
+                                      fontSize="sm"
+                                      color="gray.400"
+                                      fontWeight="bold"
+                                    >
+                                      Webinar
+                                    </StatLabel>
+                                    <Flex alignItems="center">
+                                      <StatNumber
+                                        fontWeight="medium"
+                                        fontSize="sm"
+                                        color={textColor}
+                                        display="flex"
+                                        alignItems="center"
+                                        textAlign="center"
+                                      >
+                                        {(lesson.lessonJoinLink && true) || (link && (link.LessonId == lesson.id )) ? (
+                                          <Flex _hover={{color:'teal.200'}} alignItems='center'  color="teal.400">
+                                            <Link
+                                              mr='0.1rem'
+                                              href={
+                                                link ? link.JoinLink : (lesson.lessonJoinLink && lesson.lessonJoinLink.joinLink) 
+                                              }
+                                            >
+                                              Join the lesson
+                                            </Link>
+                                            <HiCursorClick/>
+                                          </Flex>
+                                        ) : (
+                                          <Text fontWeight="bold">
+                                          Webinar isn't available
+                                          </Text>
+                                        )}
+                                      </StatNumber>
+                                    </Flex>
+                                  </Stat>
+                                  <FaVideo color="gray" />
+                                </Flex>
+                              </CardBody>
                             </Card>
                           </SimpleGrid>
                         </CardBody>

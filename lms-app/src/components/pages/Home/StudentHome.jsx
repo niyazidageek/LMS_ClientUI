@@ -380,7 +380,7 @@ export default function StudentHome() {
                           >
                             <Card
                               p="0.5rem"
-                              height="max-content"
+                              height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             >
                               <CardBody>
@@ -440,7 +440,7 @@ export default function StudentHome() {
 
                             <Card
                               p="0.5rem"
-                              height="max-content"
+                              height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             >
                               <CardBody>
@@ -498,7 +498,7 @@ export default function StudentHome() {
 
                             <Card
                               p="0.5rem"
-                              height="max-content"
+                              height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                             >
                               <CardBody>
@@ -539,7 +539,7 @@ export default function StudentHome() {
                                           </Flex>
                                         ) : (
                                           <Text fontWeight="bold">
-                                            No webinar available
+                                            Webinar isn't available
                                           </Text>
                                         )}
                                       </StatNumber>

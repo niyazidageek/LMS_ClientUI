@@ -24,6 +24,10 @@ export const markTheoryAsRead = (id, token) => {
   });
 };
 
+export const getTheoryById = (id) => {
+  return httpClient.get("theory/gettheorybyid/" + id);
+};
+
 export const getTheoryContent = (fileName) => {
   return httpClient.get(process.env.REACT_APP_FILES_API + fileName);
 };

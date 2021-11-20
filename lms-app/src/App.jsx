@@ -21,6 +21,10 @@ import StudentLessonDetail from "./components/pages/Lessons/StudentLessonDetail"
 import StudentAssignmentDetail from "./components/pages/Assignments/StudentAssignmentDetail";
 import StudentTheoryDetail from "./components/pages/Theories/StudentTheoryDetail";
 import TeacherHome from "./components/pages/Home/TeacherHome";
+import TeacherLessons from "./components/pages/Lessons/TeacherLessons";
+import TeacherLessonDetail from "./components/pages/Lessons/TeacherLessonDetail";
+import TeacherAssignmentDetail from "./components/pages/Assignments/TeacherAssignmentDetail";
+import TeacherTheoryDetail from "./components/pages/Theories/TeacherTheoryDetail";
 
 
 
@@ -72,7 +76,13 @@ function App() {
                     rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
                     component={TeacherHome}
                     />
-                    <Route exact path="teacher/fig" component={Home}/>
+                     <PrivateRoute exact path="/teacher/profile" component={Profile}/>
+                     <PrivateRoute exact path="/teacher/lessons" component={TeacherLessons}/>
+                     <PrivateRoute exact path="/teacher/lessons/:id" component={TeacherLessonDetail}/>
+                     <PrivateRoute exact path="/teacher/assignments" />
+                     <PrivateRoute exact path="/teacher/assignments/:id" component={TeacherAssignmentDetail}/>
+                     <PrivateRoute exact path="/teacher/theories" />
+                     <PrivateRoute exact path="/teacher/theories/:id" component={TeacherTheoryDetail}/>
                 </MainLayout>
              </Route>
 
