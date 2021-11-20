@@ -22,6 +22,7 @@ import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import ReactPaginate from "react-paginate";
+import CreateLessonModal from "./CreateLessonModal";
 import {
   Pagination,
   usePagination,
@@ -42,6 +43,7 @@ function TeacherLessons() {
   const [pageCount, setPageCount] = useState(0);
   const newLessons = useSelector((state) => state.lessonReducer.lessons);
   const total = useSelector((state) => state.lessonReducer.count);
+  const [isOpen, setIsOpen] = useState(false);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
@@ -105,9 +107,13 @@ function TeacherLessons() {
     history.push(path);
   }
 
-  function lessonEditCLick(id){
+  function lessonEditCLick(id) {
     let path = history.location.pathname + "/edit" + "/" + id;
     history.push(path);
+  }
+
+  function handleModal() {
+    setIsOpen((prev) => !prev);
   }
 
   return isFetching || !lessons ? (
@@ -115,10 +121,28 @@ function TeacherLessons() {
   ) : lessons.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <CardHeader p="6px 0px 22px 0px">
+        <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons
           </Text>
+          <Button
+            color="white"
+            bg="green.500"
+            _hover={{
+              bg: "green.600",
+            }}
+            borderRadius="6px"
+            onClick={() => handleModal()}
+            lineHeight="initial"
+          >
+            Create a lesson
+          </Button>
+
+          <CreateLessonModal
+            onClick={() => handleModal()}
+            value={isOpen}
+            groupId={currentGroupId}
+          />
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>
@@ -164,10 +188,10 @@ function TeacherLessons() {
                     <Td textAlign="center">
                       <Button
                         borderRadius="6px"
-                         _hover={{ bg: "yellow.500" }}
+                        _hover={{ bg: "yellow.500" }}
                         lineHeight="none"
                         bg="yellow.400"
-                        onClick={()=>lessonEditCLick(lesson.id)}
+                        onClick={() => lessonEditCLick(lesson.id)}
                         color="white"
                       >
                         Edit
@@ -175,7 +199,7 @@ function TeacherLessons() {
                     </Td>
                     <Td textAlign="center">
                       <Button
-                        onClick={()=>lessonClick(lesson.id)}
+                        onClick={() => lessonClick(lesson.id)}
                         borderRadius="6px"
                         _hover={{ bg: "teal.400" }}
                         lineHeight="none"

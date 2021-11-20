@@ -35,7 +35,7 @@ import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import lessonSchema from "../../../validations/lessonSchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getLessonByIdAction } from "../../../actions/lessonActions";
+import { editLessonByIdAction, getLessonByIdAction } from "../../../actions/lessonActions";
 
 function EditLesson() {
   let { id } = useParams();
@@ -52,7 +52,18 @@ function EditLesson() {
 
   function handleSubmit(values) {
     let groupId = lesson.groupId;
-    console.log(values);
+
+    let {name, startDate, endDate, description, isOnline} = values;
+
+    let data = { 
+      groupId,
+      name, 
+      startDate,
+      endDate,
+      description,
+      isOnline: isOnline == "1" ? true : false,
+    }
+    dispatch(editLessonByIdAction(id, data, token))
   }
 
   return isFetching || !lesson ? (

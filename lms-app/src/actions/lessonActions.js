@@ -1,4 +1,4 @@
-import { getLessonById, getMoreStudentsLessons, getMoreTeachersLessons, startLessonById } from "../services/lessonService";
+import { createLesson, editLessonById, getLessonById, getMoreStudentsLessons, getMoreTeachersLessons, startLessonById } from "../services/lessonService";
 import { actionTypes } from "./const";
 
 export const getMoreStudentsLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
@@ -141,3 +141,79 @@ export const startLessonByIdAction = (id, data, token) => async (dispatch) => {
     type:actionTypes.DISABLE_IS_FETCHING
   })
 };
+
+
+export const editLessonByIdAction = (id, data, token) => async (dispatch) => {
+  try {
+    dispatch({
+      type:actionTypes.SET_IS_FETCHING
+    })
+
+    let resp = await editLessonById(id, data, token);
+
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
+
+    await dispatch(getLessonByIdAction(id));
+
+    dispatch({
+      type:actionTypes.DISABLE_IS_FETCHING
+    })
+
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type:actionTypes.DISABLE_IS_FETCHING
+  })
+};
+
+export const createLessonAction = (data, token) => async (dispatch) => {
+  try {
+    dispatch({
+      type:actionTypes.SET_IS_FETCHING
+    })
+
+    let resp = await createLesson(data, token);
+
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
+
+    dispatch({
+      type:actionTypes.DISABLE_IS_FETCHING
+    })
+
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type:actionTypes.DISABLE_IS_FETCHING
+  })
+};
+
+
+

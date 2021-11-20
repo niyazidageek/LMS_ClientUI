@@ -27,7 +27,7 @@ class DateHelper{
   normalizeDateToTimeOnly(date){
     date = Date.parse(date);
     date = new Date(date);
-    return moment(date).format('hh:mm');
+    return moment(date).format('HH:mm');
   }
 
   normalizedDateWithVerbalDateAndTime(date){

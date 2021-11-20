@@ -65,10 +65,13 @@ import {
   FaBook,
   FaSchool,
   FaUsers,
-  FaVideo
+  FaVideo,
 } from "react-icons/fa";
 import { dateHelper } from "../../../utils/dateHelper";
-import { getMoreTeachersLessonsAction, startLessonByIdAction } from "../../../actions/lessonActions";
+import {
+  getMoreTeachersLessonsAction,
+  startLessonByIdAction,
+} from "../../../actions/lessonActions";
 import { getTeacherHomeAction } from "../../../actions/teacherHomeActions";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
@@ -123,11 +126,11 @@ export default function TeacherHome() {
     }
   }, [connection]);
 
-  function handleStartLesson(id){
+  function handleStartLesson(id) {
     let data = {
-      joinLink:"adsdsadfsnlsanfl"
-    }
-      dispatch(startLessonByIdAction(id, data, token))
+      joinLink: "adsdsadfsnlsanfl",
+    };
+    dispatch(startLessonByIdAction(id, data, token));
   }
 
   useEffect(() => {
@@ -181,7 +184,7 @@ export default function TeacherHome() {
                   fontWeight="bold"
                   pb=".1rem"
                 >
-                 Students
+                  Students
                 </StatLabel>
                 <Flex>
                   <StatNumber fontSize="md" color={textColor}>
@@ -205,7 +208,7 @@ export default function TeacherHome() {
                   fontWeight="bold"
                   pb=".1rem"
                 >
-                 Group score
+                  Group score
                 </StatLabel>
                 <Text fontWeight="bold" fontSize="md">
                   Maximum score: {homeContent.maxPoint}
@@ -252,7 +255,7 @@ export default function TeacherHome() {
                   fontWeight="bold"
                   pb=".1rem"
                 >
-                 Theory
+                  Theory
                 </StatLabel>
                 <Flex>
                   <StatNumber fontSize="md" color={textColor}>
@@ -354,12 +357,14 @@ export default function TeacherHome() {
                             mb="1rem"
                           >
                             Description:{" "}
-                            <Text color={textColor}>{lesson.description}</Text>
+                            <Text display="inline-block" color={textColor}>
+                              {lesson.description}
+                            </Text>
                           </Text>
                         </CardHeader>
                         <CardBody>
                           <SimpleGrid
-                          mr='12px'
+                            mr="12px"
                             width="100%"
                             columns={{ sm: 3, md: 3, xl: 3 }}
                             spacing="12px"
@@ -391,9 +396,10 @@ export default function TeacherHome() {
                                         color={textColor}
                                       >
                                         {lesson.assignments.length > 0 ? (
-                                            <Text fontWeight="bold">
-                                             Number of assignments: {lesson.assignments.length}
-                                            </Text>
+                                          <Text fontWeight="bold">
+                                            Number of assignments:{" "}
+                                            {lesson.assignments.length}
+                                          </Text>
                                         ) : (
                                           <Text fontWeight="bold">
                                             No assignments
@@ -408,7 +414,6 @@ export default function TeacherHome() {
                             </Card>
 
                             <Card
-                            
                               p="0.5rem"
                               height="100%"
                               boxShadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
@@ -435,9 +440,10 @@ export default function TeacherHome() {
                                         color={textColor}
                                       >
                                         {lesson.theories.length > 0 ? (
-                                            <Text fontWeight="bold">
-                                              Number of theory materials: {lesson.theories.length}
-                                            </Text>
+                                          <Text fontWeight="bold">
+                                            Number of theory materials:{" "}
+                                            {lesson.theories.length}
+                                          </Text>
                                         ) : (
                                           <Text fontWeight="bold">
                                             No assignments
@@ -480,21 +486,30 @@ export default function TeacherHome() {
                                         alignItems="center"
                                         textAlign="center"
                                       >
-                                        {(lesson.lessonJoinLink && true) || (link && (link.LessonId == lesson.id )) ? (
-                                          <Flex _hover={{color:'teal.200'}} alignItems='center'  color="teal.400">
+                                        {(lesson.lessonJoinLink && true) ||
+                                        (link && link.LessonId == lesson.id) ? (
+                                          <Flex
+                                            _hover={{ color: "teal.200" }}
+                                            alignItems="center"
+                                            color="teal.400"
+                                          >
                                             <Link
-                                              mr='0.1rem'
+                                              mr="0.1rem"
                                               href={
-                                                link ? link.JoinLink : (lesson.lessonJoinLink && lesson.lessonJoinLink.joinLink) 
+                                                link
+                                                  ? link.JoinLink
+                                                  : lesson.lessonJoinLink &&
+                                                    lesson.lessonJoinLink
+                                                      .joinLink
                                               }
                                             >
                                               Join the lesson
                                             </Link>
-                                            <HiCursorClick/>
+                                            <HiCursorClick />
                                           </Flex>
                                         ) : (
                                           <Text fontWeight="bold">
-                                          Webinar isn't available
+                                            Webinar isn't available
                                           </Text>
                                         )}
                                       </StatNumber>

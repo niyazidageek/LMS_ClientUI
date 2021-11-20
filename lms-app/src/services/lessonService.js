@@ -76,3 +76,21 @@ export const startLessonById = (lessonId, data, token)=>{
     },
   });
 }
+
+
+export const editLessonById = (lessonId, data, token) => {
+  return httpClient.put("lesson/editlesson/" + lessonId, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createLesson = (data, token) => {
+  return httpClient.post("lesson/createlesson", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+

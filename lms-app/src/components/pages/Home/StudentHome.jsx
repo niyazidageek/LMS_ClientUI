@@ -368,7 +368,9 @@ export default function StudentHome() {
                             mb="1rem"
                           >
                             Description:{" "}
-                            <Text color={textColor}>{lesson.description}</Text>
+                            <Text display="inline-block" color={textColor}>
+                              {lesson.description}
+                            </Text>
                           </Text>
                         </CardHeader>
                         <CardBody>
@@ -525,17 +527,26 @@ export default function StudentHome() {
                                         alignItems="center"
                                         textAlign="center"
                                       >
-                                        {(lesson.lessonJoinLink && true) || (link && (link.LessonId == lesson.id )) ? (
-                                          <Flex _hover={{color:'teal.200'}} alignItems='center'  color="teal.400">
+                                        {(lesson.lessonJoinLink && true) ||
+                                        (link && link.LessonId == lesson.id) ? (
+                                          <Flex
+                                            _hover={{ color: "teal.200" }}
+                                            alignItems="center"
+                                            color="teal.400"
+                                          >
                                             <Link
-                                              mr='0.1rem'
+                                              mr="0.1rem"
                                               href={
-                                                link ? link.JoinLink : (lesson.lessonJoinLink && lesson.lessonJoinLink.joinLink) 
+                                                link
+                                                  ? link.JoinLink
+                                                  : lesson.lessonJoinLink &&
+                                                    lesson.lessonJoinLink
+                                                      .joinLink
                                               }
                                             >
                                               Join the lesson
                                             </Link>
-                                            <HiCursorClick/>
+                                            <HiCursorClick />
                                           </Flex>
                                         ) : (
                                           <Text fontWeight="bold">
@@ -579,7 +590,7 @@ export default function StudentHome() {
                           {startTime}-{endTime}
                         </Text>
 
-                        {lesson.isOnline   ? (
+                        {lesson.isOnline ? (
                           <Flex color="green.500">
                             <Text
                               style={{ lineHeight: "1 !important" }}
