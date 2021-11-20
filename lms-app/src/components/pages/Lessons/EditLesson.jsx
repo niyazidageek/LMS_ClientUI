@@ -33,7 +33,7 @@ import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-
+import lessonSchema from "../../../validations/lessonSchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { getLessonByIdAction } from "../../../actions/lessonActions";
 
@@ -51,6 +51,7 @@ function EditLesson() {
   }, []);
 
   function handleSubmit(values) {
+    let groupId = lesson.groupId;
     console.log(values);
   }
 
@@ -89,7 +90,7 @@ function EditLesson() {
                     endDate: lesson.endDate,
                     isOnline: lesson.isOnline ? "1" : "0",
                   }}
-                  // validationSchema={profileSettingsSchema}
+                  validationSchema={lessonSchema}
                   onSubmit={handleSubmit}
                 >
                   <Form>
@@ -159,7 +160,7 @@ function EditLesson() {
                                 Start time
                               </FormLabel>
                               <Input
-                                fontSize="sm"
+                                fontSize="md"
                                 borderRadius="15px"
                                 size="lg"
                                 type="datetime-local"
@@ -185,7 +186,7 @@ function EditLesson() {
                               </FormLabel>
                               <Input
                                 size="lg"
-                                fontSize="sm"
+                                fontSize="md"
                                 borderRadius="15px"
                                 type="datetime-local"
                                 {...field}
@@ -204,6 +205,9 @@ function EditLesson() {
                               mt="24px"
                               display="flex"
                               flexDirection="column"
+                              isInvalid={
+                                form.errors.isOnline && form.touched.isOnline
+                              }
                             >
                               <FormLabel
                                 htmlFor="isSubscribedToSender"
@@ -216,7 +220,6 @@ function EditLesson() {
                                 <Stack spacing={5} direction="row">
                                   <Radio
                                     onChange={(e) => {
-                                      console.log();
                                       form.setFieldValue(
                                         field.name,
                                         e.target.value
@@ -231,7 +234,6 @@ function EditLesson() {
                                   </Radio>
                                   <Radio
                                     onChange={(e) => {
-                                      console.log();
                                       form.setFieldValue(
                                         field.name,
                                         e.target.value
@@ -245,6 +247,9 @@ function EditLesson() {
                                     Offline
                                   </Radio>
                                 </Stack>
+                                 <FormErrorMessage>
+                                {form.errors.isOnline}
+                              </FormErrorMessage>
                               </RadioGroup>
                             </FormControl>
                           )}

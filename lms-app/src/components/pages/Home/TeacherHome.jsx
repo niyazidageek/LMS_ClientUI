@@ -534,7 +534,7 @@ export default function TeacherHome() {
                           {startTime}-{endTime}
                         </Text>
 
-                        {true ? (
+                        {lesson.isOnline ? (
                           <Flex color="green.500">
                             <Text
                               style={{ lineHeight: "1 !important" }}
