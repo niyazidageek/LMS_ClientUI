@@ -1,4 +1,6 @@
 import {
+  getAllAssignmentsByGroupId,
+  getAllAssignmentsByLessonId,
   getAssignmentById,
   getStudentsAssignmentById,
   getUndoneAssignmentsByLessonId,
@@ -16,7 +18,7 @@ export const getUndoneAssignmentsByLessonIdAction =
       let resp = await getUndoneAssignmentsByLessonId(id, token);
 
       dispatch({
-        type: actionTypes.GET_ASSINGMENTS_BY_LESSON_ID,
+        type: actionTypes.GET_STUDENTS_ASSINGMENTS_BY_LESSON_ID,
         payload: resp.data,
       });
 
@@ -127,6 +129,46 @@ export const submitAssignmentByIdAction =
       dispatch({
         type: actionTypes.GET_ASSIGNMENT_BY_ID,
         payload: resp.data,
+      });
+
+      dispatch({
+        type: actionTypes.DISABLE_IS_FETCHING,
+      });
+    } catch (error) {
+      if (error.message === "Network Error") {
+        dispatch({
+          type: actionTypes.SET_AUTH_ERROR,
+          payload: error,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.SET_AUTH_ERROR,
+          payload: error.response.data,
+        });
+      }
+    }
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
+  };
+
+
+  export const getAllAssignmentsByGroupIdAction = (id, page=null, size=null) => async (dispatch) => {
+    try {
+      dispatch({
+        type: actionTypes.SET_IS_FETCHING,
+      });
+
+      let resp = await getAllAssignmentsByGroupId(id, page, size);
+
+      let payload = {
+        data:resp.data,
+        count:resp.headers['count']
+    }
+
+      dispatch({
+        type: actionTypes.GET_ASSIGNMENTS_BY_GROUP_ID,
+        payload: payload,
       });
 
       dispatch({

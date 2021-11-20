@@ -10,6 +10,7 @@ import {
 } from "./components/icons/Icons";
 
 import {MdPlayLesson} from 'react-icons/md'
+import { FaFileAlt } from "react-icons/fa";
 
 export const studentRoutes = [
   {
@@ -49,6 +50,12 @@ export const teacherRoutes = [
     path: "/lessons",
     name: "Lessons",
     icon: <MdPlayLesson color="inherit" />,
+    layout: "/teacher",
+  },
+  {
+    path: "/assignments",
+    name: "Assignments",
+    icon: <FaFileAlt color="inherit" />,
     layout: "/teacher",
   },
 ]

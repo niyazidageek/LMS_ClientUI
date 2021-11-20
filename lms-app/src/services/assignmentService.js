@@ -31,3 +31,19 @@ export const submitAssignmentById = (id, data, token) => {
 export const getAssignmentById = (id) => {
   return httpClient.get("assignment/getassignmentbyid/" + id);
 };
+
+export const getAllAssignmentsByGroupId = (groupId, page, size) => {
+  let path;
+  (page!=null && size!=null)
+    ? (
+      path =
+        "assignment/getallassignemntsbygroupid/" +
+        groupId +
+        "/" +
+        page +
+        "/" +
+        size)
+    : (
+      path = "assignment/getallassignemntsbygroupid/" + groupId);
+  return httpClient.get(path);
+};

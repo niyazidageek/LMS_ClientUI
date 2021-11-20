@@ -26,6 +26,7 @@ import TeacherLessonDetail from "./components/pages/Lessons/TeacherLessonDetail"
 import TeacherAssignmentDetail from "./components/pages/Assignments/TeacherAssignmentDetail";
 import TeacherTheoryDetail from "./components/pages/Theories/TeacherTheoryDetail";
 import EditLesson from "./components/pages/Lessons/EditLesson";
+import TeacherAssignments from "./components/pages/Assignments/TeacherAssignments";
 
 
 
@@ -81,7 +82,7 @@ function App() {
                      <PrivateRoute exact path="/teacher/lessons" component={TeacherLessons}/>
                      <PrivateRoute exact path="/teacher/lessons/:id" component={TeacherLessonDetail}/>
                      <PrivateRoute exact path="/teacher/lessons/edit/:id" component={EditLesson}/>
-                     <PrivateRoute exact path="/teacher/assignments" />
+                     <PrivateRoute exact path="/teacher/assignments" component={TeacherAssignments} />
                      <PrivateRoute exact path="/teacher/assignments/:id" component={TeacherAssignmentDetail}/>
                      <PrivateRoute exact path="/teacher/theories" />
                      <PrivateRoute exact path="/teacher/theories/:id" component={TeacherTheoryDetail}/>
