@@ -105,6 +105,11 @@ function TeacherLessons() {
     history.push(path);
   }
 
+  function lessonEditCLick(id){
+    let path = history.location.pathname + "/edit" + "/" + id;
+    history.push(path);
+  }
+
   return isFetching || !lessons ? (
     <SpinnerComponent />
   ) : lessons.length != 0 ? (
@@ -159,9 +164,10 @@ function TeacherLessons() {
                     <Td textAlign="center">
                       <Button
                         borderRadius="6px"
-                        _hover={{ bg: "yellow.500" }}
+                         _hover={{ bg: "yellow.500" }}
                         lineHeight="none"
                         bg="yellow.400"
+                        onClick={()=>lessonEditCLick(lesson.id)}
                         color="white"
                       >
                         Edit
