@@ -36,6 +36,7 @@ import {
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
 import { getAllAssignmentsByGroupIdAction } from "../../../actions/assignmentActions";
+import CreateAssignmentModal from "./CreateAssignmentModal";
 
 function TeacherAssignments() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -139,11 +140,11 @@ function TeacherAssignments() {
             Create an assignment
           </Button>
 
-          {/* <CreateLessonModal
+          <CreateAssignmentModal
             onClick={() => handleModal()}
             value={isOpen}
-            groupId={currentGroupId}
-          /> */}
+            // lessonId={currentGroupId}
+          />
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>

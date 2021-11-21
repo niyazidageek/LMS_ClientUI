@@ -39,6 +39,7 @@ import {
   submitAssignmentByIdAction,
 } from "../../../actions/assignmentActions";
 import { fileHelper } from "../../../utils/fileHelper";
+import submitAssignmentSchema from "../../../validations/submitAssignmentSchema";
 
 function StudentAssignmentDetail() {
   let { id } = useParams();
@@ -228,21 +229,29 @@ function StudentAssignmentDetail() {
                 !assignment.assignmentAppUsers[0].isSubmitted ? (
                   <>
                     <Flex
-                      flexWrap="wrap"
+                      justifyContent='space-between'
                       color="yellow.400"
+                      flexWrap='wrap'
                       alignItems="center"
                     >
-                      <Text lineHeight="unset" fontWeight="bold" me="10px">
-                        Before attaching files, make sure your submission is
-                        either in ".jpg", ".jpeg", ".pdf", or ".docx" format!
+                      <Text>
+                       <Text display='inline-block' lineHeight="unset" fontWeight="bold" me="10px" borderBottom='1px'>
+                       Maximum file size: 16mb!
                       </Text>
-                      <FaExclamationTriangle width="100%" />
+                      <Text display='inline-block' lineHeight="unset" fontWeight="bold" me="10px">
+                        Before attaching files, make sure your submission is
+                        either in ".jpg", ".jpeg", ".png", ".pptx", ".txt", ".pdf", or ".docx" format!
+                      </Text>
+                      </Text>
+                      <FaExclamationTriangle size={40}/>
+                      
                     </Flex>
                     <Formik
                       initialValues={{
-                        files: [],
+                        files: "",
                       }}
                       onSubmit={handleSubmit}
+                      validationSchema={submitAssignmentSchema}
                     >
                       <Form>
                         <FormControl>
@@ -263,7 +272,7 @@ function StudentAssignmentDetail() {
                                   onChange={(e) => {
                                     form.setFieldValue(
                                       field.name,
-                                      e.target.files
+                                      Array.from(e.target.files)
                                     );
                                   }}
                                 />
@@ -281,7 +290,7 @@ function StudentAssignmentDetail() {
                                     marginLeft="1"
                                   >
                                     {fileRef.current !== undefined &&
-                                    fileRef.current !== null ? (
+                                    fileRef.current !== null && fileRef.current.value!="" ? (
                                       fileRef.current.files.length == 1 ? (
                                         <Text fontWeight="bold">
                                           {fileRef.current.files[0].name}
@@ -300,7 +309,7 @@ function StudentAssignmentDetail() {
                                 </Box>
 
                                 <FormErrorMessage>
-                                  {form.errors.email}
+                                  {form.errors.files}
                                 </FormErrorMessage>
                               </FormControl>
                             )}

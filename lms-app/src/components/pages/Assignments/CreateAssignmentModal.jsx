@@ -7,7 +7,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Select } from "chakra-react-select";
 import { NavLink, Redirect } from "react-router-dom";
-
+import { FaFileUpload } from "react-icons/fa";
 import { Icon } from "@chakra-ui/icon";
 import {
   FormErrorMessage,
@@ -34,34 +34,44 @@ import {
 import { FiFilePlus } from "react-icons/fi";
 import { createLessonAction } from "../../../actions/lessonActions";
 import lessonSchema from "../../../validations/lessonSchema";
+import assignmentSchema from "../../../validations/assignmentSchema";
 
-const CreateLessonModal = ({ onClick, value, groupId }) => {
+const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const dispatch = useDispatch();
+  const fileRef = useRef(null);
   function handleSubmit(values) {
-    let { name, startDate, endDate, groupId, isOnline, description } = values;
+    let { name, deadline, description, maxGrade,files } = values;
     let data = {
       name,
-      startDate,
+      deadline,
       description,
-      endDate,
-      groupId,
+      maxGrade,
     };
 
-    dispatch(createLessonAction(data, token))
+    var formData = new FormData();
+    formData.append("Values", JSON.stringify(data));
+    var ins = files.length;
+    for (var x = 0; x < ins; x++) {
+      formData.append("Materials", files[x]);
+    }
+
+
+    console.log(values);
+    // dispatch(createLessonAction(data, token))
 
     onClick();
   }
 
   return (
     <>
-      <Modal size='xl' isOpen={value} onClose={onClick}>
+      <Modal size="xl" isOpen={value} onClose={onClick}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
             <Text fontSize="lg" color="teal.300" fontWeight="bold">
-              Create a lesson
+              Create an assingment
             </Text>
           </ModalHeader>
           <ModalCloseButton />
@@ -71,12 +81,11 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
               initialValues={{
                 name: "",
                 description: "",
-                startDate: "",
-                endDate: "",
-                groupId: groupId,
-                isOnline: "",
+                deadline: "",
+                maxGrade: "",
+                files: [],
               }}
-              validationSchema={lessonSchema}
+              validationSchema={assignmentSchema}
               onSubmit={handleSubmit}
             >
               <Form>
@@ -97,7 +106,7 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
                             fontSize="md"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Name of the lesson"
+                            placeholder="Name of the assignment"
                             size="lg"
                             {...field}
                           />
@@ -133,15 +142,15 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
                       )}
                     </Field>
 
-                    <Field name="startDate">
+                    <Field name="deadline">
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
-                            form.errors.startDate && form.touched.startDate
+                            form.errors.deadline && form.touched.deadline
                           }
                         >
                           <FormLabel fontWeight="semibold" fontSize="md">
-                            Start time
+                            Deadline
                           </FormLabel>
                           <Input
                             fontSize="md"
@@ -151,86 +160,89 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
                             {...field}
                           />
                           <FormErrorMessage>
-                            {form.errors.startDate}
+                            {form.errors.deadline}
                           </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
 
-                    <Field name="endDate">
+                    <Field name="maxGrade">
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
-                            form.errors.endDate && form.touched.endDate
+                            form.errors.maxGrade && form.touched.maxGrade
                           }
                         >
                           <FormLabel fontWeight="semibold" fontSize="md">
-                            End time
+                            Maximum grade
                           </FormLabel>
                           <Input
-                            size="lg"
                             fontSize="md"
                             borderRadius="15px"
-                            type="datetime-local"
+                            type="number"
+                            placeholder="Maximum grade"
+                            size="lg"
                             {...field}
                           />
                           <FormErrorMessage>
-                            {form.errors.endDate}
+                            {form.errors.maxGrade}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+
+                    <Field name="files">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.files && form.touched.files}
+                        >
+                          <Input
+                            multiple={true}
+                            ref={fileRef}
+                            type="file"
+                            placeholder="Files"
+                            display="none"
+                            onChange={(e) => {
+                              form.setFieldValue(field.name,  Array.from(e.target.files));
+                            }}
+                          />
+                          <Box display="flex" alignItems="center">
+                            <Icon
+                              cursor="pointer"
+                              onClick={() => fileRef.current.click()}
+                              border="orange"
+                              boxSize={10}
+                              as={FaFileUpload}
+                            />
+                            <Text
+                              cursor="pointer"
+                              onClick={() => fileRef.current.click()}
+                              marginLeft="1"
+                            >
+                              {fileRef.current !== undefined &&
+                              fileRef.current !== null && fileRef.current.value!="" ? (
+                                fileRef.current.files.length == 1 ? (
+                                  <Text fontWeight="bold">
+                                    {fileRef.current.files[0].name}
+                                  </Text>
+                                ) : (
+                                  <Text fontWeight="bold">
+                                    {fileRef.current.files.length} files
+                                  </Text>
+                                )
+                              ) : (
+                                <Text fontWeight="bold">Upload files</Text>
+                              )}
+                            </Text>
+                          </Box>
+
+                          <FormErrorMessage>
+                            {form.errors.files}
                           </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
                   </SimpleGrid>
-
-                  <Field name="isOnline">
-                    {({ field, form }) => (
-                      <FormControl
-                        mt="24px"
-                        display="flex"
-                        flexDirection="column"
-                        isInvalid={
-                          form.errors.isOnline && form.touched.isOnline
-                        }
-                      >
-                        <FormLabel
-                          htmlFor="isSubscribedToSender"
-                          fontWeight="semibold"
-                          fontSize="md"
-                        >
-                          Format of the lesson
-                        </FormLabel>
-                        <RadioGroup {...field}>
-                          <Stack spacing={5} direction="row">
-                            <Radio
-                              onChange={(e) => {
-                                form.setFieldValue(field.name, e.target.value);
-                              }}
-                              fontWeight="semibold"
-                              color="green"
-                              colorScheme="green"
-                              value="1"
-                            >
-                              Online
-                            </Radio>
-                            <Radio
-                              onChange={(e) => {
-                                form.setFieldValue(field.name, e.target.value);
-                              }}
-                              fontWeight="semibold"
-                              color="yellow.500"
-                              colorScheme="yellow"
-                              value="0"
-                            >
-                              Offline
-                            </Radio>
-                          </Stack>
-                          <FormErrorMessage>
-                            {form.errors.isOnline}
-                          </FormErrorMessage>
-                        </RadioGroup>
-                      </FormControl>
-                    )}
-                  </Field>
 
                   <Button
                     isLoading={isFetching}
@@ -262,4 +274,4 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
   );
 };
 
-export default CreateLessonModal;
+export default CreateAssignmentModal;
