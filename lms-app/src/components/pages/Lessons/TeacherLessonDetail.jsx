@@ -47,7 +47,7 @@ function TeacherLessonDetail() {
 
   function theoryClick(id) {
     let path = history.location.pathname.split("lessons")[0];
-    path=path.concat("theories/" + id);
+    path=path.concat("theories" + "/" + "detail" + "/" + id);
     history.push(path)
   }
 

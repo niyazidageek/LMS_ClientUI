@@ -103,7 +103,7 @@ function TeacherTheories() {
   };
 
   function theoryClick(id) {
-    let path = history.location.pathname + "/" + id;
+    let path = history.location.pathname + "/" + "detail/" + id;
     history.push(path);
   }
 

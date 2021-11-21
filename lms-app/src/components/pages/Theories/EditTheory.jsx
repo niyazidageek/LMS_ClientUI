@@ -122,7 +122,7 @@ function EditTheory() {
                                 fontSize="md"
                                 borderRadius="15px"
                                 type="text"
-                                placeholder="Name of the lesson"
+                                placeholder="Name of theory"
                                 size="lg"
                                 {...field}
                               />

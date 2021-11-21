@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useMemo, useState } from "react";
 import draftToMarkdown from "draftjs-to-markdown";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -6,7 +6,10 @@ import htmlToDraft from "html-to-draftjs";
 import draftToHtml from "draftjs-to-html";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const EditorUtil = React.memo(({onEditorStateChange, editorState, form, field}) => {
+const EditorUtil = React.memo(({onEditorStateChange, form, field, handleEditorError}) => {
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [isFocused,setIsFocused] = useState(false);
+  const [firstTouch, setFirstTouch] = useState(true)
   const config = {
     blockTypesMapping: {
       /* mappings */
@@ -14,21 +17,10 @@ const EditorUtil = React.memo(({onEditorStateChange, editorState, form, field}) 
     emptyLineBeforeBlock: true,
   };
 
-  // const rawContentState = convertToRaw(editorState.getCurrentContent());
-
-
-  // function onSubmit(rawContentState) {
-  //   // var isValid = rawContentState.blocks.every(block=>block.text != "")
-  //   // console.log(a);
-  //   // let formdata = new FormData();
-  //   //   formdata.append("Values", JSON.stringify(rawContentState))
-  //   //   axios.post('https://localhost:5001/api/Lesson/CreateLesson',formdata, {
-  //   //     headers: {
-  //   //       "Content-Type": "multipart/form-data"
-  //   //      },
-  //   //   })
-    
-  // }
+  const onEditorStateChangeDraft = (editorState) =>{
+    setEditorState(editorState)
+    onEditorStateChange(convertToRaw(editorState.getCurrentContent()), form, field)
+}
 
   function uploadImageCallBack(file) {
     return new Promise((resolve, reject) => {
@@ -38,6 +30,35 @@ const EditorUtil = React.memo(({onEditorStateChange, editorState, form, field}) 
       reader.readAsDataURL(file);
     });
   }
+
+  useEffect(()=>{
+    console.log('s');
+  },[editorState])
+
+  const focusedClickCallBack = useCallback(()=>{
+    setIsFocused(false)
+  },[isFocused])
+
+  const setTouchedCallBack = useCallback(()=>{
+    setIsFocused(true)
+    form.setTouched({...form.touched,[field.name]: true })
+  },[isFocused])
+
+  useEffect(()=>{
+    if(form.errors.content&&form.touched.content&&firstTouch){
+      handleEditorError(undefined)
+      setFirstTouch(false)
+    }
+  },[isFocused])
+
+  useEffect(() => {
+    if(form.errors.content&&form.touched.content&&!firstTouch){
+      handleEditorError(form.errors.content.blocks)
+    }
+    else{
+      handleEditorError(undefined)
+    }
+  },[form.errors.content, firstTouch]);
 
   return (
     (
@@ -53,9 +74,11 @@ const EditorUtil = React.memo(({onEditorStateChange, editorState, form, field}) 
               previewImage: true,
             },
           }}
+          onBlur={focusedClickCallBack}
+          onFocus={setTouchedCallBack}
           wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
-          onEditorStateChange={(e) => onEditorStateChange(e,form,field)}
+          editorClassName={ isFocused ? "demo-editor focused" : ((form.errors.content&&form.touched.content) ? ("demo-editor invalid"):"demo-editor")}
+          onEditorStateChange={()=>onEditorStateChangeDraft}
         />
       </>
     )

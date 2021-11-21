@@ -121,6 +121,8 @@ export const markTheoryAsReadAction = (id, token) => async (dispatch) => {
 export const getTheoryByIdAction = (id) => async (dispatch) => {
   try {
 
+    console.log('bbubhbbh');
+
     dispatch({
         type:actionTypes.SET_IS_FETCHING
       })

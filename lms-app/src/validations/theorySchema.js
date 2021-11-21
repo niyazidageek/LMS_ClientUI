@@ -9,6 +9,8 @@ const theorySchema = Yup.object().shape({
 
   point: Yup.number().required("Required!"),
 
+  lessonId: Yup.number().required("Required!"),
+
   content: Yup.object().shape({
     blocks: Yup.array().test("has-content", "Required!", validateDraftJs),
   }),

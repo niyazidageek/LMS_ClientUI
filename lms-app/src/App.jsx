@@ -89,7 +89,7 @@ function App() {
                      <PrivateRoute exact path="/teacher/assignments/:id" component={TeacherAssignmentDetail}/>
                      <PrivateRoute exact path="/teacher/assignments/edit/:id" component={EditAssignment}/>
                      <PrivateRoute exact path="/teacher/theories" component={TeacherTheories} />
-                     <PrivateRoute exact path="/teacher/theories/:id" component={TeacherTheoryDetail}/>
+                     <PrivateRoute exact path="/teacher/theories/detail/:id" component={TeacherTheoryDetail}/>
                      <PrivateRoute exact path="/teacher/theories/edit/:id" />
                      <PrivateRoute exact path="/teacher/theories/create"  component={CreateTheory}/>
                 </MainLayout>
