@@ -33,7 +33,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import { FiFilePlus } from "react-icons/fi";
-import { createLessonAction, searchLessonAction } from "../../../actions/lessonActions";
+import { searchLessonsByGroupIdAction } from "../../../actions/lessonActions";
 import lessonSchema from "../../../validations/lessonSchema";
 import assignmentSchema from "../../../validations/assignmentSchema";
 import { createAssignmentAction } from "../../../actions/assignmentActions";
@@ -41,12 +41,13 @@ import { createAssignmentAction } from "../../../actions/assignmentActions";
 const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
+  const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   const [lessons, setLessons] = useState([]);
   const dispatch = useDispatch();
   const fileRef = useRef(null);
 
 function handleSearchInput(input){
-      let lessons = dispatch(searchLessonAction(input.trim()));
+      let lessons = dispatch(searchLessonsByGroupIdAction(currentGroupId,input.trim()));
       lessons.then(res=>{
           res ? setLessons(res) : setLessons([])
       })

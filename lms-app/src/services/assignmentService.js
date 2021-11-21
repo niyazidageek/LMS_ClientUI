@@ -56,3 +56,12 @@ export const createAssignment = (data, token) => {
     },
   });
 };
+
+export const editAssignmentById = (id, data, token) => {
+  return httpClient.put("assignment/editassignment/"+id, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

@@ -95,6 +95,6 @@ export const createLesson = (data, token) => {
 };
 
 
-export const searchLesson = (input) => {
-  return httpClient.get("lesson/searchlesson/" + input);
+export const searchLessonsByGroupId = (groupId, input) => {
+  return httpClient.get("lesson/searchlessonsbygroupid/" + groupId + "/" + input);
 };

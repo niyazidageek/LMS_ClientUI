@@ -1,4 +1,4 @@
-import { createLesson, editLessonById, getLessonById, getMoreStudentsLessons, getMoreTeachersLessons, searchLesson, startLessonById } from "../services/lessonService";
+import { createLesson, editLessonById, getLessonById, getMoreStudentsLessons, getMoreTeachersLessons, searchLessonsByGroupId, startLessonById } from "../services/lessonService";
 import { actionTypes } from "./const";
 
 export const getMoreStudentsLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
@@ -215,10 +215,10 @@ export const createLessonAction = (data, token) => async (dispatch) => {
   })
 };
 
-export const searchLessonAction = (input) => async (dispatch) => {
+export const searchLessonsByGroupIdAction = (id,input) => async (dispatch) => {
   try {
 
-    let resp = await searchLesson(input);
+    let resp = await searchLessonsByGroupId(id,input);
 
     return resp.data
 

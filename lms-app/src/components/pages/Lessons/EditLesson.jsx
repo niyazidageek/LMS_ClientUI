@@ -122,7 +122,7 @@ function EditLesson() {
                                 fontSize="md"
                                 borderRadius="15px"
                                 type="text"
-                                placeholder="Your Name"
+                                placeholder="Name of the lesson"
                                 size="lg"
                                 {...field}
                               />

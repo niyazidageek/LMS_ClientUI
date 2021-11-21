@@ -229,33 +229,22 @@ function StudentAssignmentDetail() {
                 !assignment.assignmentAppUsers[0].isSubmitted ? (
                   <>
                     <Flex
-                      justifyContent="space-between"
+                      justifyContent='space-between'
                       color="yellow.400"
-                      flexWrap="wrap"
+                      flexWrap='wrap'
                       alignItems="center"
                     >
                       <Text>
-                        <Text
-                          display="inline-block"
-                          lineHeight="unset"
-                          fontWeight="bold"
-                          me="10px"
-                          borderBottom="1px"
-                        >
-                          Maximum file size: 16mb!
-                        </Text>
-                        <Text
-                          display="inline-block"
-                          lineHeight="unset"
-                          fontWeight="bold"
-                          me="10px"
-                        >
-                          Before attaching files, make sure your submission is
-                          either in ".jpg", ".jpeg", ".png", ".pptx", ".txt",
-                          ".pdf", or ".docx" format!
-                        </Text>
+                       <Text display='inline-block' lineHeight="unset" fontWeight="bold" me="10px" borderBottom='1px'>
+                       Maximum file size: 16mb!
                       </Text>
-                      <FaExclamationTriangle size={40} />
+                      <Text display='inline-block' lineHeight="unset" fontWeight="bold" me="10px">
+                        Before attaching files, make sure your submission is
+                        either in ".jpg", ".jpeg", ".png", ".pptx", ".txt", ".pdf", or ".docx" format!
+                      </Text>
+                      </Text>
+                      <FaExclamationTriangle size={40}/>
+                      
                     </Flex>
                     <Formik
                       initialValues={{
@@ -301,8 +290,7 @@ function StudentAssignmentDetail() {
                                     marginLeft="1"
                                   >
                                     {fileRef.current !== undefined &&
-                                    fileRef.current !== null &&
-                                    fileRef.current.value != "" ? (
+                                    fileRef.current !== null && fileRef.current.value!="" ? (
                                       fileRef.current.files.length == 1 ? (
                                         <Text fontWeight="bold">
                                           {fileRef.current.files[0].name}
