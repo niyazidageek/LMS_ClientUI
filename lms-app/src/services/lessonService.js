@@ -94,3 +94,7 @@ export const createLesson = (data, token) => {
   });
 };
 
+
+export const searchLesson = (input) => {
+  return httpClient.get("lesson/searchlesson/" + input);
+};

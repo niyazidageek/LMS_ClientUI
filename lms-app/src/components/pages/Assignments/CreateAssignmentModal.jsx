@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Select } from "chakra-react-select";
 import { NavLink, Redirect } from "react-router-dom";
-import { FaFileUpload } from "react-icons/fa";
+import { FaFileUpload, FaExclamationTriangle } from "react-icons/fa";
 import { Icon } from "@chakra-ui/icon";
 import {
   FormErrorMessage,
@@ -15,6 +15,7 @@ import {
   Box,
   Checkbox,
   Stack,
+  Switch,
   Link,
   Heading,
   SimpleGrid,
@@ -32,22 +33,33 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import { FiFilePlus } from "react-icons/fi";
-import { createLessonAction } from "../../../actions/lessonActions";
+import { createLessonAction, searchLessonAction } from "../../../actions/lessonActions";
 import lessonSchema from "../../../validations/lessonSchema";
 import assignmentSchema from "../../../validations/assignmentSchema";
+import { createAssignmentAction } from "../../../actions/assignmentActions";
 
 const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
+  const [lessons, setLessons] = useState([]);
   const dispatch = useDispatch();
   const fileRef = useRef(null);
+
+function handleSearchInput(input){
+      let lessons = dispatch(searchLessonAction(input.trim()));
+      lessons.then(res=>{
+          res ? setLessons(res) : setLessons([])
+      })
+  }
   function handleSubmit(values) {
-    let { name, deadline, description, maxGrade,files } = values;
+    let { name, deadline, description, lessonId, maxGrade, files, notifyAll } = values;
     let data = {
       name,
       deadline,
       description,
       maxGrade,
+      lessonId,
+      notifyAll
     };
 
     var formData = new FormData();
@@ -57,9 +69,7 @@ const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
       formData.append("Materials", files[x]);
     }
 
-
-    console.log(values);
-    // dispatch(createLessonAction(data, token))
+    dispatch(createAssignmentAction(formData, token));
 
     onClick();
   }
@@ -84,6 +94,8 @@ const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
                 deadline: "",
                 maxGrade: "",
                 files: [],
+                lessonId:"",
+                notifyAll:false
               }}
               validationSchema={assignmentSchema}
               onSubmit={handleSubmit}
@@ -190,59 +202,144 @@ const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
                         </FormControl>
                       )}
                     </Field>
-
-                    <Field name="files">
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.files && form.touched.files}
-                        >
-                          <Input
-                            multiple={true}
-                            ref={fileRef}
-                            type="file"
-                            placeholder="Files"
-                            display="none"
-                            onChange={(e) => {
-                              form.setFieldValue(field.name,  Array.from(e.target.files));
-                            }}
-                          />
-                          <Box display="flex" alignItems="center">
-                            <Icon
-                              cursor="pointer"
-                              onClick={() => fileRef.current.click()}
-                              border="orange"
-                              boxSize={10}
-                              as={FaFileUpload}
-                            />
-                            <Text
-                              cursor="pointer"
-                              onClick={() => fileRef.current.click()}
-                              marginLeft="1"
-                            >
-                              {fileRef.current !== undefined &&
-                              fileRef.current !== null && fileRef.current.value!="" ? (
-                                fileRef.current.files.length == 1 ? (
-                                  <Text fontWeight="bold">
-                                    {fileRef.current.files[0].name}
-                                  </Text>
-                                ) : (
-                                  <Text fontWeight="bold">
-                                    {fileRef.current.files.length} files
-                                  </Text>
-                                )
-                              ) : (
-                                <Text fontWeight="bold">Upload files</Text>
-                              )}
-                            </Text>
-                          </Box>
-
-                          <FormErrorMessage>
-                            {form.errors.files}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
                   </SimpleGrid>
+
+                  <Field name="lessonId">
+                    {({ field, form }) => (
+                      <FormControl
+                        mt="36px"
+                        isInvalid={
+                          form.errors.lessonId && form.touched.lessonId
+                        }
+                      >
+                        <FormLabel fontWeight="semibold" fontSize="md">
+                          Lesson
+                        </FormLabel>
+                        <Select
+                          name="lessonId"
+                          closeMenuOnSelect={false}
+                          placeholder="Select the lesson"
+                          onInputChange={(e) => handleSearchInput(e)}
+                          onChange={(option) => {
+                            form.setFieldValue(field.name, option.value);
+                          }}
+                          options={lessons.map((s) => ({
+                            label: s.name,
+                            value: s.id,
+                          }))}
+                        />
+                        <FormErrorMessage>
+                          {form.errors.lessonId}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <Field name="files">
+                    {({ field, form }) => (
+                      <FormControl
+                        mt="24px"
+                        mb="12px"
+                        isInvalid={form.errors.files && form.touched.files}
+                      >
+                        <Input
+                          multiple={true}
+                          ref={fileRef}
+                          type="file"
+                          placeholder="Files"
+                          display="none"
+                          onChange={(e) => {
+                            form.setFieldValue(
+                              field.name,
+                              Array.from(e.target.files)
+                            );
+                          }}
+                        />
+                        <Box display="flex" alignItems="center">
+                          <Icon
+                            cursor="pointer"
+                            onClick={() => fileRef.current.click()}
+                            border="orange"
+                            boxSize={10}
+                            as={FaFileUpload}
+                          />
+                          <Text
+                            cursor="pointer"
+                            onClick={() => fileRef.current.click()}
+                            marginLeft="1"
+                          >
+                            {fileRef.current !== undefined &&
+                            fileRef.current !== null &&
+                            fileRef.current.value != "" ? (
+                              fileRef.current.files.length == 1 ? (
+                                <Text fontWeight="bold">
+                                  {fileRef.current.files[0].name}
+                                </Text>
+                              ) : (
+                                <Text fontWeight="bold">
+                                  {fileRef.current.files.length} files
+                                </Text>
+                              )
+                            ) : (
+                              <Text fontWeight="bold">Upload files</Text>
+                            )}
+                          </Text>
+                        </Box>
+
+                        <FormErrorMessage>{form.errors.files}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <Flex
+                    justifyContent="space-between"
+                    color="yellow.400"
+                    alignItems="center"
+                  >
+                    <Text>
+                      <Text
+                        display="inline-block"
+                        lineHeight="unset"
+                        fontWeight="bold"
+                        me="10px"
+                        borderBottom="1px"
+                      >
+                        Maximum file size: 16mb!
+                      </Text>
+                      <Text
+                        display="inline-block"
+                        lineHeight="unset"
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Before attaching files, make sure your submission is
+                        either in ".jpg", ".jpeg", ".png", ".pptx", ".txt",
+                        ".pdf", or ".docx" format!
+                      </Text>
+                    </Text>
+                    <FaExclamationTriangle size={70} />
+                  </Flex>
+
+                  <Field name='notifyAll'>
+                    {({ field, form }) => (
+                      <FormControl mt='12px' display="flex" alignItems="center">
+                        <Switch
+                          id="notify-all"
+                          {...field}
+                          colorScheme="teal"
+                          me="10px"
+                        />
+                        <FormLabel
+                          htmlFor="notify-all"
+                          mb="0"
+                          ms="1"
+                          fontWeight="bold"
+                        >
+                          Notify all
+                        </FormLabel>
+                      </FormControl>
+                    )}
+                  </Field>
 
                   <Button
                     isLoading={isFetching}
@@ -262,7 +359,7 @@ const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
                       bg: "teal.400",
                     }}
                   >
-                    SAVE
+                    CREATE
                   </Button>
                 </FormControl>
               </Form>

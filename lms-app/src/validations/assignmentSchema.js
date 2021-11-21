@@ -17,6 +17,8 @@ const assignmentSchema = Yup.object().shape({
 
   maxGrade: Yup.number().required("Required!"),
 
+  lessonId: Yup.number().required("Required!"),
+
   files: Yup.array()
     .test("is-big-file", "One of the files is too big!", validateFileSize)
     .test(

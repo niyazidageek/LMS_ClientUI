@@ -47,3 +47,12 @@ export const getAllAssignmentsByGroupId = (groupId, page, size) => {
       path = "assignment/getallassignemntsbygroupid/" + groupId);
   return httpClient.get(path);
 };
+
+export const createAssignment = (data, token) => {
+  return httpClient.post("assignment/createassignment", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
