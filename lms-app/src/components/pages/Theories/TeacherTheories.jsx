@@ -35,15 +35,15 @@ import {
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
 import { getAllAssignmentsByGroupIdAction } from "../../../actions/assignmentActions";
+import { getAllTheoriesByGroupIdAction } from "../../../actions/theoryActions";
 
 function TeacherTheories() {
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
-  const [assignments, setAssignments] = useState([]);
+  const [theories, setTheories] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const newAssignments = useSelector((state) => state.assignmentReducer.assignments);
-  const total = useSelector((state) => state.assignmentReducer.count);
-  const [isOpen, setIsOpen] = useState(false);
+  const newTheories = useSelector((state) => state.theoryReducer.theories);
+  const total = useSelector((state) => state.theoryReducer.count);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
@@ -77,17 +77,17 @@ function TeacherTheories() {
     });
     let pageTake = page ? currentPage - 1 : currentPage;
     dispatch(
-      getAllAssignmentsByGroupIdAction(currentGroupId, pageTake, size)
+      getAllTheoriesByGroupIdAction(currentGroupId, pageTake, size)
     );
     setPageCount(Math.ceil(total / size));
-    setAssignments(newAssignments);
+    setTheories(newTheories);
   }, [currentGroupId]);
 
   useMemo(() => {
-    if (newAssignments) {
-      setAssignments(newAssignments);
+    if (newTheories) {
+      setTheories(newTheories);
     }
-  }, [newAssignments]);
+  }, [newTheories]);
 
   const handlePageClick = (number) => {
     setCurrentPage(number);
@@ -97,28 +97,29 @@ function TeacherTheories() {
       type: actionTypes.SET_IS_FETCHING,
     });
     dispatch(
-      getAllAssignmentsByGroupIdAction(currentGroupId, number - 1, size)
+      getAllTheoriesByGroupIdAction(currentGroupId, number - 1, size)
     );
-    setAssignments(newAssignments);
+    setTheories(newTheories);
   };
 
-  function assignmentClick(id) {
+  function theoryClick(id) {
     let path = history.location.pathname + "/" + id;
     history.push(path);
   }
 
-  function assignmentEditCLick(id) {
+  function theoryEditCLick(id) {
     let path = history.location.pathname + "/edit" + "/" + id;
     history.push(path);
   }
 
-  function handleModal() {
-    setIsOpen((prev) => !prev);
+  function handleCreate() {
+    let path = history.location.pathname + "/create";
+    history.push(path);
   }
 
-  return isFetching || !assignments ? (
+  return isFetching || !theories ? (
     <SpinnerComponent />
-  ) : assignments.length != 0 ? (
+  ) : theories.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
@@ -132,7 +133,7 @@ function TeacherTheories() {
               bg: "green.600",
             }}
             borderRadius="6px"
-            onClick={() => handleModal()}
+            onClick={() => handleCreate()}
             lineHeight="initial"
           >
             Create theory
@@ -144,10 +145,6 @@ function TeacherTheories() {
               <Tr color="gray.400">
                 <Th textAlign="center" color="gray.400">
                   Name
-                </Th>
-
-                <Th textAlign="center" color="gray.400">
-                  Deadline
                 </Th>
 
                 <Th textAlign="center" color="gray.400">
@@ -166,26 +163,22 @@ function TeacherTheories() {
               </Tr>
             </Thead>
             <Tbody fontWeight="semibold">
-              {assignments.map((assignment) => {
-                let deadline = dateHelper.normalizedDateWithVerbalDateAndTime(
-                    assignment.deadline
-                );
+              {theories.map((theory) => {
                 return (
                   <Tr
                     _hover={{
                       bg: "whitesmoke",
                     }}
                   >
-                    <Td textAlign="center">{assignment.name}</Td>
-                    <Td textAlign="center">{deadline}</Td>
-                    <Td textAlign="center">{assignment.lesson.name}</Td>
+                    <Td textAlign="center">{theory.name}</Td>
+                    <Td textAlign="center">{theory.lesson.name}</Td>
                     <Td textAlign="center">
                       <Button
                         borderRadius="6px"
                         _hover={{ bg: "yellow.500" }}
                         lineHeight="none"
                         bg="yellow.400"
-                        onClick={() => assignmentEditCLick(assignment.id)}
+                        onClick={() => theoryEditCLick(theory.id)}
                         color="white"
                       >
                         Edit
@@ -193,7 +186,7 @@ function TeacherTheories() {
                     </Td>
                     <Td textAlign="center">
                       <Button
-                        onClick={() => assignmentClick(assignment.id)}
+                        onClick={() => theoryClick(theory.id)}
                         borderRadius="6px"
                         _hover={{ bg: "teal.400" }}
                         lineHeight="none"
@@ -298,7 +291,7 @@ function TeacherTheories() {
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <Text textAlign="center" fontSize="xl" fontWeight="bold">
-          You have no assignments..
+          You have no theory..
         </Text>
       </Card>
     </Flex>
