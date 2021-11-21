@@ -18,7 +18,6 @@ const assignmentReducer = (state = initialState, action) => {
         assignment: action.payload,
       };
     case actionTypes.GET_ASSIGNMENTS_BY_GROUP_ID:
-      console.log(action.payload);
       return {
         ...state,
         assignments: action.payload.data,

@@ -31,3 +31,19 @@ export const getTheoryById = (id) => {
 export const getTheoryContent = (fileName) => {
   return httpClient.get(process.env.REACT_APP_FILES_API + fileName);
 };
+
+export const getAllTheoriesByGroupId = (groupId, page, size) => {
+  let path;
+  (page!=null && size!=null)
+    ? (
+      path =
+        "theory/getalltheoriesbygroupid/" +
+        groupId +
+        "/" +
+        page +
+        "/" +
+        size)
+    : (
+      path = "assignment/getalltheoriesbygroupid/" + groupId);
+  return httpClient.get(path);
+};

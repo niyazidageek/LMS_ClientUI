@@ -307,8 +307,10 @@ function EditAssignment() {
                                       margin="1rem 0rem 1rem"
                                       key={index}
                                       direction="row"
+                                      // flexWrap = 'wrap'
                                     >
                                       <Link
+                                        wordBreak='break-all'
                                         cursor="pointer"
                                         href={fileHelper.convertToUrl(
                                           file.fileName
@@ -317,6 +319,7 @@ function EditAssignment() {
                                         {file.fileName}
                                       </Link>
                                       <CloseButton
+                                        // margin='unset !important'
                                         onClick={() => remove(index)}
                                         size="sm"
                                         color="red"
