@@ -89,17 +89,16 @@ function CreateTheory() {
 
     var formData = new FormData();
     formData.append("Values", JSON.stringify(data));
-    formData.append("Values", JSON.stringify(content));
+    formData.append("Content", JSON.stringify(content));
 
-    // dispatch(createTheoryAction(data, token));
-    console.log(values);
+    dispatch(createTheoryAction(formData, token));
   }
 
   return isFetching ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card overflowX='visible'>
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="teal.300" fontWeight="bold">
             Create theory
