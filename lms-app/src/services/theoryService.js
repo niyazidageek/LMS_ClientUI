@@ -47,3 +47,12 @@ export const getAllTheoriesByGroupId = (groupId, page, size) => {
       path = "assignment/getalltheoriesbygroupid/" + groupId);
   return httpClient.get(path);
 };
+
+export const createTheory = (data, token)=>{
+  return httpClient.post("theory/createtheory", data,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  })
+}

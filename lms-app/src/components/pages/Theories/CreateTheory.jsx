@@ -44,11 +44,12 @@ import {
 } from "../../../actions/lessonActions";
 import EditorUtil from "../../editor/EditorUtil";
 import theorySchema from "../../../validations/theorySchema";
+import { createTheoryAction } from "../../../actions/theoryActions";
 
 function CreateTheory() {
   let { id } = useParams();
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
-
+  const [firstTouch, setFirstTouch] = useState(true);
 
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
@@ -60,35 +61,37 @@ function CreateTheory() {
 
   function onEditorStateChange(rawContentState, form, field) {
     // setEditorState(editorState);
-    console.log('rendz');
-    form.setFieldValue(field.name, rawContentState)
+    console.log("rendz");
+    form.setFieldValue(field.name, rawContentState);
   }
 
-  function handleSearchInput(input){
-    let lessons = dispatch(searchLessonsByGroupIdAction(currentGroupId,input.trim()));
-    lessons.then(res=>{
-        res ? setLessons(res) : setLessons([])
-    })
-}
+  function handleSearchInput(input) {
+    let lessons = dispatch(
+      searchLessonsByGroupIdAction(currentGroupId, input.trim())
+    );
+    lessons.then((res) => {
+      res ? setLessons(res) : setLessons([]);
+    });
+  }
 
-    const handleEditorError = (e)=>{
-        setEditorError(e);
-    }
+  const handleEditorError = (e) => {
+    setEditorError(e);
+  };
 
   function handleSubmit(values) {
-    // let groupId = lesson.groupId;
+    let { name, point, lessonId, content } = values;
 
-    let { name, startDate, endDate, lessonId, description, isOnline } = values;
+    let data = {
+      name,
+      point,
+      lessonId,
+    };
 
-    // let data = {
-    //   //   groupId,
-    //   name,
-    //   startDate,
-    //   endDate,
-    //   description,
-    //   isOnline: isOnline == "1" ? true : false,
-    // };
-    // dispatch(editLessonByIdAction(id, data, token));
+    var formData = new FormData();
+    formData.append("Values", JSON.stringify(data));
+    formData.append("Values", JSON.stringify(content));
+
+    // dispatch(createTheoryAction(data, token));
     console.log(values);
   }
 
@@ -183,7 +186,9 @@ function CreateTheory() {
                         {({ field, form }) => (
                           <FormControl
                             mt="24px"
-                            isInvalid={form.errors.lessonId && form.touched.lessonId}
+                            isInvalid={
+                              form.errors.lessonId && form.touched.lessonId
+                            }
                           >
                             <FormLabel fontWeight="semibold" fontSize="md">
                               Lesson
@@ -210,20 +215,24 @@ function CreateTheory() {
 
                       <Field name="content">
                         {({ field, form }) => (
-                          <FormControl
-                            mt="24px"
-                          >
+                          <FormControl mt="24px">
                             <FormLabel fontWeight="semibold" fontSize="md">
                               Content
                             </FormLabel>
                             <EditorUtil
-                              handleEditorError = {handleEditorError}
+                              handleEditorError={handleEditorError}
                               onEditorStateChange={onEditorStateChange}
                               form={form}
                               field={field}
+                              setFirstTouch={setFirstTouch}
+                              firstTouch={firstTouch}
                             />
-                            <Text fontSize='sm' color='#e53e3e'>
-                              {editorError}
+                            <Text fontSize="sm" color="#e53e3e">
+                              {editorError ??
+                                (firstTouch &&
+                                  form.errors.content &&
+                                  form.touched.content &&
+                                  form.errors.content.blocks)}
                             </Text>
                           </FormControl>
                         )}

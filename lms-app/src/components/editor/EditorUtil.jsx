@@ -6,10 +6,11 @@ import htmlToDraft from "html-to-draftjs";
 import draftToHtml from "draftjs-to-html";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const EditorUtil = React.memo(({onEditorStateChange, form, field, handleEditorError}) => {
+const EditorUtil = React.memo(({onEditorStateChange, form, field, handleEditorError,firstTouch,setFirstTouch}) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [isFocused,setIsFocused] = useState(false);
-  const [firstTouch, setFirstTouch] = useState(true)
+  // const [firstTouch, setFirstTouch] = useState(true)
+
   const config = {
     blockTypesMapping: {
       /* mappings */
@@ -31,17 +32,15 @@ const EditorUtil = React.memo(({onEditorStateChange, form, field, handleEditorEr
     });
   }
 
-  useEffect(()=>{
-    console.log('s');
-  },[editorState])
 
   const focusedClickCallBack = useCallback(()=>{
     setIsFocused(false)
+     form.setTouched(Object.assign(form.touched, {content:true}))
+
   },[isFocused])
 
   const setTouchedCallBack = useCallback(()=>{
     setIsFocused(true)
-    form.setTouched({...form.touched,[field.name]: true })
   },[isFocused])
 
   useEffect(()=>{
@@ -78,7 +77,7 @@ const EditorUtil = React.memo(({onEditorStateChange, form, field, handleEditorEr
           onFocus={setTouchedCallBack}
           wrapperClassName="demo-wrapper"
           editorClassName={ isFocused ? "demo-editor focused" : ((form.errors.content&&form.touched.content) ? ("demo-editor invalid"):"demo-editor")}
-          onEditorStateChange={()=>onEditorStateChangeDraft}
+          onEditorStateChange={onEditorStateChangeDraft}
         />
       </>
     )

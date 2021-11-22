@@ -1,48 +1,54 @@
-import { getAllTheoriesByGroupId, getStudentsTheoriesByLessonId, getStudentsTheoryById, getTheoryById, getTheoryContent, markTheoryAsRead } from "../services/theoryService";
+import {
+  createTheory,
+  getAllTheoriesByGroupId,
+  getStudentsTheoriesByLessonId,
+  getStudentsTheoryById,
+  getTheoryById,
+  getTheoryContent,
+  markTheoryAsRead,
+} from "../services/theoryService";
 import { actionTypes } from "./const";
 
-export const getStudentsTheoriesByLessonIdAction = (id, token) => async (dispatch) => {
-  try {
-
-    dispatch({
-        type:actionTypes.SET_IS_FETCHING
-      })
-
-    let resp = await getStudentsTheoriesByLessonId(id,token)
-
-    dispatch({
-      type: actionTypes.GET_STUDENTS_THEORIES_BY_LESSON_ID,
-      payload: resp.data,
-    });
-
-    dispatch({
-      type:actionTypes.DISABLE_IS_FETCHING
-    })
-
-  } catch (error) {
-    if (error.message === "Network Error") {
+export const getStudentsTheoriesByLessonIdAction =
+  (id, token) => async (dispatch) => {
+    try {
       dispatch({
-        type: actionTypes.SET_AUTH_ERROR,
-        payload: error,
+        type: actionTypes.SET_IS_FETCHING,
       });
-    } else {
+
+      let resp = await getStudentsTheoriesByLessonId(id, token);
+
       dispatch({
-        type: actionTypes.SET_AUTH_ERROR,
-        payload: error.response.data,
+        type: actionTypes.GET_STUDENTS_THEORIES_BY_LESSON_ID,
+        payload: resp.data,
       });
+
+      dispatch({
+        type: actionTypes.DISABLE_IS_FETCHING,
+      });
+    } catch (error) {
+      if (error.message === "Network Error") {
+        dispatch({
+          type: actionTypes.SET_AUTH_ERROR,
+          payload: error,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.SET_AUTH_ERROR,
+          payload: error.response.data,
+        });
+      }
     }
-  }
-  dispatch({
-    type:actionTypes.DISABLE_IS_FETCHING
-  })
-};
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
+  };
 
 export const getStudentsTheoryByIdAction = (id, token) => async (dispatch) => {
   try {
-
     dispatch({
-        type:actionTypes.SET_IS_FETCHING
-      })
+      type: actionTypes.SET_IS_FETCHING,
+    });
 
     let resp = await getStudentsTheoryById(id, token);
 
@@ -56,12 +62,10 @@ export const getStudentsTheoryByIdAction = (id, token) => async (dispatch) => {
     });
 
     dispatch({
-      type:actionTypes.DISABLE_IS_FETCHING
-    })
-    
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
 
-    return htmlResp.data
-
+    return htmlResp.data;
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({
@@ -76,30 +80,28 @@ export const getStudentsTheoryByIdAction = (id, token) => async (dispatch) => {
     }
   }
   dispatch({
-    type:actionTypes.DISABLE_IS_FETCHING
-  })
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
 };
 
 export const markTheoryAsReadAction = (id, token) => async (dispatch) => {
   try {
-
     dispatch({
-        type:actionTypes.SET_IS_FETCHING
-      })
+      type: actionTypes.SET_IS_FETCHING,
+    });
 
     let resp = await markTheoryAsRead(id, token);
 
     await dispatch(getStudentsTheoryByIdAction(id, token));
-    
-    dispatch({
-      type:actionTypes.DISABLE_IS_FETCHING
-    })
 
     dispatch({
-      type:actionTypes.SET_AUTH_MESSAGE,
-      payload:resp.data
-    })
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
 
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({
@@ -114,18 +116,17 @@ export const markTheoryAsReadAction = (id, token) => async (dispatch) => {
     }
   }
   dispatch({
-    type:actionTypes.DISABLE_IS_FETCHING
-  })
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
 };
 
 export const getTheoryByIdAction = (id) => async (dispatch) => {
   try {
-
-    console.log('bbubhbbh');
+    console.log("bbubhbbh");
 
     dispatch({
-        type:actionTypes.SET_IS_FETCHING
-      })
+      type: actionTypes.SET_IS_FETCHING,
+    });
 
     let resp = await getTheoryById(id);
 
@@ -137,12 +138,10 @@ export const getTheoryByIdAction = (id) => async (dispatch) => {
     });
 
     dispatch({
-      type:actionTypes.DISABLE_IS_FETCHING
-    })
-    
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
 
-    return htmlResp.data
-
+    return htmlResp.data;
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({
@@ -157,10 +156,9 @@ export const getTheoryByIdAction = (id) => async (dispatch) => {
     }
   }
   dispatch({
-    type:actionTypes.DISABLE_IS_FETCHING
-  })
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
 };
-
 
 export const getAllTheoriesByGroupIdAction =
   (id, page = null, size = null) =>
@@ -202,3 +200,39 @@ export const getAllTheoriesByGroupIdAction =
       type: actionTypes.DISABLE_IS_FETCHING,
     });
   };
+
+export const createTheoryAction = (data,token) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.SET_IS_FETCHING,
+    });
+
+    let resp = await createTheory(data, token);
+
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
+
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
+
+
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
+};
