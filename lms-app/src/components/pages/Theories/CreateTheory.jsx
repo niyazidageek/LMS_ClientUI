@@ -60,8 +60,6 @@ function CreateTheory() {
   const [editorError, setEditorError] = useState(null);
 
   function onEditorStateChange(rawContentState, form, field) {
-    // setEditorState(editorState);
-    console.log("rendz");
     form.setFieldValue(field.name, rawContentState);
   }
 

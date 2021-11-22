@@ -24,63 +24,89 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
-import { FaCheckCircle } from "react-icons/fa";
+import { Select } from "chakra-react-select";
 import { useHistory, useParams } from "react-router";
 import { actionTypes } from "../../../actions/const";
 // Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
+import {searchLessonsByGroupIdAction} from "../../../actions/lessonActions";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import lessonSchema from "../../../validations/lessonSchema";
+import theorySchema from "../../../validations/theorySchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { editLessonByIdAction, getLessonByIdAction } from "../../../actions/lessonActions";
+import { getTheoryByIdAction } from "../../../actions/theoryActions";
+import EditorUtil from "../../editor/EditorUtil";
 
 function EditTheory() {
   let { id } = useParams();
+  const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
+  const [firstTouch, setFirstTouch] = useState(true);
+  const [lessons, setLessons] = useState([]);
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
   const history = useHistory();
+  const [rawContent, setRawContent] = useState(null);
   const token = useSelector((state) => state.authReducer.jwt);
+  const [editorError, setEditorError] = useState(null);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
-  const lesson = useSelector((state) => state.lessonReducer.lesson);
+  const theory = useSelector((state) => state.theoryReducer.theory);
 
   useEffect(() => {
-    dispatch(getLessonByIdAction(id));
+    let resp =dispatch(getTheoryByIdAction(id));
+    resp.then((r) => setRawContent(r));
   }, []);
 
-  function handleSubmit(values) {
-    let groupId = lesson.groupId;
-
-    let {name, startDate, endDate, description, isOnline} = values;
-
-    let data = { 
-      groupId,
-      name, 
-      startDate,
-      endDate,
-      description,
-      isOnline: isOnline == "1" ? true : false,
-    }
-    dispatch(editLessonByIdAction(id, data, token))
+  function onEditorStateChange(rawContentState, form, field) {
+    form.setFieldValue(field.name, rawContentState);
   }
 
-  return isFetching || !lesson ? (
+  function handleSearchInput(input) {
+    let lessons = dispatch(
+      searchLessonsByGroupIdAction(currentGroupId, input.trim())
+    );
+    lessons.then((res) => {
+      res ? setLessons(res) : setLessons([]);
+    });
+  }
+
+  const handleEditorError = (e) => {
+    setEditorError(e);
+  };
+
+  function handleSubmit(values) {
+    // let groupId = lesson.groupId;
+
+    // let {name, startDate, endDate, description, isOnline} = values;
+
+    // let data = { 
+    //   groupId,
+    //   name, 
+    //   startDate,
+    //   endDate,
+    //   description,
+    //   isOnline: isOnline == "1" ? true : false,
+    // }
+    // dispatch(editLessonByIdAction(id, data, token))
+  }
+
+  return isFetching || !theory  || !rawContent ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
-            Lesson:{" "}
+            Theory:{" "}
             <Text
               color={textColor}
               display="inline-block"
               fontSize="xl"
               fontWeight="semi-bold"
             >
-              {lesson.name}
+              {theory.name}
             </Text>
           </Text>
         </CardHeader>
@@ -88,20 +114,19 @@ function EditTheory() {
           <Card p="16px">
             <CardHeader p="12px 5px" mb="12px">
               <Text fontSize="lg" color="teal.300" fontWeight="bold">
-                Edit lesson
+                Edit theory
               </Text>
             </CardHeader>
             <CardBody px="5px">
               <Flex direction="column" width="100%">
-                <Formik
+              <Formik
                   initialValues={{
-                    name: lesson.name,
-                    description: lesson.description,
-                    startDate: lesson.startDate,
-                    endDate: lesson.endDate,
-                    isOnline: lesson.isOnline ? "1" : "0",
+                    name: "",
+                    point: "",
+                    lessonId: "",
+                    content: rawContent,
                   }}
-                  validationSchema={lessonSchema}
+                  validationSchema={theorySchema}
                   onSubmit={handleSubmit}
                 >
                   <Form>
@@ -122,7 +147,7 @@ function EditTheory() {
                                 fontSize="md"
                                 borderRadius="15px"
                                 type="text"
-                                placeholder="Name of theory"
+                                placeholder="Name of the theory"
                                 size="lg"
                                 {...field}
                               />
@@ -133,138 +158,88 @@ function EditTheory() {
                           )}
                         </Field>
 
-                        <Field name="description">
+                        <Field name="point">
                           {({ field, form }) => (
                             <FormControl
                               isInvalid={
-                                form.errors.description &&
-                                form.touched.description
+                                form.errors.point && form.touched.point
                               }
                             >
                               <FormLabel fontWeight="semibold" fontSize="md">
-                                Description
+                                Point
                               </FormLabel>
                               <Input
                                 fontSize="md"
                                 borderRadius="15px"
-                                type="text"
-                                placeholder="Add description"
+                                type="number"
+                                placeholder="Maximum point"
                                 size="lg"
                                 {...field}
                               />
                               <FormErrorMessage>
-                                {form.errors.description}
-                              </FormErrorMessage>
-                            </FormControl>
-                          )}
-                        </Field>
-
-                        <Field name="startDate">
-                          {({ field, form }) => (
-                            <FormControl
-                              mt="24px"
-                              isInvalid={
-                                form.errors.startDate && form.touched.startDate
-                              }
-                            >
-                              <FormLabel fontWeight="semibold" fontSize="md">
-                                Start time
-                              </FormLabel>
-                              <Input
-                                fontSize="md"
-                                borderRadius="15px"
-                                size="lg"
-                                type="datetime-local"
-                                {...field}
-                              />
-                              <FormErrorMessage>
-                                {form.errors.startDate}
-                              </FormErrorMessage>
-                            </FormControl>
-                          )}
-                        </Field>
-
-                        <Field name="endDate">
-                          {({ field, form }) => (
-                            <FormControl
-                              mt="24px"
-                              isInvalid={
-                                form.errors.endDate && form.touched.endDate
-                              }
-                            >
-                              <FormLabel fontWeight="semibold" fontSize="md">
-                                End time
-                              </FormLabel>
-                              <Input
-                                size="lg"
-                                fontSize="md"
-                                borderRadius="15px"
-                                type="datetime-local"
-                                {...field}
-                              />
-                              <FormErrorMessage>
-                                {form.errors.endDate}
+                                {form.errors.point}
                               </FormErrorMessage>
                             </FormControl>
                           )}
                         </Field>
                       </SimpleGrid>
 
-                      <Field name="isOnline">
-                          {({ field, form }) => (
-                            <FormControl
-                              mt="24px"
-                              display="flex"
-                              flexDirection="column"
-                              isInvalid={
-                                form.errors.isOnline && form.touched.isOnline
-                              }
-                            >
-                              <FormLabel
-                                htmlFor="isSubscribedToSender"
-                                fontWeight="semibold"
-                                fontSize="md"
-                              >
-                                Format of the lesson
-                              </FormLabel>
-                              <RadioGroup {...field}>
-                                <Stack spacing={5} direction="row">
-                                  <Radio
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        field.name,
-                                        e.target.value
-                                      );
-                                    }}
-                                    fontWeight="semibold"
-                                    color="green"
-                                    colorScheme="green"
-                                    value="1"
-                                  >
-                                    Online
-                                  </Radio>
-                                  <Radio
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        field.name,
-                                        e.target.value
-                                      );
-                                    }}
-                                    fontWeight="semibold"
-                                    color="yellow.500"
-                                    colorScheme="yellow"
-                                    value="0"
-                                  >
-                                    Offline
-                                  </Radio>
-                                </Stack>
-                                 <FormErrorMessage>
-                                {form.errors.isOnline}
-                              </FormErrorMessage>
-                              </RadioGroup>
-                            </FormControl>
-                          )}
-                        </Field>
+                      <Field name="lessonId">
+                        {({ field, form }) => (
+                          <FormControl
+                            mt="24px"
+                            isInvalid={
+                              form.errors.lessonId && form.touched.lessonId
+                            }
+                          >
+                            <FormLabel fontWeight="semibold" fontSize="md">
+                              Lesson
+                            </FormLabel>
+                            <Select
+                              name="lessonId"
+                              closeMenuOnSelect={false}
+                              placeholder="Select the lesson"
+                              onInputChange={(e) => handleSearchInput(e)}
+                              onChange={(option) => {
+                                form.setFieldValue(field.name, option.value);
+                              }}
+                              options={lessons.map((s) => ({
+                                label: s.name,
+                                value: s.id,
+                              }))}
+                            />
+                            <FormErrorMessage>
+                              {form.errors.lessonId}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+
+                      <Field name="content">
+                        {({ field, form }) => (
+                          <FormControl mt="24px">
+                            <FormLabel fontWeight="semibold" fontSize="md">
+                              Content
+                            </FormLabel>
+                            <EditorUtil
+                              handleEditorError={handleEditorError}
+                              onEditorStateChange={onEditorStateChange}
+                              form={form}
+                              field={field}
+                              rawContent={rawContent}
+                              setFirstTouch={setFirstTouch}
+                              firstTouch={firstTouch}
+                            />
+                            <Text fontSize="sm" color="#e53e3e">
+                              {editorError ??
+                                (firstTouch &&
+                                  form.errors.content &&
+                                  form.touched.content &&
+                                  form.errors.content.blocks)}
+                            </Text>
+                          </FormControl>
+                        )}
+                      </Field>
 
                       <Button
                         isLoading={isFetching}
