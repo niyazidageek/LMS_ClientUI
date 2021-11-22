@@ -27,8 +27,17 @@ const EditorUtil = React.memo(
         ? EditorState.createWithContent(convertFromRaw(rawContent))
         : EditorState.createEmpty()
     );
+
+    useEffect(() => {
+      if (rawContent) {
+        setEditorState(
+          EditorState.createWithContent(convertFromRaw(rawContent))
+        );
+        onEditorStateChange(rawContent, form, field);
+      }
+    }, [rawContent]);
+
     const [isFocused, setIsFocused] = useState(false);
-    // const [firstTouch, setFirstTouch] = useState(true)
 
     const config = {
       blockTypesMapping: {
@@ -80,7 +89,6 @@ const EditorUtil = React.memo(
     }, [form.errors.content, firstTouch]);
 
     return (
-      console.log(rawContent),
       <Editor
         editorState={editorState}
         toolbar={{

@@ -56,3 +56,12 @@ export const createTheory = (data, token)=>{
     },
   })
 }
+
+export const editTheoryById = (id, data, token)=>{
+  return httpClient.put("theory/edittheory/"+id, data,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  })
+}

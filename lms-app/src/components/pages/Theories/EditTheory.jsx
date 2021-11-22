@@ -37,7 +37,7 @@ import CardBody from "../../cards/CardBody";
 import theorySchema from "../../../validations/theorySchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { editLessonByIdAction, getLessonByIdAction } from "../../../actions/lessonActions";
-import { getTheoryByIdAction } from "../../../actions/theoryActions";
+import { editTheoryByIdAction, getTheoryByIdAction } from "../../../actions/theoryActions";
 import EditorUtil from "../../editor/EditorUtil";
 
 function EditTheory() {
@@ -62,7 +62,7 @@ function EditTheory() {
   function onEditorStateChange(rawContentState, form, field) {
     form.setFieldValue(field.name, rawContentState);
   }
-
+  
   function handleSearchInput(input) {
     let lessons = dispatch(
       searchLessonsByGroupIdAction(currentGroupId, input.trim())
@@ -77,22 +77,20 @@ function EditTheory() {
   };
 
   function handleSubmit(values) {
-    // let groupId = lesson.groupId;
-
-    // let {name, startDate, endDate, description, isOnline} = values;
-
-    // let data = { 
-    //   groupId,
-    //   name, 
-    //   startDate,
-    //   endDate,
-    //   description,
-    //   isOnline: isOnline == "1" ? true : false,
-    // }
-    // dispatch(editLessonByIdAction(id, data, token))
+    let { name, point, lessonId, content } = values;
+    let data = {
+      name,
+      point,
+      lessonId,
+    };
+    var formData = new FormData();
+    formData.append("Values", JSON.stringify(data));
+    formData.append("Content", JSON.stringify(content));
+    let resp = dispatch(editTheoryByIdAction(id, formData, token));
+    resp.then(r=>setRawContent(r))
   }
 
-  return isFetching || !theory  || !rawContent ? (
+  return isFetching || !theory || !rawContent ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -121,9 +119,9 @@ function EditTheory() {
               <Flex direction="column" width="100%">
               <Formik
                   initialValues={{
-                    name: "",
-                    point: "",
-                    lessonId: "",
+                    name: theory.name,
+                    point: theory.point,
+                    lessonId: theory.lessonId,
                     content: rawContent,
                   }}
                   validationSchema={theorySchema}
@@ -203,6 +201,10 @@ function EditTheory() {
                               onChange={(option) => {
                                 form.setFieldValue(field.name, option.value);
                               }}
+                              defaultValue={{
+                                label: theory.lesson.name,
+                                value: theory.lesson.id,
+                              }}
                               options={lessons.map((s) => ({
                                 label: s.name,
                                 value: s.id,
@@ -217,6 +219,7 @@ function EditTheory() {
 
                       <Field name="content">
                         {({ field, form }) => (
+                          console.log(field.value, '2'),
                           <FormControl mt="24px">
                             <FormLabel fontWeight="semibold" fontSize="md">
                               Content
@@ -258,7 +261,7 @@ function EditTheory() {
                         _active={{
                           bg: "teal.400",
                         }}
-                      >
+                      >             
                         SAVE
                       </Button>
                     </FormControl>
