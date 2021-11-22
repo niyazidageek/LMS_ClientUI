@@ -6,6 +6,7 @@ import {
   getAllAssignmentsByLessonId,
   getAssignmentById,
   getStudentsAssignmentById,
+  getSubmissionsByLessonId,
   getUndoneAssignmentsByLessonId,
   submitAssignmentById,
 } from "../services/assignmentService";
@@ -245,6 +246,47 @@ export const editAssignmentByIdAction = (id,data,token) => async (dispatch) => {
     dispatch({
       type: actionTypes.SET_AUTH_MESSAGE,
       payload: resp.data,
+    });
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
+};
+
+
+export const getSubmissionsByLessonIdAction = (id,token) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.SET_IS_FETCHING,
+    });
+
+    let resp = await getSubmissionsByLessonId(id,token);
+
+    let payload = {
+      data: resp.data,
+      count: resp.headers["count"],
+    };
+
+
+    dispatch({
+      type: actionTypes.GET_SUBMISSIONS_BY_LESSON_ID,
+      payload: resp.payload,
+    });
+
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
     });
   } catch (error) {
     if (error.message === "Network Error") {

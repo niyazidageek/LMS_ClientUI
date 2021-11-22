@@ -51,12 +51,7 @@ export const getMoreTeachersLessons = (
         "/" +
         futureDaysCount)
     : (path =
-        "lesson/getlessonsbygroupid/" +
-        groupId +
-        "/" +
-        page +
-        "/" +
-        size);
+        "lesson/getlessonsbygroupid/" + groupId + "/" + page + "/" + size);
   return httpClient.get(path, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -68,15 +63,13 @@ export const getLessonById = (lessonId) => {
   return httpClient.get("lesson/getlessonbyid/" + lessonId);
 };
 
-
-export const startLessonById = (lessonId, data, token)=>{
+export const startLessonById = (lessonId, data, token) => {
   return httpClient.post("lesson/startlesson/" + lessonId, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-}
-
+};
 
 export const editLessonById = (lessonId, data, token) => {
   return httpClient.put("lesson/editlesson/" + lessonId, data, {
@@ -94,7 +87,24 @@ export const createLesson = (data, token) => {
   });
 };
 
-
 export const searchLessonsByGroupId = (groupId, input) => {
-  return httpClient.get("lesson/searchlessonsbygroupid/" + groupId + "/" + input);
+  return httpClient.get(
+    "lesson/searchlessonsbygroupid/" + groupId + "/" + input
+  );
+};
+
+export const getLessonsWithSubmissionsByGroupId = (token, groupId, page, size) => {
+  return httpClient.get(
+    "lesson/getlessonswithsubmissionsbygroupid/" +
+      groupId +
+      "/" +
+      page +
+      "/" +
+      size,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };

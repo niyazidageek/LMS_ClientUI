@@ -33,17 +33,16 @@ import {
   PaginationSeparator,
 } from "@ajna/pagination";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
-import { getAllAssignmentsByGroupIdAction } from "../../../actions/assignmentActions";
-import { getAllTheoriesByGroupIdAction } from "../../../actions/theoryActions";
+import { getLessonsWithSubmissionsByGroupIdAction, getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
 
-function TeacherTheories() {
+function Submissions() {
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
-  const [theories, setTheories] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const newTheories = useSelector((state) => state.theoryReducer.theories);
-  const total = useSelector((state) => state.theoryReducer.count);
+  const newLessons = useSelector((state) => state.lessonReducer.lessons);
+  const total = useSelector((state) => state.lessonReducer.count);
+  const [isOpen, setIsOpen] = useState(false);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
@@ -77,17 +76,17 @@ function TeacherTheories() {
     });
     let pageTake = page ? currentPage - 1 : currentPage;
     dispatch(
-      getAllTheoriesByGroupIdAction(currentGroupId, pageTake, size)
+      getLessonsWithSubmissionsByGroupIdAction(token, currentGroupId, pageTake, size)
     );
     setPageCount(Math.ceil(total / size));
-    setTheories(newTheories);
+    setLessons(newLessons);
   }, [currentGroupId]);
 
   useMemo(() => {
-    if (newTheories) {
-      setTheories(newTheories);
+    if (newLessons) {
+      setLessons(newLessons);
     }
-  }, [newTheories]);
+  }, [newLessons]);
 
   const handlePageClick = (number) => {
     setCurrentPage(number);
@@ -97,47 +96,27 @@ function TeacherTheories() {
       type: actionTypes.SET_IS_FETCHING,
     });
     dispatch(
-      getAllTheoriesByGroupIdAction(currentGroupId, number - 1, size)
+      getLessonsWithSubmissionsByGroupIdAction(token, currentGroupId, number - 1, size)
     );
-    setTheories(newTheories);
+    setLessons(newLessons);
   };
 
-  function theoryClick(id) {
-    let path = history.location.pathname + "/" + "detail/" + id;
+  function lessonClick(id) {
+    let path = history.location.pathname + "/lesson/" + id;
     history.push(path);
   }
 
-  function theoryEditCLick(id) {
-    let path = history.location.pathname + "/edit" + "/" + id;
-    history.push(path);
-  }
-  
-  function handleCreate() {
-    let path = history.location.pathname + "/create";
-    history.push(path);
-  }
 
-  return isFetching || !theories ? (
+  return isFetching || !lessons ? (
     <SpinnerComponent />
-  ) : theories.length != 0 ? (
+  ) : lessons.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
-            Theory
+            Lessons
           </Text>
-          <Button
-            color="white"
-            bg="green.500"
-            _hover={{
-              bg: "green.600",
-            }}
-            borderRadius="6px"
-            onClick={() => handleCreate()}
-            lineHeight="initial"
-          >
-            Create theory
-          </Button>
+          
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>
@@ -146,66 +125,27 @@ function TeacherTheories() {
                 <Th textAlign="center" color="gray.400">
                   Name
                 </Th>
-
                 <Th textAlign="center" color="gray.400">
-                  Lesson name
-                </Th>
-
-                <Th textAlign="center" color="gray.400">
-                  Edit
-                </Th>
-                <Th textAlign="center" color="gray.400">
-                  View
-                </Th>
-                <Th textAlign="center" color="gray.400">
-                  Delete
+                  Submissionns
                 </Th>
               </Tr>
             </Thead>
             <Tbody fontWeight="semibold">
-              {theories.map((theory) => {
+              {lessons.map((lesson) => {
                 return (
                   <Tr
+                    onClick={()=>lessonClick(lesson.id)}
                     _hover={{
                       bg: "whitesmoke",
                     }}
                   >
-                    <Td textAlign="center">{theory.name}</Td>
-                    <Td textAlign="center">{theory.lesson.name}</Td>
-                    <Td textAlign="center">
-                      <Button
-                        borderRadius="6px"
-                        _hover={{ bg: "yellow.500" }}
-                        lineHeight="none"
-                        bg="yellow.400"
-                        onClick={() => theoryEditCLick(theory.id)}
-                        color="white"
-                      >
-                        Edit
-                      </Button>
-                    </Td>
-                    <Td textAlign="center">
-                      <Button
-                        onClick={() => theoryClick(theory.id)}
-                        borderRadius="6px"
-                        _hover={{ bg: "teal.400" }}
-                        lineHeight="none"
-                        bg="teal.300"
-                        color="white"
-                      >
-                        View
-                      </Button>
-                    </Td>
-                    <Td textAlign="center">
-                      <Button
-                        borderRadius="6px"
-                        _hover={{ bg: "red.600" }}
-                        lineHeight="none"
-                        bg="red.500"
-                        color="white"
-                      >
-                        Delete
-                      </Button>
+                    <Td textAlign="center">{lesson.name}</Td>
+                    <Td textAlign="center" color='teal.300' fontWeight='bold'>
+                      {
+                        lesson.assignments &&
+                        lesson.assignments.reduce( (accumulator, curr) =>
+                        accumulator +curr.assignmentAppUsers.length, 0)
+                      }
                     </Td>
                   </Tr>
                 );
@@ -291,11 +231,11 @@ function TeacherTheories() {
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <Text textAlign="center" fontSize="xl" fontWeight="bold">
-          You have no theory..
+          You have no lessons..
         </Text>
       </Card>
     </Flex>
   );
 }
 
-export default TeacherTheories;
+export default Submissions;

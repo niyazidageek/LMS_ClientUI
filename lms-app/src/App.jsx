@@ -31,6 +31,8 @@ import EditAssignment from "./components/pages/Assignments/EditAssignment";
 import TeacherTheories from "./components/pages/Theories/TeacherTheories";
 import CreateTheory from "./components/pages/Theories/CreateTheory";
 import EditTheory from "./components/pages/Theories/EditTheory";
+import Submissions from "./components/pages/Assignments/Submissions";
+import LessonSubmissions from "./components/pages/Assignments/LessonSubmissions";
 
 
 
@@ -93,6 +95,8 @@ function App() {
                      <PrivateRoute exact path="/teacher/theories/detail/:id" component={TeacherTheoryDetail}/>
                      <PrivateRoute exact path="/teacher/theories/edit/:id" component={EditTheory}/>
                      <PrivateRoute exact path="/teacher/theories/create"  component={CreateTheory}/>
+                     <PrivateRoute exact path="/teacher/submissions" component={Submissions} />
+                     <PrivateRoute exact path="/teacher/submissions/lesson/:id" component={LessonSubmissions} />
                 </MainLayout>
              </Route>
 

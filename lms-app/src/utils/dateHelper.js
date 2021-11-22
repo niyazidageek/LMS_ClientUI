@@ -33,7 +33,7 @@ class DateHelper{
   normalizedDateWithVerbalDateAndTime(date){
     date = Date.parse(date);
     date = new Date(date);
-    return moment(date).format('MMMM Do, h:mm');
+    return moment(date).format('MMMM Do, HH:mm');
   }
 
   isLessonInProgress(startDate,endDate){

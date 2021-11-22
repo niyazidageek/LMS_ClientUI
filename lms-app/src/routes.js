@@ -10,7 +10,7 @@ import {
 } from "./components/icons/Icons";
 
 import {MdPlayLesson} from 'react-icons/md'
-import { FaBook, FaFileAlt } from "react-icons/fa";
+import { FaBook, FaCheck, FaFileAlt } from "react-icons/fa";
 
 export const studentRoutes = [
   {
@@ -64,4 +64,10 @@ export const teacherRoutes = [
     icon: <FaBook color="inherit" />,
     layout: "/teacher",
   },
+  {
+    path: "/submissions",
+    name: "Submissions",
+    icon: <FaCheck color="inherit" />,
+    layout: "/teacher",
+  }
 ]
