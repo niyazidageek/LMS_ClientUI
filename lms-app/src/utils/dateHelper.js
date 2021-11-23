@@ -59,6 +59,17 @@ class DateHelper{
     }
   }
 
+  isLate(firstDate, compareDate){
+    firstDate = Date.parse(firstDate)
+    compareDate = Date.parse(compareDate)
+    if(firstDate>=compareDate){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 }
 
 export const dateHelper = new DateHelper();

@@ -73,3 +73,19 @@ export const getSubmissionsByLessonId = (id, token) => {
     },
   });
 };
+
+export const getSubmissionById = (id, token) => {
+  return httpClient.get("assignment/getsubmissionbyid/" + id, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const gradeSubmissionById = (id, data, token) => {
+  return httpClient.put("assignment/gradeassignment/" + id, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

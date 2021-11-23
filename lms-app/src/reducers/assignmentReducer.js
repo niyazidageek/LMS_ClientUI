@@ -3,7 +3,8 @@ import { actionTypes } from "../actions/const";
 const initialState = {
   assignments: null,
   assignment: null,
-  submissions:null,
+  submissions: null,
+  submission: null,
   count: 0,
 };
 
@@ -29,6 +30,11 @@ const assignmentReducer = (state = initialState, action) => {
         ...state,
         submissions: action.payload.data,
         count: action.payload.count,
+      };
+    case actionTypes.GET_SUBMISSION_BY_ID:
+      return {
+        ...state,
+        submission: action.payload,
       };
     default:
       return state;

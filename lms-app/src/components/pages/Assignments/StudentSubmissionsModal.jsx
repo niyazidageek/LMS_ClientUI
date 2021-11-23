@@ -41,6 +41,7 @@ import lessonSchema from "../../../validations/lessonSchema";
 
 const StudentSubmissionsModal = ({ onClick, value, modalContent }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
+  const history = useHistory();
   const token = useSelector((state) => state.authReducer.jwt);
   const dispatch = useDispatch();
   const { submissions, name, surname } = modalContent;

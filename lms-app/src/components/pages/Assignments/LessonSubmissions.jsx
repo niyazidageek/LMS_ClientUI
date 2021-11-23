@@ -248,13 +248,6 @@ function LessonSubmissions() {
               </CardBody>
             </Card>
           </Grid>
-
-          <Grid
-            w="100%"
-            mt="22px"
-            templateColumns={{ sm: "1fr", xl: "repeat(1 , 1fr)" }}
-            gap="22px"
-          ></Grid>
         </CardBody>
         <Button
           onClick={() => history.goBack()}
