@@ -282,7 +282,7 @@ export const getSubmissionsByLessonIdAction = (id,token) => async (dispatch) => 
 
     dispatch({
       type: actionTypes.GET_SUBMISSIONS_BY_LESSON_ID,
-      payload: resp.payload,
+      payload: payload,
     });
 
     dispatch({

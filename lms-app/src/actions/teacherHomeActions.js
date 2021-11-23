@@ -1,7 +1,7 @@
 import { getTeacherHome } from "../services/teacherHomeService";
 import { actionTypes } from "./const";
 
-export const getTeacherHomeAction = (token, id) => async (dispatch) => {
+export const getTeacherHomeAction = (token, id=null) => async (dispatch) => {
   try {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
@@ -9,31 +9,33 @@ export const getTeacherHomeAction = (token, id) => async (dispatch) => {
 
     let resp = await getTeacherHome(token, id);
 
-
-    let payload = {
-      data: resp.data,
-      count: resp.headers["count"],
-    };
-
-    let onBoard = {
-      groupId:payload.data.currentGroupId,
-      groups: payload.data.groups.map(g=>({name:g.name,id:g.id}))
+    if(resp.data){
+      let payload = {
+        data: resp.data,
+        count: resp.headers["count"],
+      };
+  
+      let onBoard = {
+        groupId:payload.data.currentGroupId,
+        groups: payload.data.groups.map(g=>({name:g.name,id:g.id}))
+      }
+  
+      dispatch({
+        type: actionTypes.SET_ONBOARD,
+        payload:onBoard
+      })
+  
+      dispatch({
+        type: actionTypes.GET_TEACHER_HOME_CONTENT,
+        payload: payload,
+      });
+  
+      dispatch({
+        type: actionTypes.DISABLE_IS_FETCHING,
+      });
+  
     }
-
-    dispatch({
-      type: actionTypes.SET_ONBOARD,
-      payload:onBoard
-    })
-
-    dispatch({
-      type: actionTypes.GET_TEACHER_HOME_CONTENT,
-      payload: payload,
-    });
-
-    dispatch({
-      type: actionTypes.DISABLE_IS_FETCHING,
-    });
-
+    
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({

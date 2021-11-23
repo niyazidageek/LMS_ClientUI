@@ -7,3 +7,10 @@ export const setOnBoardAction = (data) => async (dispatch) => {
     payload: data,
   });
 };
+
+export const deleteOnboardInfoAction = () => async (dispatch) => {
+  dispatch({
+    type: actionTypes.DELETE_ONBOARD,
+  });
+};
+

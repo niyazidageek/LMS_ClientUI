@@ -1,5 +1,6 @@
 import { actionTypes } from "./const";
 import { signIn, signUp, requestResetPassword, resetPassword, sendConfirmEmail, confirmEmail } from "../services/authService";
+import { deleteOnboardInfoAction } from "./onBoardActions";
 
 export const signInAction = (data) => async (dispatch) =>{
     try {
@@ -98,6 +99,7 @@ export const logOutAction = () => (dispatch) => {
     dispatch({
         type:actionTypes.LOG_OUT
     })
+    dispatch(deleteOnboardInfoAction())
 }
 
 export const requestResetPasswordAction = (data) => async (dispatch) =>{

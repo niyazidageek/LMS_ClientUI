@@ -168,9 +168,10 @@ export default function TeacherHome() {
     history.push(path);
   }
 
-  return isFetching || !homeContent.students ? (
+  return isFetching || !homeContent.groups ? (
     <SpinnerComponent />
   ) : (
+    console.log(homeContent),
     // console.log(homeContent),
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">

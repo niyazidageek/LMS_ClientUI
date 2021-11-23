@@ -42,6 +42,7 @@ import {
 } from "../../../actions/assignmentActions";
 import { fileHelper } from "../../../utils/fileHelper";
 import { getLessonByIdAction } from "../../../actions/lessonActions";
+import { distinctBy } from "../../../utils/distinctBy";
 
 function LessonSubmissions() {
   let { id } = useParams();
@@ -63,8 +64,14 @@ function LessonSubmissions() {
 
   function assignmentClick(id) {
     let path = history.location.pathname.split("submissions")[0];
-    path=path.concat("assignments/" + id);
-    history.push(path)
+    path = path.concat("assignments/" + id);
+    history.push(path);
+  }
+
+  function studentClick(id){
+    let path = history.location.pathname.split("lesson")[0];
+    path = path.concat("detail/"+id);
+    history.push(path);
   }
 
   return isFetching || !submissions || !lesson ? (
@@ -76,12 +83,12 @@ function LessonSubmissions() {
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Submissions:{" "}
             <Text
-              color='teal.300'
+              color="teal.300"
               display="inline-block"
               fontSize="xl"
               fontWeight="semi-bold"
             >
-              {submissions.length}/{count}
+              {submissions.filter((s) => s.isSubmitted).length}/{count}
             </Text>
           </Text>
         </CardHeader>
@@ -118,7 +125,7 @@ function LessonSubmissions() {
                             {++index})
                           </Text>
                           <Text
-                            onClick={()=>assignmentClick(a.id)}
+                            onClick={() => assignmentClick(a.id)}
                             fontSize="md"
                             borderBottom="1px"
                             _hover={{ color: "teal.300", cursor: "pointer" }}
@@ -131,11 +138,7 @@ function LessonSubmissions() {
                       );
                     })
                   ) : (
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      fontWeight="bold"
-                    >
+                    <Text fontSize="lg" textAlign="center" fontWeight="bold">
                       This lesson doesn't have any assignments
                     </Text>
                   )}
@@ -151,11 +154,60 @@ function LessonSubmissions() {
                   me="10px"
                   borderBottom="2px solid"
                 >
-                  Content
+                  Students
                 </Text>
               </CardHeader>
               <CardBody px="5px">
-                <Flex direction="column"></Flex>
+                <Flex direction="column" width='100%'>
+                  {submissions && submissions.length != 0 ? (
+                    distinctBy(submissions).map((au, index) => {
+                      return (
+                        <Card
+                        _hover={{
+                          bg: "#c9c9c9",
+                        }}
+                          onClick={()=>studentClick(au.id)}
+                          flexDirection="row"
+                          alignItems="center"
+                          bg="whitesmoke"
+                          my="0.3rem"
+                          p="0.5rem"
+                          borderRadius="5px"
+                          boxShadow="md"
+                          justifyContent="space-between"
+                        >
+                          <Text fontWeight="bold">
+                            {++index}. {au.name} {au.surname}
+                          </Text>
+                          <Text color='teal.300' fontWeight="bold">
+                          {
+                              submissions.filter(
+                                (s) => s.appUserId == au.appUserId && s.isSubmitted
+                              ).length
+                            }
+                            /
+                            {
+                              submissions.filter((s) => s.appUserId == au.id)
+                                .length
+                            }
+                          </Text>
+                        </Card>
+                      );
+                    })
+                  ) : (
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      pos="absolute"
+                      left="50%"
+                      top="50%"
+                      style={{ transform: "translate(-50%,-50%)" }}
+                      fontWeight="bold"
+                    >
+                      This assignment doesn't have any submissions
+                    </Text>
+                  )}
+                </Flex>
               </CardBody>
             </Card>
           </Grid>
