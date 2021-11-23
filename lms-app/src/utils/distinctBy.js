@@ -9,6 +9,7 @@ export function distinctBy(array) {
         appUserId: item.appUserId,
         name: item.appUser.name,
         surname: item.appUser.surname,
+        isGraded: item.graded
       });
     }
   }

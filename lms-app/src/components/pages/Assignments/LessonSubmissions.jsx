@@ -43,12 +43,19 @@ import {
 import { fileHelper } from "../../../utils/fileHelper";
 import { getLessonByIdAction } from "../../../actions/lessonActions";
 import { distinctBy } from "../../../utils/distinctBy";
+import StudentSubmissionsModal from "./StudentSubmissionsModal";
 
 function LessonSubmissions() {
   let { id } = useParams();
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
   const history = useHistory();
+  const [modalContent, setModalContent] = useState({
+    name: null,
+    surname: null,
+    submissions: null,
+  });
+  const [isOpen, setIsOpen] = useState(false);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const submissions = useSelector(
     (state) => state.assignmentReducer.submissions
@@ -62,15 +69,21 @@ function LessonSubmissions() {
     dispatch(getLessonByIdAction(id));
   }, []);
 
+  function handleModal(id, name, surname) {
+    let tempSubmissions = submissions.filter(
+      (s) => s.appUserId == id && s.isSubmitted == true
+    );
+    setModalContent({
+      name: name,
+      surname: surname,
+      submissions: tempSubmissions,
+    });
+    setIsOpen((prev) => !prev);
+  }
+
   function assignmentClick(id) {
     let path = history.location.pathname.split("submissions")[0];
     path = path.concat("assignments/" + id);
-    history.push(path);
-  }
-
-  function studentClick(id){
-    let path = history.location.pathname.split("lesson")[0];
-    path = path.concat("detail/"+id);
     history.push(path);
   }
 
@@ -111,30 +124,38 @@ function LessonSubmissions() {
                 </Text>
               </CardHeader>
               <CardBody px="5px">
-                <Flex direction="column">
+                <Flex direction="column" width="100%">
                   {lesson.assignments && lesson.assignments.length != 0 ? (
                     lesson.assignments.map((a, index) => {
                       return (
-                        <Flex align="start" mb="18px">
-                          <Text
-                            fontSize="md"
-                            color={textColor}
-                            fontWeight="bold"
-                            me="10px"
-                          >
-                            {++index})
+                        <Card
+                          _hover={{
+                            bg: "#c9c9c9",
+                          }}
+                          onClick={() =>
+                            assignmentClick(a.id)
+                          }
+                          flexDirection="row"
+                          alignItems="center"
+                          bg="whitesmoke"
+                          my="0.3rem"
+                          p="0.5rem"
+                          borderRadius="5px"
+                          boxShadow="md"
+                          justifyContent="space-between"
+                        >
+                          <Text fontWeight="bold">
+                            {++index}. {a.name}
                           </Text>
-                          <Text
-                            onClick={() => assignmentClick(a.id)}
-                            fontSize="md"
-                            borderBottom="1px"
-                            _hover={{ color: "teal.300", cursor: "pointer" }}
-                            color="teal.400"
-                            fontWeight="400"
-                          >
-                            {a.name}
+                          <Text fontWeight="bold">
+                            Deadline: {" "}
+                            {
+                              dateHelper.isLessonOver(a.deadline) ?
+                              <Text display='inline-block' color='red.500'>{dateHelper.normalizedDate(a.deadline)}</Text>
+                              :  <Text  display='inline-block' color='green.500'>{dateHelper.normalizedDate(a.deadline)}</Text>
+                            }
                           </Text>
-                        </Flex>
+                        </Card>
                       );
                     })
                   ) : (
@@ -146,6 +167,11 @@ function LessonSubmissions() {
               </CardBody>
             </Card>
             <Card boxShadow="xl" p="16px">
+              <StudentSubmissionsModal
+                onClick={() => handleModal()}
+                value={isOpen}
+                modalContent={modalContent}
+              />
               <CardHeader pb="1rem">
                 <Text
                   fontSize="xl"
@@ -158,15 +184,17 @@ function LessonSubmissions() {
                 </Text>
               </CardHeader>
               <CardBody px="5px">
-                <Flex direction="column" width='100%'>
+                <Flex direction="column" width="100%">
                   {submissions && submissions.length != 0 ? (
                     distinctBy(submissions).map((au, index) => {
                       return (
                         <Card
-                        _hover={{
-                          bg: "#c9c9c9",
-                        }}
-                          onClick={()=>studentClick(au.id)}
+                          _hover={{
+                            bg: "#c9c9c9",
+                          }}
+                          onClick={() =>
+                            handleModal(au.appUserId, au.name, au.surname)
+                          }
                           flexDirection="row"
                           alignItems="center"
                           bg="whitesmoke"
@@ -179,17 +207,26 @@ function LessonSubmissions() {
                           <Text fontWeight="bold">
                             {++index}. {au.name} {au.surname}
                           </Text>
-                          <Text color='teal.300' fontWeight="bold">
-                          {
-                              submissions.filter(
-                                (s) => s.appUserId == au.appUserId && s.isSubmitted
-                              ).length
-                            }
-                            /
-                            {
-                              submissions.filter((s) => s.appUserId == au.id)
-                                .length
-                            }
+                          <Text fontWeight="bold">
+                            Submissions:{" "}
+                            <Text
+                              fontWeight="bold"
+                              display="inline-block"
+                              color="teal.300"
+                            >
+                              {
+                                submissions.filter(
+                                  (s) =>
+                                    s.appUserId == au.appUserId && s.isSubmitted
+                                ).length
+                              }
+                              /
+                              {
+                                submissions.filter(
+                                  (s) => s.appUserId == au.appUserId
+                                ).length
+                              }
+                            </Text>
                           </Text>
                         </Card>
                       );
