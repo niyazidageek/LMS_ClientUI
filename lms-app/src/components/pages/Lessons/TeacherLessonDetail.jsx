@@ -91,6 +91,7 @@ function TeacherLessonDetail() {
               Start the lesson
             </Button>
           ) : (
+            console.log(lesson.isOnline),
             <Button
               color="white"
               disabled={true}

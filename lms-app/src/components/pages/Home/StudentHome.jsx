@@ -335,10 +335,6 @@ export default function StudentHome() {
                   let isLessonOver = dateHelper.isLessonOver(lesson.endDate);
                   return (
                     <Card
-                      // _hover={{
-                      //   cursor:'pointer'
-                      // }}
-                      // onClick={()=>handleLessonClick(lesson.id)}
                       justifyContent="space-between"
                       flexDirection="row"
                       m="1rem 0"
@@ -350,17 +346,37 @@ export default function StudentHome() {
                         flexDirection="column"
                       >
                         <CardHeader flexDirection="column">
-                          <Text
-                            fontSize="lg"
-                            color="gray.400"
-                            fontWeight="bold"
-                            marginBottom="1rem"
+                          <Flex
+                            flexDirection="row"
+                            justifyContent="space-between"
                           >
-                            Lesson:{" "}
-                            <Text display="inline-block" color={textColor}>
-                              {lesson.name}
+                            <Text
+                              fontSize="lg"
+                              color="gray.400"
+                              fontWeight="bold"
+                              marginBottom="1rem"
+                              display="inline-block"
+                            >
+                              Lesson:{" "}
+                              <Text display="inline-block" color={textColor}>
+                                {lesson.name}
+                              </Text>
                             </Text>
-                          </Text>
+                            <Link
+                              me="12px"
+                              fontWeight="bold"
+                              lineHeight="unset"
+                              height="max-content"
+                              color="teal.300"
+                              display="inline-block"
+                              onClick={() => handleLessonClick(lesson.id)}
+                              _hover={{
+                                color:'teal.200',
+                              }}
+                            >
+                              View details
+                            </Link>
+                          </Flex>
 
                           <Text
                             fontSize="md"
