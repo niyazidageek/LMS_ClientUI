@@ -35,6 +35,7 @@ import Submissions from "./components/pages/Assignments/Submissions";
 import LessonSubmissions from "./components/pages/Assignments/LessonSubmissions";
 import SubmissionDetail from "./components/pages/Assignments/SubmissionDetail";
 import SubmissionStatistics from "./components/pages/Assignments/SubmissionStatistics";
+import StartLesson from "./components/pages/Lessons/StartLesson";
 
 
 
@@ -63,6 +64,13 @@ function App() {
                 );
               }}
             />
+
+            <Route path="/videochat">
+              <PrivateRoute exact path="/videochat/startlesson/:id" 
+                rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
+                component={StartLesson}
+              />
+            </Route>
 
              <Route path="/student">
                <MainLayout>

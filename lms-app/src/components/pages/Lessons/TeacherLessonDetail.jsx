@@ -24,7 +24,10 @@ import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getLessonByIdAction, startLessonByIdAction } from "../../../actions/lessonActions";
+import {
+  getLessonByIdAction,
+  startLessonByIdAction,
+} from "../../../actions/lessonActions";
 
 function TeacherLessonDetail() {
   let { id } = useParams();
@@ -40,22 +43,21 @@ function TeacherLessonDetail() {
   }, []);
 
   function handleStartLesson(id) {
-    let data = {
-      joinLink: "adsdsadfsnlsanfl",
-    };
-    dispatch(startLessonByIdAction(id, data, token));
+    let path = history.location.pathname.split("teacher")[0];
+    path = path.concat("videochat/startlesson/" + id);
+    history.push(path);
   }
 
   function assignmentClick(id) {
     let path = history.location.pathname.split("lessons")[0];
-    path=path.concat("assignments/" + id);
-    history.push(path)
+    path = path.concat("assignments/" + id);
+    history.push(path);
   }
 
   function theoryClick(id) {
     let path = history.location.pathname.split("lessons")[0];
-    path=path.concat("theories" + "/" + "detail" + "/" + id);
-    history.push(path)
+    path = path.concat("theories" + "/" + "detail" + "/" + id);
+    history.push(path);
   }
 
   return isFetching || !lesson ? (
@@ -63,7 +65,7 @@ function TeacherLessonDetail() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <CardHeader justifyContent='space-between' p="6px 0px 22px 0px">
+        <CardHeader justifyContent="space-between" p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Lesson:{" "}
             <Text
@@ -75,22 +77,37 @@ function TeacherLessonDetail() {
               {lesson.name}
             </Text>
           </Text>
-          <Button
-            color="white"
-            bg="green.500"
-            _hover={{
-              bg: "green.600",
-            }}
-            borderRadius="6px"
-            onClick={()=>handleStartLesson(lesson.id)}
-            lineHeight="initial"
-          >
-            Start the lesson
-          </Button>
+          {lesson.isOnline && !dateHelper.isLessonOver(lesson.endDate) ? (
+            <Button
+              color="white"
+              bg="green.500"
+              _hover={{
+                bg: "green.600",
+              }}
+              borderRadius="6px"
+              onClick={() => handleStartLesson(lesson.id)}
+              lineHeight="initial"
+            >
+              Start the lesson
+            </Button>
+          ) : (
+            <Button
+              color="white"
+              disabled={true}
+              bg="green.500"
+              _hover={{
+                bg: "green.600",
+              }}
+              borderRadius="6px"
+              lineHeight="initial"
+            >
+              Start the lesson
+            </Button>
+          )}
         </CardHeader>
         <CardBody>
           <Grid
-            width='100%'
+            width="100%"
             templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }}
             gap="22px"
           >
@@ -118,7 +135,7 @@ function TeacherLessonDetail() {
                       Description:
                     </Text>
                     <Text fontSize="md" color="gray.500" fontWeight="400">
-                     {lesson.description}
+                      {lesson.description}
                     </Text>
                   </Flex>
                   <Flex align="center" mb="18px">
@@ -161,7 +178,7 @@ function TeacherLessonDetail() {
                       Format:
                     </Text>
                     <Text fontSize="md" color="gray.500" fontWeight="400">
-                      {lesson.isOnline ? 'Online' : 'Offline'}
+                      {lesson.isOnline ? "Online" : "Offline"}
                     </Text>
                   </Flex>
                 </Flex>
@@ -182,9 +199,9 @@ function TeacherLessonDetail() {
               </CardHeader>
               <CardBody px="5px">
                 <Flex direction="column" w="100%">
-                  {lesson.theories && lesson.theories.length!=0 ? (
+                  {lesson.theories && lesson.theories.length != 0 ? (
                     lesson.theories.map((t, index) => {
-                      return(
+                      return (
                         <Card
                           onClick={() => theoryClick(t.id)}
                           _hover={{
@@ -200,7 +217,7 @@ function TeacherLessonDetail() {
                             {++index}. {t.name}
                           </Text>
                         </Card>
-                      )
+                      );
                     })
                   ) : (
                     <Text
@@ -234,8 +251,8 @@ function TeacherLessonDetail() {
               <CardBody px="5px">
                 <Flex direction="column" w="100%">
                   {lesson.assignments && lesson.assignments.length != 0 ? (
-                   lesson.assignments.map((a, index) => {
-                      return(
+                    lesson.assignments.map((a, index) => {
+                      return (
                         <Card
                           onClick={() => assignmentClick(a.id)}
                           _hover={{
@@ -251,7 +268,7 @@ function TeacherLessonDetail() {
                             {++index}. {a.name}
                           </Text>
                         </Card>
-                      )
+                      );
                     })
                   ) : (
                     <Text
@@ -274,11 +291,11 @@ function TeacherLessonDetail() {
         <Button
           onClick={() => history.goBack()}
           lineHeight="unset"
-          bg='transparent'
+          bg="transparent"
           outlineColor="teal.300"
           _hover={{
             bg: "teal.400",
-            color:'white'
+            color: "white",
           }}
           color="teal.400"
           mt="2rem"

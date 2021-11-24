@@ -113,16 +113,13 @@ export const getLessonByIdAction = (id) => async (dispatch) => {
 
 export const startLessonByIdAction = (id, data, token) => async (dispatch) => {
   try {
-    dispatch({
-      type:actionTypes.SET_IS_FETCHING
-    })
-
+  
     let resp = await startLessonById(id, data, token);
-    
-
+  
     dispatch({
-      type:actionTypes.DISABLE_IS_FETCHING
-    })
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
 
   } catch (error) {
     if (error.message === "Network Error") {
