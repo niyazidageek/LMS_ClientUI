@@ -42,7 +42,6 @@ function Submissions() {
   const [pageCount, setPageCount] = useState(0);
   const newLessons = useSelector((state) => state.lessonReducer.lessons);
   const total = useSelector((state) => state.lessonReducer.count);
-  const [isOpen, setIsOpen] = useState(false);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);

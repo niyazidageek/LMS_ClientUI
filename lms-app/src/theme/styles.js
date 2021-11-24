@@ -14,6 +14,29 @@ export const globalStyles = {
       },
       html: {
         fontFamily: 'Helvetica, sans-serif'
+      },
+      input:{
+        _focus:{
+          borderColor:'rgb(117,206,197) !important',
+          boxShadow:'0 0 0 1px rgb(117,206,197) !important'
+        }
+      },
+      ".css-1ibe2e7[data-focus]":{
+        input:{
+          borderColor:'unset !important',
+          boxShadow:'unset !important'
+        },
+        borderColor:'rgb(117,206,197) !important',
+        boxShadow:'0 0 0 1px rgb(117,206,197) !important'
+      },
+      ".css-1engdo3  *":{
+        backGroundColor:'red !important'
+      },
+      textArea:{
+        _focus:{
+          borderColor:'rgb(117,206,197) !important',
+          boxShadow:'0 0 0 1px rgb(117,206,197) !important'
+        }
       }
     }),
   },

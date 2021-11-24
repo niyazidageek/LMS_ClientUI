@@ -1,40 +1,82 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import {lineChartOptions} from "../../utils/chartOptions";
-import { yAxisTypes } from "../../utils/yAxisTypes";
+import { lineChartOptions } from "./chartOptions";
+import { yAxisTypes } from "./yAxisTypes";
+import SpinnerComponent from "../spinners/SpinnerComponent";
+import { useSelector } from "react-redux";
+import { actionTypes } from "../../actions/const";
+import { Select } from "chakra-react-select";
+import {
+  getAssignmentProgressByGroupId,
+  getSubmissionsCountByGroupId,
+} from "../../services/submissionStatisticsServce";
+import { Spinner } from "@chakra-ui/spinner";
+import { Input } from "@chakra-ui/input";
+import { Button } from "@chakra-ui/button";
 
-const LineChart = ({ lineChartData, type }) => {
-  const [data, setData] = useState([]);
-  const [options, setOptions] = useState({});
+const LineChart = React.memo(
+  ({ actionType, optionType, currentGroupId, yearCallback }) => {
+    const [options, setOptions] = useState(null);
+    const [statistics, setStatistics] = useState(null);
+    const [isFetching, setIsFetching] = useState(true);
+    const [year, setYear] = useState(null)
+    const token = useSelector((state) => state.authReducer.jwt);
+    useEffect(() => {
+      let options = lineChartOptions(optionType);
+      setOptions(options);
 
-  useEffect(() => {
-    setData(lineChartData);
-    let options = lineChartOptions(type)
-    setOptions(options);
-  }, []);
+      switch (actionType) {
+        case actionTypes.GET_SUBMISSIONS_COUNT_BY_GROUP_ID:
+          // setIsFetching(true)
+          getSubmissionsCountByGroupId(currentGroupId, token,year)
+            .then((res) => {
+              setStatistics(res.data);
+              yearCallback(res.data.currentYear);
+            })
+            .then(() => setIsFetching(false));
+          break;
+        case actionTypes.GET_ASSIGNMENT_PROGRESS_BY_GROUP_ID:
+          // setIsFetching(true)
+          getAssignmentProgressByGroupId(currentGroupId, token,year)
+            .then((res) => {
+              setStatistics(res.data);
+              yearCallback(res.data.currentYear);
+            })
+            .then(() => setIsFetching(false));
+        default:
+          break;
+      }
+    }, [currentGroupId,year]);
 
-  return (
-    <ReactApexChart
-      y-axis
-      options={options}
-      series={data}
-      type="area"
-      width="100%"
-      height="100%"
-    />
-  );
-};
-
+    return isFetching  || !statistics ?  (
+      <Spinner color="teal.300" alignSelf="center" />
+    ) : (
+      console.log('dsmj'),
+      <>
+        <Select
+          closeMenuOnSelect={true}
+          placeholder="Select a year"
+          defaultValue={{ label: `${statistics.currentYear}`, value: statistics.currentYear }}
+          onChange={(value) => setYear(value.value)}
+          options={statistics.years.map((y) => ({
+            label: `${y}`,
+            value: y,
+          }))}
+        />
+        <ReactApexChart
+          options={options}
+          series={[
+            {
+              name: "Submissions",
+              data: statistics.data,
+            },
+          ]}
+          type="area"
+          width="100%"
+          height="100%"
+        />
+      </>
+    );
+  }
+);
 export default LineChart;
-
-
-// const lineChartData = [
-//   {
-//     name: "Mobile apps",
-//     data: [50, 40, 0],
-//   },
-//   {
-//     name: "Websites",
-//     data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-//   },
-// ];

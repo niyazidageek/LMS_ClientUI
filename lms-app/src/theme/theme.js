@@ -26,5 +26,5 @@ export default extendTheme(
   CardHeaderComponent, // Card Header component
   MainPanelComponent, // Main Panel component
   PanelContentComponent, // Panel Content component
-  PanelContainerComponent // Panel Container component
+  PanelContainerComponent, // Panel Container component
 );

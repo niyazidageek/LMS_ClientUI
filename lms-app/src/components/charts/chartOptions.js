@@ -27,7 +27,7 @@ const yAxisPercentageOptions = {
     curve: "smooth",
   },
   xaxis: {
-    type: "datetime",
+    type: "date",
     categories: [
       "Jan",
       "Feb",
@@ -52,12 +52,15 @@ const yAxisPercentageOptions = {
   yaxis: {
     forceNiceScale: true,
     max: 100,
+    min: 0,
+    // max: 100,
+    tickAmount: 6,
     labels: {
+      formatter: (value) => value&&value.toFixed(0) + "%",
       style: {
         colors: "#c8cfca",
         fontSize: "12px",
       },
-      formatter: (value) => value.toFixed(0) + "%",
     },
   },
   legend: {
@@ -83,7 +86,6 @@ const yAxisPercentageOptions = {
   colors: ["#4FD1C5", "#2D3748"],
 };
 
-
 const yAxisNumberOptions = {
   chart: {
     toolbar: {
@@ -100,7 +102,7 @@ const yAxisNumberOptions = {
     curve: "smooth",
   },
   xaxis: {
-    type: "datetime",
+    type: "date",
     categories: [
       "Jan",
       "Feb",
