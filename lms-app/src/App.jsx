@@ -36,6 +36,7 @@ import LessonSubmissions from "./components/pages/Assignments/LessonSubmissions"
 import SubmissionDetail from "./components/pages/Assignments/SubmissionDetail";
 import SubmissionStatistics from "./components/pages/Assignments/SubmissionStatistics";
 import StartLesson from "./components/pages/Lessons/StartLesson";
+import OnBoardPage from "./components/pages/VideoChat/OnBoardPage/OnBoardPage";
 
 
 
@@ -70,6 +71,7 @@ function App() {
                 rolesRestriction={[roles.Teacher, roles.Admin, roles.SuperAdmin]}
                 component={StartLesson}
               />
+              <PrivateRoute exact path="/videochat/onboard" component={OnBoardPage} />
             </Route>
 
              <Route path="/student">

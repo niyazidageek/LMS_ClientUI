@@ -32,10 +32,10 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import { FiFilePlus } from "react-icons/fi";
-import { createLessonAction } from "../../../actions/lessonActions";
+import { createLessonAction, getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
 import lessonSchema from "../../../validations/lessonSchema";
 
-const CreateLessonModal = ({ onClick, value, groupId }) => {
+const CreateLessonModal = ({ onClick, value, groupId, fetchMore }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const dispatch = useDispatch();
@@ -47,11 +47,13 @@ const CreateLessonModal = ({ onClick, value, groupId }) => {
       description,
       endDate,
       groupId,
+      isOnline :isOnline == "1" ? true : false,
     };
 
     dispatch(createLessonAction(data, token))
 
     onClick();
+    fetchMore();
   }
 
   return (

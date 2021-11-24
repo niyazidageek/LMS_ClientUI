@@ -38,7 +38,7 @@ import lessonSchema from "../../../validations/lessonSchema";
 import assignmentSchema from "../../../validations/assignmentSchema";
 import { createAssignmentAction } from "../../../actions/assignmentActions";
 
-const CreateAssignmentModal = ({ onClick, value, lessonId }) => {
+const CreateAssignmentModal = ({ onClick, value, fetchMore }) => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
@@ -73,6 +73,7 @@ function handleSearchInput(input){
     dispatch(createAssignmentAction(formData, token));
 
     onClick();
+    fetchMore();
   }
 
   return (

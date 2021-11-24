@@ -71,7 +71,8 @@ function TeacherLessons() {
     },
   });
 
-  useMemo(() => {
+
+  function fetchMore(){
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
@@ -79,11 +80,15 @@ function TeacherLessons() {
     dispatch(
       getMoreTeachersLessonsAction(token, currentGroupId, pageTake, size)
     );
+  }
+
+  useEffect(() => {
+    fetchMore()
     setPageCount(Math.ceil(total / size));
     setLessons(newLessons);
   }, [currentGroupId]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (newLessons) {
       setLessons(newLessons);
     }
@@ -119,6 +124,7 @@ function TeacherLessons() {
   return isFetching || !lessons ? (
     <SpinnerComponent />
   ) : lessons.length != 0 ? (
+    console.log(currentPage),
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
@@ -139,6 +145,7 @@ function TeacherLessons() {
           </Button>
 
           <CreateLessonModal
+            fetchMore={()=>fetchMore()}
             onClick={() => handleModal()}
             value={isOpen}
             groupId={currentGroupId}

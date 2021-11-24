@@ -73,7 +73,7 @@ function TeacherAssignments() {
     },
   });
 
-  useMemo(() => {
+  function fetchMore(){
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
@@ -81,6 +81,10 @@ function TeacherAssignments() {
     dispatch(
       getAllAssignmentsByGroupIdAction(currentGroupId, pageTake, size)
     );
+  }
+
+  useEffect(() => {
+    fetchMore()
     setPageCount(Math.ceil(total / size));
     setAssignments(newAssignments);
   }, [currentGroupId]);
@@ -143,7 +147,7 @@ function TeacherAssignments() {
           <CreateAssignmentModal
             onClick={() => handleModal()}
             value={isOpen}
-            // lessonId={currentGroupId}
+            fetchMore={()=>fetchMore()}
           />
         </CardHeader>
         <CardBody>
