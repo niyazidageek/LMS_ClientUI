@@ -106,6 +106,11 @@ function Submissions() {
     history.push(path);
   }
 
+  function handleStatistics(){
+    let path = history.location.pathname + "/statistics";
+    history.push(path);
+  }
+
 
   return isFetching || !lessons ? (
     <SpinnerComponent />
@@ -116,6 +121,18 @@ function Submissions() {
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons
           </Text>
+          <Button
+            color="white"
+            bg="teal.300"
+            _hover={{
+              bg: "teal.400",
+            }}
+            borderRadius="6px"
+            onClick={() => handleStatistics()}
+            lineHeight="initial"
+          >
+            View statistics
+          </Button>
           
         </CardHeader>
         <CardBody>

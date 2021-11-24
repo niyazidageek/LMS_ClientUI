@@ -26,7 +26,7 @@ import {
   FaFileUpload,
   FaExclamationTriangle,
 } from "react-icons/fa";
-import {validateGrade} from '../../../validations/validateGrade'
+import { validateGrade } from "../../../validations/validateGrade";
 import { useHistory, useParams } from "react-router";
 import { actionTypes } from "../../../actions/const";
 // Custom components
@@ -59,8 +59,8 @@ function SubmissionDetail() {
     dispatch(getSubmissionByIdAction(id, token));
   }, []);
 
-  function handleSubmit(values){
-    dispatch(gradeSubmissionByIdAction(id, values, token))
+  function handleSubmit(values) {
+    dispatch(gradeSubmissionByIdAction(id, values, token));
   }
 
   return isFetching || !submission ? (
@@ -68,7 +68,7 @@ function SubmissionDetail() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <CardHeader p="6px 0px 22px 0px">
+        <CardHeader justifyContent="space-between" p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Submission:{" "}
             <Text
@@ -80,6 +80,31 @@ function SubmissionDetail() {
               #{submission.id}
             </Text>
           </Text>
+          {submission.graded ? (
+            <Flex color="green.500" alignItems="center">
+              <Text
+               lineHeight='initial'
+                me="0.3rem"
+                fontSize="xl"
+                fontWeight="bold"
+              >
+                Graded!
+              </Text>
+              <FaCheckCircle />
+            </Flex>
+          ) : (
+            <Flex color="red.500" alignItems="center">
+              <Text
+                lineHeight='initial'
+                me="0.3rem"
+                fontSize="xl"
+                fontWeight="bold"
+              >
+                Needs grading!
+              </Text>
+              <FaExclamationTriangle size={20}/>
+            </Flex>
+          )}
         </CardHeader>
         <CardBody flexDirection="column">
           <Grid
@@ -264,78 +289,79 @@ function SubmissionDetail() {
                 </Text>
               </CardHeader>
               <CardBody flexDirection="column" px="5px">
-
-                  <Flex
-                    color="yellow.400"
-                    flexWrap="wrap"
-                    alignItems="center"
-                    mb='1rem'
+                <Flex
+                  color="yellow.400"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  mb="1rem"
+                >
+                  <Text
+                    display="inline-block"
+                    lineHeight="unset"
+                    fontWeight="bold"
+                    me="10px"
+                    borderBottom="1px"
                   >
-                      <Text
-                        display="inline-block"
-                        lineHeight="unset"
-                        fontWeight="bold"
-                        me="10px"
-                        borderBottom="1px"
+                    Maximum grade possible is:{" "}
+                    {submission.assignment.maxGrade.toFixed(2)}!
+                  </Text>
+                  <FaExclamationTriangle size={20} />
+                </Flex>
+
+                <Formik
+                  initialValues={{
+                    grade: submission.graded ? submission.grade : "",
+                  }}
+                  onSubmit={handleSubmit}
+                  validationSchema={gradeSubmissionSchema}
+                >
+                  <Form>
+                    <FormControl>
+                      <Field
+                        name="grade"
+                        validate={(e) =>
+                          validateGrade(e, submission.assignment.maxGrade)
+                        }
                       >
-                        Maximum grade possible is: {submission.assignment.maxGrade.toFixed(2)}!
-                      </Text>
-                    <FaExclamationTriangle size={20}/>
-                  </Flex>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={form.errors.grade && form.touched.grade}
+                          >
+                            <FormLabel fontWeight="semibold" fontSize="md">
+                              Grade
+                            </FormLabel>
+                            <Input
+                              fontSize="md"
+                              borderRadius="15px"
+                              type="number"
+                              placeholder="Enter the grade"
+                              size="lg"
+                              {...field}
+                            />
+                            <FormErrorMessage>
+                              {form.errors.grade}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
 
-                  <Formik
-                    initialValues={{
-                      grade: submission.graded ? submission.grade : "",
-                    }}
-                      onSubmit={handleSubmit}
-                      validationSchema={gradeSubmissionSchema}
-                  >
-                    <Form>
-                      <FormControl>
-
-                      <Field name="grade" validate={(e)=>validateGrade(e,submission.assignment.maxGrade)}>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={
-                            form.errors.grade && form.touched.grade
-                          }
-                        >
-                          <FormLabel fontWeight="semibold" fontSize="md">
-                            Grade
-                          </FormLabel>
-                          <Input
-                            fontSize="md"
-                            borderRadius="15px"
-                            type="number"
-                            placeholder="Enter the grade"
-                            size="lg"
-                            {...field}
-                          />
-                          <FormErrorMessage>
-                            {form.errors.grade}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-
-                        <Button
-                          lineHeight="unset"
-                          mr={3}
-                          mt='24px'
-                          isLoading={isFetching}
-                          type="submit"
-                          bg="teal.300"
-                          _hover={{
-                            bg: "teal.400",
-                          }}
-                          color="white"
-                        >
-                          Grade submission
-                        </Button>
-                      </FormControl>
-                    </Form>
-                  </Formik>
-
+                      <Button
+                        lineHeight="unset"
+                        mr={3}
+                        mt="24px"
+                        isLoading={isFetching}
+                        type="submit"
+                        bg="teal.300"
+                        _hover={{
+                          bg: "teal.400",
+                        }}
+                        color="white"
+                      >
+                        Grade submission
+                      </Button>
+                    </FormControl>
+                  </Form>
+                </Formik>
               </CardBody>
             </Card>
           </Grid>

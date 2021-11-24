@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import {lineChartOptions} from "../../utils/chartOptions";
+import { yAxisTypes } from "../../utils/yAxisTypes";
 
-const LineChart = ({ lineChartData }) => {
+const LineChart = ({ lineChartData, type }) => {
   const [data, setData] = useState([]);
   const [options, setOptions] = useState({});
 
   useEffect(() => {
     setData(lineChartData);
-    setOptions(lineChartOptions);
+    let options = lineChartOptions(type)
+    setOptions(options);
   }, []);
 
   return (
     <ReactApexChart
+      y-axis
       options={options}
       series={data}
       type="area"
