@@ -246,8 +246,26 @@ function Submissions() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+          <Text fontSize="xl" color={textColor} fontWeight="bold">
+            Lessons with submissions
+          </Text>
+          <Button
+            color="white"
+            bg="teal.300"
+            _hover={{
+              bg: "teal.400",
+            }}
+            borderRadius="6px"
+            onClick={() => handleStatistics()}
+            lineHeight="initial"
+          >
+            View statistics
+          </Button>
+          
+        </CardHeader>
         <Text textAlign="center" fontSize="xl" fontWeight="bold">
-          You have no lessons..
+          You have no lessons with submissions..
         </Text>
       </Card>
     </Flex>

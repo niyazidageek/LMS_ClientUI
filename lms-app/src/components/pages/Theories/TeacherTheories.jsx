@@ -76,9 +76,7 @@ function TeacherTheories() {
       type: actionTypes.SET_IS_FETCHING,
     });
     let pageTake = page ? currentPage - 1 : currentPage;
-    dispatch(
-      getAllTheoriesByGroupIdAction(currentGroupId, pageTake, size)
-    );
+    dispatch(getAllTheoriesByGroupIdAction(currentGroupId, pageTake, size));
     setPageCount(Math.ceil(total / size));
     setTheories(newTheories);
   }, [currentGroupId]);
@@ -96,9 +94,7 @@ function TeacherTheories() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
-    dispatch(
-      getAllTheoriesByGroupIdAction(currentGroupId, number - 1, size)
-    );
+    dispatch(getAllTheoriesByGroupIdAction(currentGroupId, number - 1, size));
     setTheories(newTheories);
   };
 
@@ -111,7 +107,7 @@ function TeacherTheories() {
     let path = history.location.pathname + "/edit" + "/" + id;
     history.push(path);
   }
-  
+
   function handleCreate() {
     let path = history.location.pathname + "/create";
     history.push(path);
@@ -290,6 +286,23 @@ function TeacherTheories() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+          <Text fontSize="xl" color={textColor} fontWeight="bold">
+            Theory
+          </Text>
+          <Button
+            color="white"
+            bg="green.500"
+            _hover={{
+              bg: "green.600",
+            }}
+            borderRadius="6px"
+            onClick={() => handleCreate()}
+            lineHeight="initial"
+          >
+            Create theory
+          </Button>
+        </CardHeader>
         <Text textAlign="center" fontSize="xl" fontWeight="bold">
           You have no theory..
         </Text>

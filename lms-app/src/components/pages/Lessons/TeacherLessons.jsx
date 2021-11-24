@@ -303,6 +303,29 @@ function TeacherLessons() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+          <Text fontSize="xl" color={textColor} fontWeight="bold">
+            Lessons
+          </Text>
+          <Button
+            color="white"
+            bg="green.500"
+            _hover={{
+              bg: "green.600",
+            }}
+            borderRadius="6px"
+            onClick={() => handleModal()}
+            lineHeight="initial"
+          >
+            Create a lesson
+          </Button>
+
+          <CreateLessonModal
+            onClick={() => handleModal()}
+            value={isOpen}
+            groupId={currentGroupId}
+          />
+        </CardHeader>
         <Text textAlign="center" fontSize="xl" fontWeight="bold">
           You have no lessons..
         </Text>
