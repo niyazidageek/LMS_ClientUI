@@ -97,6 +97,7 @@ export default function AdminNavbar(props) {
         <Box ml={{ sm: "1rem" }} width="100%" marginRight="1rem">
           {groups && currentGroup ? (
             <Select 
+              selectedOptionColor='teal'
               width="500px"
               name="subjectId"
               closeMenuOnSelect={true}
@@ -110,6 +111,7 @@ export default function AdminNavbar(props) {
             />
           ) : (
             <Select
+            selectedOptionColor='teal'
               width="500px"
               name="subjectId"
               closeMenuOnSelect={true}

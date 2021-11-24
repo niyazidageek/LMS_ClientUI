@@ -24,7 +24,7 @@ import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getLessonByIdAction } from "../../../actions/lessonActions";
+import { getLessonByIdAction, startLessonByIdAction } from "../../../actions/lessonActions";
 
 function TeacherLessonDetail() {
   let { id } = useParams();
@@ -38,6 +38,13 @@ function TeacherLessonDetail() {
   useEffect(() => {
     dispatch(getLessonByIdAction(id));
   }, []);
+
+  function handleStartLesson(id) {
+    let data = {
+      joinLink: "adsdsadfsnlsanfl",
+    };
+    dispatch(startLessonByIdAction(id, data, token));
+  }
 
   function assignmentClick(id) {
     let path = history.location.pathname.split("lessons")[0];
@@ -56,7 +63,7 @@ function TeacherLessonDetail() {
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <CardHeader p="6px 0px 22px 0px">
+        <CardHeader justifyContent='space-between' p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Lesson:{" "}
             <Text
@@ -68,6 +75,18 @@ function TeacherLessonDetail() {
               {lesson.name}
             </Text>
           </Text>
+          <Button
+            color="white"
+            bg="green.500"
+            _hover={{
+              bg: "green.600",
+            }}
+            borderRadius="6px"
+            onClick={()=>handleStartLesson(lesson.id)}
+            lineHeight="initial"
+          >
+            Start the lesson
+          </Button>
         </CardHeader>
         <CardBody>
           <Grid

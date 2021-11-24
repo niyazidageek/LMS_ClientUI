@@ -118,11 +118,11 @@ function Profile() {
         >
           <Flex
             direction={{ sm: "column", md: "row" }}
-            mx="1.5rem"
+            // mx="1.5rem"
             maxH="330px"
             w={{ sm: "90%", xl: "95%" }}
             justifyContent={{ sm: "center", md: "space-between" }}
-            align="center"
+            // align="center"
             backdropFilter="saturate(200%) blur(50px)"
             position="absolute"
             boxShadow="0px 2px 5.5px rgba(0, 0, 0, 0.02)"

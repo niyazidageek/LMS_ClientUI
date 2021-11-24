@@ -466,7 +466,6 @@ function EditAssignment() {
           onClick={() => history.goBack()}
           lineHeight="unset"
           bg="transparent"
-          outlineColor="teal.300"
           _hover={{
             bg: "teal.400",
             color: "white",

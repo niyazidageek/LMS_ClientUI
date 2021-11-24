@@ -97,16 +97,16 @@ export default function StudentHome() {
   const size = 3;
 
   useEffect(() => {
-    const connect = new HubConnectionBuilder()
+    var connect;
+     token && (connect = new HubConnectionBuilder()
       .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
         accessTokenFactory: () => token,
       })
       .withAutomaticReconnect()
-      .build();
+      .build(),setConnection(connect));
 
-    setConnection(connect);
     console.log(connect);
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     if (connection) {
@@ -527,8 +527,8 @@ export default function StudentHome() {
                                         alignItems="center"
                                         textAlign="center"
                                       >
-                                        {(lesson.lessonJoinLink && true) ||
-                                        (link && link.LessonId == lesson.id) ? (
+                                        {((lesson.lessonJoinLink && true) ||
+                                        (link && link.LessonId == lesson.id)) && !isLessonOver ? (
                                           <Flex
                                             _hover={{ color: "teal.200" }}
                                             alignItems="center"
