@@ -75,7 +75,8 @@ function VideoChat() {
               {
                 [userStatusRef.key]: { name: userName, ...defaultPreference },
               },
-              participants
+              participants,
+              id
             )
           );
           userStatusRef.onDisconnect().remove();
@@ -125,7 +126,8 @@ function VideoChat() {
                 },
               },
               currentUser,
-              mainStream
+              mainStream,
+              id
             )
           );
         });
@@ -163,7 +165,7 @@ function VideoChat() {
 
   return (
     <div className="App">
-      <MainScreen />
+      <MainScreen roomId={id} dbRef={participantRef}/>
     </div>
   );
 }

@@ -19,9 +19,8 @@ import {
 } from "../../../../services/videoChatService";
 import { useHistory } from "react-router";
 import Cookies from "universal-cookie";
-import dbRef from "../../../../fireBase";
 
-const MainScreen = () => {
+const MainScreen = ({dbRef,roomId}) => {
   const participants = useSelector(
     (state) => state.videoChatReducer.participants
   );
@@ -37,13 +36,13 @@ const MainScreen = () => {
   const onMicClick = (micEnabled) => {
     if (mainStream) {
       mainStream.getAudioTracks()[0].enabled = micEnabled;
-      dispatch(updateUserAction(currentUser, { audio: micEnabled }));
+      dispatch(updateUserAction(currentUser, { audio: micEnabled },roomId));
     }
   };
   const onVideoClick = async (videoEnabled) => {
     if (mainStream) {
       mainStream.getVideoTracks()[0].enabled = videoEnabled;
-      dispatch(updateUserAction(currentUser, { video: videoEnabled }));
+      dispatch(updateUserAction(currentUser, { video: videoEnabled },roomId));
     }
   };
 
@@ -67,7 +66,7 @@ const MainScreen = () => {
     let cookies = new Cookies;
     
     stopMediaStream(mainStream);
-    dbRef.child('participants').child(Object.keys(currentUser)[0]).remove();
+    dbRef.child(Object.keys(currentUser)[0]).remove();
     removeParticipantAction(participants,Object.keys(currentUser)[0])
     // console.log(Object.keys(currentUser)[0]);
 
@@ -93,7 +92,7 @@ const MainScreen = () => {
 
     updateStream(localStream);
 
-    dispatch(updateUserAction(currentUser, { screen: false }));
+    dispatch(updateUserAction(currentUser, { screen: false },roomId));
   };
 
   const onScreenClick = async () => {
@@ -114,7 +113,7 @@ const MainScreen = () => {
 
     updateStream(mediaStream);
 
-    dispatch(updateUserAction(currentUser, { screen: true }));
+    dispatch(updateUserAction(currentUser, { screen: true },roomId));
   };
   return (
     <div className="wrapper">

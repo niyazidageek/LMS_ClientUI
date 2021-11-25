@@ -1,10 +1,12 @@
 import firepadRef from "../fireBase";
 import {store} from "../store"
 
-const participantRef = firepadRef.child("participants");
+const participantRef = firepadRef;
 
-export const updatePreference = (userId, preference) => {
+export const updatePreference = (userId, preference,roomId) => {
   const currentParticipantRef = participantRef
+    .child(roomId)
+    .child('participants')
     .child(userId)
     .child("preferences");
   setTimeout(() => {
@@ -12,8 +14,8 @@ export const updatePreference = (userId, preference) => {
   });
 };
 
-export const createOffer = async (peerConnection, receiverId, createdID) => {
-  const currentParticipantRef = participantRef.child(receiverId);
+export const createOffer = async (peerConnection, receiverId, createdID,roomId) => {
+  const currentParticipantRef = participantRef.child(roomId).child('participants').child(receiverId);
   peerConnection.onicecandidate = (event) => {
     event.candidate &&
       currentParticipantRef
@@ -34,14 +36,14 @@ export const createOffer = async (peerConnection, receiverId, createdID) => {
 };
 
 
-export const initializeListensers = async (userId, participants) => {
-  const currentUserRef = participantRef.child(userId);
+export const initializeListensers = async (userId, participants,roomId) => {
+  const currentUserRef = participantRef.child(roomId).child('participants').child(userId);
   currentUserRef.child("offers").on("child_added", async (snapshot) => {
     const data = snapshot.val();
     if (data?.offer) {
       const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
       await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-      await createAnswer(data.offer.userId, userId, participants);
+      await createAnswer(data.offer.userId, userId, participants,roomId);
     }
   });
 
@@ -49,7 +51,10 @@ export const initializeListensers = async (userId, participants) => {
     const data = snapshot.val();
     if (data.userId) {
       const pc = store.getState().videoChatReducer.participants[data.userId].peerConnection;
-      pc.addIceCandidate(new RTCIceCandidate(data));
+      if(pc.remoteDescription){
+        pc.addIceCandidate(new RTCIceCandidate(data));
+      }
+      
     }
   });
 
@@ -66,13 +71,15 @@ export const initializeListensers = async (userId, participants) => {
     const data = snapshot.val();
     if (data.userId) {
       const pc = store.getState().videoChatReducer.participants[data.userId].peerConnection;
-      pc.addIceCandidate(new RTCIceCandidate(data));
+      if(pc.remoteDescription){
+        pc.addIceCandidate(new RTCIceCandidate(data));
+      }
     }
   });
 };
 
 
-export const addConnection = (newUser, currentUser, stream) => {
+export const addConnection = (newUser, currentUser, stream, roomId) => {
     const peerConnection = new RTCPeerConnection(servers);
     stream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, stream);
@@ -86,7 +93,7 @@ export const addConnection = (newUser, currentUser, stream) => {
   
     newUser[newUserId].peerConnection = peerConnection;
     if (offerIds[0] !== currentUserId)
-      createOffer(peerConnection, offerIds[0], offerIds[1]);
+      createOffer(peerConnection, offerIds[0], offerIds[1], roomId);
     return newUser;
   };
 
@@ -123,9 +130,9 @@ export const addConnection = (newUser, currentUser, stream) => {
   }
 
   
-const createAnswer = async (otherUserId, userId, participants) => {
+const createAnswer = async (otherUserId, userId, participants,roomId) => {
     const pc = store.getState().videoChatReducer.participants[otherUserId].peerConnection;
-    const participantRef1 = participantRef.child(otherUserId);
+    const participantRef1 = participantRef.child(roomId).child('participants').child(otherUserId);
     pc.onicecandidate = (event) => {
       event.candidate &&
         participantRef1
