@@ -15,10 +15,10 @@ import {
   createIcon,
 } from "@chakra-ui/react";
 
-const VideoChatErrorPage = ({message}) => {
+const VideoChatErrorPage = (props) => {
 
   const titleColor = useColorModeValue("teal.300", "teal.200");
-
+  console.log(props);
   return (
     <Container maxW={"3xl"}>
       <Stack
@@ -32,9 +32,9 @@ const VideoChatErrorPage = ({message}) => {
           fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
           lineHeight={"110%"}
         >
-          Sorry! <br />
+          <Text>Sorry!</Text>
           <Text as={"span"} color={"teal.300"}>
-            {message}
+            {props.location.state.message}
           </Text>
         </Heading>
         <Text color={"gray.500"}>

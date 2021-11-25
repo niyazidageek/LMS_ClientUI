@@ -38,7 +38,6 @@ const OnBoardPage = () => {
       const roomId = history.location.state.roomId;
       const cookies = new Cookies();
       cookies.set("userName", name, { path: "/" });
-      console.log(roomId);
       let path = history.location.pathname.split("onboard")[0];
       path = "room/" + roomId;
       const win = window.open(path, "_blank");

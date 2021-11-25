@@ -19,8 +19,6 @@ import VideoChatErrorPage from "./VideoChatErrorPage";
 
 function VideoChat() {
     const { search } = useLocation();
-    // const searchParams = new URLSearchParams(search);
-    // const roomId = searchParams.get("roomId");
     const {id} = useParams();
     const dispatch = useDispatch();
     const participants = useSelector(state=>state.videoChatReducer.participants)
@@ -28,16 +26,15 @@ function VideoChat() {
     const currentUser = useSelector(state=>state.videoChatReducer.currentUser)
     const cookies = new Cookies();
     const [hasJoined, setHasJoined] = useState(cookies.get('hasJoined'))
-    console.log(cookies.get('hasJoined'));
     let userName;
 
+
     window.addEventListener('beforeunload',()=>{
-      cookies.remove('hasJoined')
-      alert('posel nax')
+      cookies.set('hasJoined',false,{path:'/'})
     })
   
 
-    if(!hasJoined){
+    if(!hasJoined || hasJoined=='false'){
       userName = cookies.get("userName")
     }
     
@@ -122,7 +119,13 @@ function VideoChat() {
 
 
     if(hasJoined=='true'){
-      return <VideoChatErrorPage message={"You have already joined the lesson.."} />
+      window.removeEventListener('beforeunload',()=>{
+        cookies.set('hasJoined',false,{path:'/'})
+      })
+      return <Redirect to={{
+        pathname: "/videochat/error",
+        state: { message: "You have already joined the lesson.." }
+      }} /> 
     }
     else if(!userName){
       return <Redirect to={{
