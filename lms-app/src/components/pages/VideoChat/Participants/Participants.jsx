@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from "react";
 import "./Participants.css";
 import { useSelector, useDispatch } from "react-redux";
 import { Participant } from "./Participant/Participant";
+import { actionTypes } from "../../../../actions/const";
 
 const Participants = () => {
   const videoRef = useRef(null);
-
+  const dispatch = useDispatch();
   const participantsState = useSelector(state=>state.videoChatReducer.participants)
   const mainStream = useSelector(state=>state.videoChatReducer.mainStream)
   const currentUserState = useSelector(state=>state.videoChatReducer.currentUser)
@@ -33,6 +34,16 @@ const Participants = () => {
 
   const screenPresenter = participantKey.find((element) => {
     const currentParticipant = participantsState[element];
+    if(currentParticipant.screen){
+      dispatch({
+        type:actionTypes.SET_PRESENTER
+      })
+    }
+    else{
+      dispatch({
+        type:actionTypes.UNSET_PRESENTER
+      })
+    }
     return currentParticipant.screen;
   });
 

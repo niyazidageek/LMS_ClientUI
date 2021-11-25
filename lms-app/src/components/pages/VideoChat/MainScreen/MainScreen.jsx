@@ -19,6 +19,7 @@ import {
 } from "../../../../services/videoChatService";
 import { useHistory } from "react-router";
 import Cookies from "universal-cookie";
+import { actionTypes } from "../../../../actions/const";
 
 const MainScreen = ({dbRef,roomId}) => {
   const participants = useSelector(

@@ -12,8 +12,11 @@ import "./MeetingFooter.css";
 import { MdCallEnd, MdDesktopWindows, MdOutlineDesktopAccessDisabled, MdOutlineStopScreenShare } from "react-icons/md";
 import Cookies from "universal-cookie";
 import { stopMediaStream } from "../../../../services/videoChatService";
+import { useSelector } from "react-redux";
 
 const MeetingFooter = (props) => {
+
+  const hasPresenter = useSelector(state=>state.videoChatReducer.hasPresenter)
   const [streamState, setStreamState] = useState({
     mic: true,
     video: false,
@@ -108,7 +111,7 @@ const MeetingFooter = (props) => {
         className="meeting-icons"
         data-tip="Share Screen"
         onClick={onScreenClick}
-        disabled={streamState.screen}
+        disabled={streamState.screen || hasPresenter}
       >
         <MdDesktopWindows icon={faDesktop} />
       </div>
