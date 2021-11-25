@@ -9,6 +9,7 @@ import profileReducer from "./profileReducer";
 import assignmentReducer from "./assignmentReducer";
 import theoryReducer from "./theoryReducer"
 import teacherHomeReducer from "./teacherHomeReducer"
+import videoChatReducer from "./videoChatReducer";
 
 const persistConfig = {
     key: "root",
@@ -24,7 +25,8 @@ const persistConfig = {
     studentHomeReducer,
     assignmentReducer,
     teacherHomeReducer,
-    lessonReducer
+    lessonReducer,
+    videoChatReducer
   });
   
 

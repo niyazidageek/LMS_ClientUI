@@ -37,6 +37,7 @@ import SubmissionDetail from "./components/pages/Assignments/SubmissionDetail";
 import SubmissionStatistics from "./components/pages/Assignments/SubmissionStatistics";
 import StartLesson from "./components/pages/Lessons/StartLesson";
 import OnBoardPage from "./components/pages/VideoChat/OnBoardPage/OnBoardPage";
+import VideoChat from "./components/pages/VideoChat/VideoChat";
 
 
 
@@ -72,6 +73,7 @@ function App() {
                 component={StartLesson}
               />
               <PrivateRoute exact path="/videochat/onboard" component={OnBoardPage} />
+              <PrivateRoute exact path="/videochat/room/:id" component={VideoChat} />
             </Route>
 
              <Route path="/student">

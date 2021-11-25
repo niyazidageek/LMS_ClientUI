@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
-import resetPasswordSchema from "../../../validations/resetPasswordSchema";
-import { NavLink, Redirect } from "react-router-dom";
-import validateEmail from "../../../validations/validateEmail";
-import validatePassword from "../../../validations/validatePassword";
+import Cookies from "universal-cookie";
 import BgSignUp from "../../../assets/img/BgSignUp.png";
+import { db } from "../../../fireBase";
 import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
   Flex,
   Box,
   useColorModeValue,
@@ -32,17 +27,36 @@ const StartLesson = () => {
   const dispatch = useDispatch();
   let { id } = useParams();
   const history = useHistory();
+  const name =  useSelector((state) => state.authReducer.name);
   const token = useSelector((state) => state.authReducer.jwt);
   const [localIsFetching, setLocalIsFetching] = useState(false);
 
   function handleStartLesson() {
     setLocalIsFetching(true);
+
+    let dbRef = db.database().ref().push();
+    let roomId = dbRef.key;
+    let path = history.location.pathname.split("startlesson")[0];
+    path = "/videochat/room/" + roomId;
+
     let data = {
-      joinLink: "adsdsadfsnlsanfl",
+      joinLink: roomId,
     };
-    dispatch(startLessonByIdAction(id, data, token)).then(() =>
-      setLocalIsFetching(false)
-    );
+
+    var resp = dispatch(startLessonByIdAction(id, data, token));
+
+
+
+    resp.then((res) => {
+      if (res) {
+        const cookies = new Cookies();
+        cookies.set("userName", name, { path: "/" });
+        const win = window.open(path, "_blank");
+        win.focus();
+      }
+
+      setLocalIsFetching(false);
+    });
   }
 
   return (

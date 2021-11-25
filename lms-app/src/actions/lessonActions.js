@@ -121,6 +121,8 @@ export const startLessonByIdAction = (id, data, token) => async (dispatch) => {
       payload: resp.data,
     });
 
+    return resp;
+
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({

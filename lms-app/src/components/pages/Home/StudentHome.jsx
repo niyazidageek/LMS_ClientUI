@@ -15,7 +15,6 @@ import {
   StatLabel,
   StatNumber,
   Table,
-  Link,
   Tbody,
   Text,
   Th,
@@ -37,6 +36,7 @@ import {
 import { useHistory } from "react-router";
 // assets
 // Custom components
+import { Link } from "react-router-dom";
 import Card from "../../cards/Card";
 import CardBody from "../../cards/CardBody";
 import CardHeader from "../../cards/CardHeader";
@@ -97,17 +97,16 @@ export default function StudentHome() {
   const size = 3;
 
   useEffect(() => {
-    if (token) {
-      var connect = new HubConnectionBuilder()
-        .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
-          accessTokenFactory: () => token,
-        })
-        .withAutomaticReconnect()
-        .build();
-      setConnection(connect);
-    }
+    var connect = new HubConnectionBuilder()
+      .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
+        accessTokenFactory: () => token,
+      })
+      .withAutomaticReconnect()
+      .build();
+    setConnection(connect);
+
     console.log(connect);
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (connection) {
@@ -362,7 +361,7 @@ export default function StudentHome() {
                                 {lesson.name}
                               </Text>
                             </Text>
-                            <Link
+                            <Text
                               me="12px"
                               fontWeight="bold"
                               lineHeight="unset"
@@ -371,11 +370,12 @@ export default function StudentHome() {
                               display="inline-block"
                               onClick={() => handleLessonClick(lesson.id)}
                               _hover={{
-                                color:'teal.200',
+                                cursor:'default',
+                                color: "teal.200",
                               }}
                             >
                               View details
-                            </Link>
+                            </Text>
                           </Flex>
 
                           <Text
@@ -555,13 +555,16 @@ export default function StudentHome() {
                                           >
                                             <Link
                                               mr="0.1rem"
-                                              href={
-                                                link
-                                                  ? link.JoinLink
-                                                  : lesson.lessonJoinLink &&
-                                                    lesson.lessonJoinLink
-                                                      .joinLink
-                                              }
+                                              to={{
+                                                pathname: "/videochat/onboard",
+                                                state: {
+                                                  roomId: link
+                                                    ? link.JoinLink
+                                                    : lesson.lessonJoinLink &&
+                                                      lesson.lessonJoinLink
+                                                        .joinLink,
+                                                },
+                                              }}
                                             >
                                               Join the lesson
                                             </Link>

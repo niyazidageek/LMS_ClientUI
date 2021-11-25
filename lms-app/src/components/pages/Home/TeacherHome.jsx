@@ -16,7 +16,6 @@ import {
   StatNumber,
   Table,
   Tbody,
-  Link,
   Text,
   Th,
   Thead,
@@ -35,6 +34,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 // assets
 // Custom components
 import Card from "../../cards/Card";
@@ -98,7 +98,6 @@ export default function TeacherHome() {
   const size = 3;
 
   useEffect(() => {
-    if (token) {
       var connect = new HubConnectionBuilder()
         .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
           accessTokenFactory: () => token,
@@ -106,8 +105,7 @@ export default function TeacherHome() {
         .withAutomaticReconnect()
         .build();
       setConnection(connect);
-    }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (connection) {
@@ -116,7 +114,7 @@ export default function TeacherHome() {
           var link = JSON.parse(message);
           setLink(link);
         });
-      });
+      }).catch(e=>console.log(e));
     }
   }, [connection]);
 
@@ -336,7 +334,7 @@ export default function TeacherHome() {
                                 {lesson.name}
                               </Text>
                             </Text>
-                            <Link
+                            <Text
                               me="12px"
                               fontWeight="bold"
                               lineHeight="unset"
@@ -345,11 +343,12 @@ export default function TeacherHome() {
                               display="inline-block"
                               onClick={() => handleLessonClick(lesson.id)}
                               _hover={{
+                                cursor:'default',
                                 color: "teal.200",
                               }}
                             >
                               View details
-                            </Link>
+                            </Text>
                           </Flex>
 
                           <Text
@@ -499,13 +498,16 @@ export default function TeacherHome() {
                                           >
                                             <Link
                                               mr="0.1rem"
-                                              href={
-                                                link
-                                                  ? link.JoinLink
-                                                  : lesson.lessonJoinLink &&
-                                                    lesson.lessonJoinLink
-                                                      .joinLink
-                                              }
+                                              to={{
+                                                pathname: "/videochat/onboard",
+                                                state: {
+                                                  roomId: link
+                                                    ? link.JoinLink
+                                                    : lesson.lessonJoinLink &&
+                                                      lesson.lessonJoinLink
+                                                        .joinLink,
+                                                },
+                                              }}
                                             >
                                               Join the lesson
                                             </Link>
