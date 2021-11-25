@@ -82,10 +82,21 @@ const MainScreen = ({dbRef,roomId}) => {
   };
 
   const onScreenShareEnd = async (callback) => {
+
+    // console.log(mainStream);
+
+    mainStream.getVideoTracks()[0].stop();
+    
     const localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
     });
+
+
+    // navigator.mediaDevices.getUserMedia({
+    //   video: { mediaSource: "screen" },
+    // });
+    
 
     localStream.getVideoTracks()[0].enabled =
       Object.values(currentUser)[0].video;
