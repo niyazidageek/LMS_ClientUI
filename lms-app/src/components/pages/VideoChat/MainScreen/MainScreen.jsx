@@ -81,7 +81,7 @@ const MainScreen = ({dbRef,roomId}) => {
     // console.log(Object.keys(currentUser)[0]);
   };
 
-  const onScreenShareEnd = async () => {
+  const onScreenShareEnd = async (callback) => {
     const localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -93,6 +93,8 @@ const MainScreen = ({dbRef,roomId}) => {
     updateStream(localStream);
 
     dispatch(updateUserAction(currentUser, { screen: false },roomId));
+
+    callback(false)
   };
 
   const onScreenClick = async (callback) => {
@@ -129,6 +131,7 @@ const MainScreen = ({dbRef,roomId}) => {
           onMicClick={onMicClick}
           onVideoClick={onVideoClick}
           onEndCall={onEndCall}
+          onScreenShareEnd={onScreenShareEnd}
         />
       </div>
     </div>

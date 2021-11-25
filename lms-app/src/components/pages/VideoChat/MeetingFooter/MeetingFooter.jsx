@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 import "./MeetingFooter.css";
-import { MdCallEnd } from "react-icons/md";
+import { MdCallEnd, MdDesktopWindows, MdOutlineDesktopAccessDisabled, MdOutlineStopScreenShare } from "react-icons/md";
 import Cookies from "universal-cookie";
 import { stopMediaStream } from "../../../../services/videoChatService";
 
@@ -43,6 +43,10 @@ const MeetingFooter = (props) => {
 
   const onEndCallClick = () =>{
     props.onEndCall();
+  }
+
+  const onScreenShareEndClick=()=>{
+    props.onScreenShareEnd(setScreenState);
   }
 
   const setScreenState = (isEnabled) => {
@@ -79,14 +83,38 @@ const MeetingFooter = (props) => {
       >
         <FontAwesomeIcon icon={!streamState.video ? faVideoSlash : faVideo} />
       </div>
+
+      {
+        streamState.screen ? 
+        <>
+        <div
+        className="meeting-icons"
+        data-tip="Share Screen"
+        disabled={streamState.screen}
+      >
+        <MdDesktopWindows icon={faDesktop} />
+      </div>
+
       <div
+        className="meeting-icons"
+        data-tip="Stop sharing"
+        onClick={onScreenShareEndClick}
+      >
+        <MdOutlineDesktopAccessDisabled icon={faDesktop} />
+      </div>
+
+        </>
+        : <div
         className="meeting-icons"
         data-tip="Share Screen"
         onClick={onScreenClick}
         disabled={streamState.screen}
       >
-        <FontAwesomeIcon icon={faDesktop} />
+        <MdDesktopWindows icon={faDesktop} />
       </div>
+      }
+
+     
       <div
         className="meeting-icons"
         data-tip="End the call"
