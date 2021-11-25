@@ -34,7 +34,8 @@ const StartLesson = () => {
   function handleStartLesson() {
     setLocalIsFetching(true);
 
-    let dbRef = db.database().ref().push();
+    let dbRef = db.database().ref();
+    dbRef = dbRef.push(dbRef.key);
     let roomId = dbRef.key;
     let path = history.location.pathname.split("startlesson")[0];
     path = "/videochat/room/" + roomId;

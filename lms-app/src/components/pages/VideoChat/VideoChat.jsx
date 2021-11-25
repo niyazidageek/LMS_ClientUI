@@ -20,7 +20,6 @@ import {
   createUserStreamWithVideo,
   killVideoTracks,
 } from "../../../services/videoChatService";
-import VideoChatErrorPage from "./VideoChatErrorPage";
 
 function VideoChat() {
   const { search } = useLocation();
@@ -37,7 +36,6 @@ function VideoChat() {
   const [hasJoined, setHasJoined] = useState(cookies.get("hasJoined"));
   let userName;
 
-  
   if (!hasJoined || hasJoined == "false") {
     userName = cookies.get("userName");
   }
@@ -52,11 +50,11 @@ function VideoChat() {
   // };
 
   useEffect(async () => {
-    if (userName && id && hasJoined=="false") {
+    if (userName && id && (hasJoined == "false" || !hasJoined)) {
       window.addEventListener("beforeunload", () => {
         cookies.set("hasJoined", false, { path: "/" });
       });
-    
+
       const stream = await createUserStreamWithVideo();
       killVideoTracks(stream);
       dispatch(setMainStreamAction(stream));
@@ -95,7 +93,7 @@ function VideoChat() {
 
   if (userName) {
     connectedRef = db.database().ref(".info/connected");
-    participantRef = firepadRef.child("participants");
+    participantRef = firepadRef.child(id).child("participants");
     isUserSet = !!currentUser;
     isStreamSet = !!mainStream;
     isParticipantsSet = Object.keys(participants).length === 0;
@@ -142,8 +140,11 @@ function VideoChat() {
     return (
       <Redirect
         to={{
-          pathname: "/videochat/error",
-          state: { message: "You have already joined the lesson.." },
+          pathname: "/videochat/offboard",
+          state: {
+            message: "You have already joined the lesson..",
+            title: "Sorry!",
+          },
         }}
       />
     );

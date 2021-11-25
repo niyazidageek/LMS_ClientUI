@@ -2,14 +2,34 @@ import React, { useRef, useEffect } from "react";
 import MeetingFooter from "../MeetingFooter/MeetingFooter";
 import Participants from "../Participants/Participants";
 import "./MainScreen.css";
+import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {setMainStreamAction, updateUserAction} from "../../../../actions/videoChatActions"
-import { createUserStream, createUserStreamWithoutVideo, createUserStreamWithVideo, killVideoTracks, replaceTracks, stopMediaStream } from "../../../../services/videoChatService";
+import {
+  removeParticipantAction,
+  setMainStreamAction,
+  updateUserAction,
+} from "../../../../actions/videoChatActions";
+import {
+  createUserStream,
+  createUserStreamWithoutVideo,
+  createUserStreamWithVideo,
+  killVideoTracks,
+  replaceTracks,
+  stopMediaStream,
+} from "../../../../services/videoChatService";
+import { useHistory } from "react-router";
+import Cookies from "universal-cookie";
+import dbRef from "../../../../fireBase";
 
 const MainScreen = () => {
-  const participants = useSelector(state=>state.videoChatReducer.participants)
-  const mainStream = useSelector(state=>state.videoChatReducer.mainStream)
-  const currentUser = useSelector(state=>state.videoChatReducer.currentUser)
+  const participants = useSelector(
+    (state) => state.videoChatReducer.participants
+  );
+  const mainStream = useSelector((state) => state.videoChatReducer.mainStream);
+  const currentUser = useSelector(
+    (state) => state.videoChatReducer.currentUser
+  );
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const participantRef = useRef(participants);
@@ -17,13 +37,13 @@ const MainScreen = () => {
   const onMicClick = (micEnabled) => {
     if (mainStream) {
       mainStream.getAudioTracks()[0].enabled = micEnabled;
-      dispatch(updateUserAction(currentUser,{ audio: micEnabled }))
+      dispatch(updateUserAction(currentUser, { audio: micEnabled }));
     }
   };
   const onVideoClick = async (videoEnabled) => {
     if (mainStream) {
       mainStream.getVideoTracks()[0].enabled = videoEnabled;
-      dispatch(updateUserAction(currentUser,{ video: videoEnabled }))
+      dispatch(updateUserAction(currentUser, { video: videoEnabled }));
     }
   };
 
@@ -40,12 +60,27 @@ const MainScreen = () => {
         .find((s) => (s.track ? s.track.kind === "video" : false));
       peerConnection.replaceTrack(stream.getVideoTracks()[0]);
     }
-    dispatch(setMainStreamAction(stream))
+    dispatch(setMainStreamAction(stream));
   };
 
-  const onEndCall = ()=>{
+  const onEndCall = () => {
+    let cookies = new Cookies;
+    
     stopMediaStream(mainStream);
-  }
+    dbRef.child('participants').child(Object.keys(currentUser)[0]).remove();
+    removeParticipantAction(participants,Object.keys(currentUser)[0])
+    // console.log(Object.keys(currentUser)[0]);
+
+    history.replace({
+      pathname: "/videochat/offboard",
+      state: {
+        message: "Thank you for joining the session!",
+        title: "See you soon!",
+      },
+    });
+    cookies.set("hasJoined", false, { path: "/" });
+    // console.log(Object.keys(currentUser)[0]);
+  };
 
   const onScreenShareEnd = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
@@ -53,13 +88,12 @@ const MainScreen = () => {
       video: true,
     });
 
-    localStream.getVideoTracks()[0].enabled = Object.values(
-      currentUser
-    )[0].video;
+    localStream.getVideoTracks()[0].enabled =
+      Object.values(currentUser)[0].video;
 
     updateStream(localStream);
 
-    dispatch(updateUserAction(currentUser,{ screen: false }))
+    dispatch(updateUserAction(currentUser, { screen: false }));
   };
 
   const onScreenClick = async () => {
@@ -75,12 +109,12 @@ const MainScreen = () => {
         video: { mediaSource: "screen" },
       });
     }
-  
+
     mediaStream.getVideoTracks()[0].onended = onScreenShareEnd;
 
     updateStream(mediaStream);
 
-    dispatch(updateUserAction(currentUser,{ screen: true }))
+    dispatch(updateUserAction(currentUser, { screen: true }));
   };
   return (
     <div className="wrapper">
@@ -93,7 +127,7 @@ const MainScreen = () => {
           onScreenClick={onScreenClick}
           onMicClick={onMicClick}
           onVideoClick={onVideoClick}
-          onEndCall = {onEndCall}
+          onEndCall={onEndCall}
         />
       </div>
     </div>

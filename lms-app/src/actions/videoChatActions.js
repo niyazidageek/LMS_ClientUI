@@ -11,7 +11,7 @@ export const setMainStreamAction = (stream) => async(dispatch)=>{
     })
 }
 
-export const setUserAction = (user, participants) => async (dispatch) => {  
+export const setUserAction = (user, participants) => async (dispatch) => { 
     const userId = Object.keys(user)[0];
     user[userId].avatarColor = generateColor();
     await initializeListensers(userId,participants);

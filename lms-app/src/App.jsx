@@ -38,7 +38,7 @@ import SubmissionStatistics from "./components/pages/Assignments/SubmissionStati
 import StartLesson from "./components/pages/Lessons/StartLesson";
 import OnBoardPage from "./components/pages/VideoChat/OnBoardPage/OnBoardPage";
 import VideoChat from "./components/pages/VideoChat/VideoChat";
-import VideoChatErrorPage from "./components/pages/VideoChat/VideoChatErrorPage";
+import OffBoardPage from "./components/pages/VideoChat/OffBoardPage";
 
 
 
@@ -75,7 +75,7 @@ function App() {
               />
               <PrivateRoute exact path="/videochat/onboard" component={OnBoardPage} />
               <PrivateRoute exact path="/videochat/room/:id" component={VideoChat} />
-              <PrivateRoute exact path="/videochat/error" component={VideoChatErrorPage} />
+              <PrivateRoute exact path="/videochat/offboard" component={OffBoardPage} />
             </Route>
 
              <Route path="/student">
