@@ -46,6 +46,7 @@ const MeetingFooter = (props) => {
   }
 
   const setScreenState = (isEnabled) => {
+    console.log(isEnabled);
     setStreamState((currentState) => {
       return {
         ...currentState,

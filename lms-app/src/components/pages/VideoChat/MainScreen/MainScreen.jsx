@@ -95,7 +95,7 @@ const MainScreen = ({dbRef,roomId}) => {
     dispatch(updateUserAction(currentUser, { screen: false },roomId));
   };
 
-  const onScreenClick = async () => {
+  const onScreenClick = async (callback) => {
     let mediaStream;
     if (navigator.getDisplayMedia) {
       mediaStream = await navigator.getDisplayMedia({ video: true });
@@ -114,6 +114,8 @@ const MainScreen = ({dbRef,roomId}) => {
     updateStream(mediaStream);
 
     dispatch(updateUserAction(currentUser, { screen: true },roomId));
+
+    callback(true);
   };
   return (
     <div className="wrapper">
