@@ -9,6 +9,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 import "./MeetingFooter.css";
+import { MdCallEnd } from "react-icons/md";
+import Cookies from "universal-cookie";
+import { stopMediaStream } from "../../../../services/videoChatService";
+
 const MeetingFooter = (props) => {
   const [streamState, setStreamState] = useState({
     mic: true,
@@ -36,6 +40,10 @@ const MeetingFooter = (props) => {
   const onScreenClick = () => {
     props.onScreenClick(setScreenState);
   };
+
+  const onEndCallClick = () =>{
+    props.onEndCall();
+  }
 
   const setScreenState = (isEnabled) => {
     setStreamState((currentState) => {
@@ -77,6 +85,15 @@ const MeetingFooter = (props) => {
         disabled={streamState.screen}
       >
         <FontAwesomeIcon icon={faDesktop} />
+      </div>
+      <div
+        className="meeting-icons"
+        data-tip="End the call"
+        id='end-call'
+        onClick={onEndCallClick}
+
+      >
+        <MdCallEnd size={22} />
       </div>
       <ReactTooltip />
     </div>

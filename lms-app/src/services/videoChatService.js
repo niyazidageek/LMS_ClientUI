@@ -112,6 +112,16 @@ export const addConnection = (newUser, currentUser, stream) => {
 
   }
 
+  export const stopMediaStream = (stream) => {
+
+    let tracks = stream.getTracks();
+
+    tracks.forEach(function(track) {
+      track.stop();
+    });
+  
+  }
+
   
 const createAnswer = async (otherUserId, userId, participants) => {
     const pc = store.getState().videoChatReducer.participants[otherUserId].peerConnection;

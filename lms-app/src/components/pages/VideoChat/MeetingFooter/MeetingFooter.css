@@ -20,12 +20,22 @@
     cursor: pointer;
 }
 
+
 .meeting-active {
-  background-color:   #ea4335;
+  background-color: #ea4335;
 }
 
 div[disabled]
 {
   pointer-events: none;
   opacity: 0.3;
+}
+
+#end-call:hover{
+  background-color: #ea4335;
+  transition: all 150ms linear;
+}
+
+.meeting-icons:active{
+  opacity: 0.4;
 }
