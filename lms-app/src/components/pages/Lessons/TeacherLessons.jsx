@@ -73,6 +73,7 @@ function TeacherLessons() {
 
 
   function fetchMore(){
+    console.log('worked');
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });

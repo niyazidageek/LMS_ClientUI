@@ -70,10 +70,12 @@ function handleSearchInput(input){
       formData.append("Materials", files[x]);
     }
 
-    dispatch(createAssignmentAction(formData, token));
+    let promise = dispatch(createAssignmentAction(formData, token));
 
+    promise.then(()=>fetchMore())
+    
     onClick();
-    fetchMore();
+   
   }
 
   return (

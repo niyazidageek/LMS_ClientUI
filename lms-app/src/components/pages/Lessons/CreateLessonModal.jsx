@@ -50,10 +50,12 @@ const CreateLessonModal = ({ onClick, value, groupId, fetchMore }) => {
       isOnline :isOnline == "1" ? true : false,
     };
 
-    dispatch(createLessonAction(data, token))
+    let promise = dispatch(createLessonAction(data, token))
 
-    onClick();
-    fetchMore();
+    promise.then(()=>fetchMore())
+    
+    onClick()
+
   }
 
   return (
