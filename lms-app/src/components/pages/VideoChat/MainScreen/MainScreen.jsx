@@ -59,15 +59,20 @@ const MainScreen = ({dbRef,roomId}) => {
       const peerConnection = sender.peerConnection
         .getSenders()
         .find((s) => (s.track ? s.track.kind === "video" : false));
+        // console.log(stream.getVideoTracks())
+      console.log(peerConnection);
       peerConnection.replaceTrack(stream.getVideoTracks()[0]);
     }
     dispatch(setMainStreamAction(stream));
   };
 
-  const onEndCall = () => {
+  const onEndCall = async () => {
+
     let cookies = new Cookies;
     
-    // stopMediaStream(mainStream);
+    await stopMediaStream(mainStream);
+
+    mainStream.getVideoTracks()[0].stop();
     dbRef.child(Object.keys(currentUser)[0]).remove();
     removeParticipantAction(participants,Object.keys(currentUser)[0])
     // console.log(Object.keys(currentUser)[0]);
@@ -87,7 +92,7 @@ const MainScreen = ({dbRef,roomId}) => {
 
     // console.log(mainStream);
 
-    mainStream.getVideoTracks()[0].stop();
+    mainStream.getVideoTracks()[0].enabled = false;
     
     const localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -105,24 +110,21 @@ const MainScreen = ({dbRef,roomId}) => {
 
     updateStream(localStream);
 
-    dispatch(updateUserAction(currentUser, { screen: false },roomId));
+    await dispatch(updateUserAction(currentUser, { screen: false },roomId));
 
     callback(false)
   };
 
   const onScreenClick = async (callback) => {
-    mainStream.getVideoTracks()[0].enabled=false;
+    // mainStream.getVideoTracks()[0].enabled=false;
     let mediaStream;
     if (navigator.getDisplayMedia) {
-      // console.log(navigator.getDisplayMedia);
       mediaStream = await navigator.getDisplayMedia({ video: true });
     } else if (navigator.mediaDevices.getDisplayMedia) {
-      // console.log(navigator.mediaDevices.getDisplayMedia);
       mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
       });
     } else {
-      // console.log('suka');
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { mediaSource: "screen" },
       });
@@ -132,7 +134,9 @@ const MainScreen = ({dbRef,roomId}) => {
 
     updateStream(mediaStream);
 
-    dispatch(updateUserAction(currentUser, { screen: true },roomId));
+    console.log(mediaStream.getTracks());
+
+    await dispatch(updateUserAction(currentUser, { screen: true },roomId));
 
     callback(true);
   };

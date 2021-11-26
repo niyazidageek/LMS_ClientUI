@@ -43,11 +43,9 @@ export const initializeListensers = async (userId, participants,roomId) => {
   currentUserRef.child("offers").on("child_added", async (snapshot) => {
     const data = snapshot.val();
     if (data?.offer) {
-      if(store.getState().videoChatReducer.participants[data.offer.userId]){
-        const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
+      const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
         await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
         await createAnswer(data.offer.userId, userId, participants,roomId);
-      }
       
     }
   });
@@ -55,10 +53,8 @@ export const initializeListensers = async (userId, participants,roomId) => {
   currentUserRef.child("offerCandidates").on("child_added", (snapshot) => {
     const data = snapshot.val();
     if (data.userId) {
-      const pc = store.getState().videoChatReducer.participants[data.userId].peerConnection;
-      if(pc.remoteDescription){
-        pc.addIceCandidate(new RTCIceCandidate(data));
-      }
+      const pc = store.getState().videoChatReducer.participants && store.getState().videoChatReducer.participants[data.userId].peerConnection;
+      pc.addIceCandidate(new RTCIceCandidate(data));
       
     }
   });
@@ -76,9 +72,7 @@ export const initializeListensers = async (userId, participants,roomId) => {
     const data = snapshot.val();
     if (data.userId) {
       const pc = store.getState().videoChatReducer.participants[data.userId].peerConnection;
-      if(pc.remoteDescription){
-        pc.addIceCandidate(new RTCIceCandidate(data));
-      }
+      pc.addIceCandidate(new RTCIceCandidate(data));
     }
   });
 };
@@ -124,7 +118,7 @@ export const addConnection = (newUser, currentUser, stream, roomId) => {
 
   }
 
-  export const stopMediaStream = (stream) => {
+  export const stopMediaStream = async (stream) => {
 
     let tracks = stream.getTracks();
 

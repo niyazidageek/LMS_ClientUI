@@ -9,7 +9,7 @@ export const setMainStreamAction = (stream) => async(dispatch)=>{
             mainStream:stream
         }
     })
-       dispatch(fetchVideoStateAction())
+    //    dispatch(fetchVideoStateAction())
 }
 
 export const setUserAction = (user, participants, roomId) => async (dispatch) => { 
@@ -22,7 +22,7 @@ export const setUserAction = (user, participants, roomId) => async (dispatch) =>
             currentUser:user,
         }
     })  
-    dispatch(fetchVideoStateAction())
+    // dispatch(fetchVideoStateAction())
 }
 
 export const addParticipantAction = (user, currentUser, mainStream,roomId) => (dispatch) => {
@@ -49,12 +49,12 @@ export const addParticipantAction = (user, currentUser, mainStream,roomId) => (d
         }
     })
 
-    dispatch(fetchVideoStateAction())
+    // dispatch(fetchVideoStateAction())
 }
 
 export const updateUserAction = (currentUser,user, roomId) => async (dispatch) =>{
     const userId = Object.keys(currentUser)[0];
-    updatePreference(userId, user,roomId)
+    await updatePreference(userId, user,roomId)
 
     dispatch({
         type:actionTypes.UPDATE_VIDEO_USER,
@@ -63,7 +63,7 @@ export const updateUserAction = (currentUser,user, roomId) => async (dispatch) =
         }
     })
 
-    dispatch(fetchVideoStateAction())
+    // dispatch(fetchVideoStateAction())
 }
 
 export const updateParticipantAction = (user) => (dispatch)=>{
@@ -73,7 +73,7 @@ export const updateParticipantAction = (user) => (dispatch)=>{
             newUser:user,
         }
     })
-    dispatch(fetchVideoStateAction())
+    // dispatch(fetchVideoStateAction())
 }
 
 export const removeParticipantAction = (participants,userId) => async (dispatch) =>{

@@ -164,6 +164,7 @@ function VideoChat() {
   }
 
   return (
+    // console.log(mainStream&&mainStream.getVideoTracks()),
     <div className="App">
       <MainScreen roomId={id} dbRef={participantRef}/>
     </div>

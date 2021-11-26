@@ -60,16 +60,17 @@ const Participants = () => {
     const pc = currentParticipant.peerConnection;
     const remoteStream = new MediaStream();
     let curentIndex = index;
-    if (pc) {
-      pc.ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.addTrack(track);
-        });
-        const videElement = document.getElementById(
-          `participantVideo${curentIndex}`
-        );
-        if (videElement) videElement.srcObject = remoteStream;
-      };
+    pc.ontrack = (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track);
+      });
+      const videElement = document.getElementById(
+        `participantVideo${curentIndex}`
+      );
+      if (videElement) videElement.srcObject = remoteStream;
+    // if (pc) {
+  
+    //   };
     }
 
     return (
