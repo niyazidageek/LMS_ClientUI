@@ -42,6 +42,7 @@ const MainScreen = ({dbRef,roomId}) => {
   };
   const onVideoClick = async (videoEnabled) => {
     if (mainStream) {
+      // console.log(mainStream.getVideoTracks());
       mainStream.getVideoTracks()[0].enabled = videoEnabled;
       dispatch(updateUserAction(currentUser, { video: videoEnabled },roomId));
     }
@@ -66,7 +67,7 @@ const MainScreen = ({dbRef,roomId}) => {
   const onEndCall = () => {
     let cookies = new Cookies;
     
-    stopMediaStream(mainStream);
+    // stopMediaStream(mainStream);
     dbRef.child(Object.keys(currentUser)[0]).remove();
     removeParticipantAction(participants,Object.keys(currentUser)[0])
     // console.log(Object.keys(currentUser)[0]);
@@ -110,14 +111,18 @@ const MainScreen = ({dbRef,roomId}) => {
   };
 
   const onScreenClick = async (callback) => {
+    mainStream.getVideoTracks()[0].enabled=false;
     let mediaStream;
     if (navigator.getDisplayMedia) {
+      // console.log(navigator.getDisplayMedia);
       mediaStream = await navigator.getDisplayMedia({ video: true });
     } else if (navigator.mediaDevices.getDisplayMedia) {
+      // console.log(navigator.mediaDevices.getDisplayMedia);
       mediaStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
       });
     } else {
+      // console.log('suka');
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { mediaSource: "screen" },
       });

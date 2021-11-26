@@ -33,6 +33,8 @@ export const createOffer = async (peerConnection, receiverId, createdID,roomId) 
   };
 
   await currentParticipantRef.child("offers").push().set({ offer });
+
+  console.log(offer);
 };
 
 
@@ -41,12 +43,12 @@ export const initializeListensers = async (userId, participants,roomId) => {
   currentUserRef.child("offers").on("child_added", async (snapshot) => {
     const data = snapshot.val();
     if (data?.offer) {
-      const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
-      if(pc){
+      if(store.getState().videoChatReducer.participants[data.offer.userId]){
+        const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
         await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
         await createAnswer(data.offer.userId, userId, participants,roomId);
       }
-
+      
     }
   });
 
@@ -153,6 +155,8 @@ const createAnswer = async (otherUserId, userId, participants,roomId) => {
     };
   
     await participantRef1.child("answers").push().set({ answer });
+
+    console.log(answer);
   };
 
   export const servers = {

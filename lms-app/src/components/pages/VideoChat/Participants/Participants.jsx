@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Participants.css";
 import { useSelector, useDispatch } from "react-redux";
 import { Participant } from "./Participant/Participant";
@@ -10,7 +10,7 @@ const Participants = () => {
   const participantsState = useSelector(state=>state.videoChatReducer.participants)
   const mainStream = useSelector(state=>state.videoChatReducer.mainStream)
   const currentUserState = useSelector(state=>state.videoChatReducer.currentUser)
-
+  // const hasPresenter = useSelector(state=>state.videoChatReducer.hasPresenter)
 
   let participantKey = Object.keys(participantsState);
   useEffect(() => {
@@ -73,11 +73,12 @@ const Participants = () => {
     }
 
     return (
+      // console.log(element),
       <Participant
         key={curentIndex}
         currentParticipant={currentParticipant}
         curentIndex={curentIndex}
-        hideVideo={screenPresenter && screenPresenter !== element}
+        hideVideo={(screenPresenter && screenPresenter !== element)}
         showAvatar={
           !currentParticipant.video &&
           !currentParticipant.screen &&
@@ -87,6 +88,7 @@ const Participants = () => {
     );
   });
   return (
+    // console.log('jpk'),
     <div
       style={{
         "--grid-size": gridCol,

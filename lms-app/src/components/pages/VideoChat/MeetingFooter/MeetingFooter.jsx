@@ -9,14 +9,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 import "./MeetingFooter.css";
-import { MdCallEnd, MdDesktopWindows, MdOutlineDesktopAccessDisabled, MdOutlineStopScreenShare } from "react-icons/md";
+import {
+  MdCallEnd,
+  MdDesktopWindows,
+  MdOutlineDesktopAccessDisabled,
+  MdOutlineStopScreenShare,
+} from "react-icons/md";
 import Cookies from "universal-cookie";
 import { stopMediaStream } from "../../../../services/videoChatService";
 import { useSelector } from "react-redux";
 
 const MeetingFooter = (props) => {
-
-  const hasPresenter = useSelector(state=>state.videoChatReducer.hasPresenter)
+  const hasPresenter = useSelector(
+    (state) => state.videoChatReducer.hasPresenter
+  );
   const [streamState, setStreamState] = useState({
     mic: true,
     video: false,
@@ -44,16 +50,16 @@ const MeetingFooter = (props) => {
     props.onScreenClick(setScreenState);
   };
 
-  const onEndCallClick = () =>{
+  const onEndCallClick = () => {
     props.onEndCall();
-  }
+  };
 
-  const onScreenShareEndClick=()=>{
+  const onScreenShareEndClick = () => {
     props.onScreenShareEnd(setScreenState);
-  }
+  };
 
   const setScreenState = (isEnabled) => {
-    console.log(isEnabled);
+    // console.log(isEnabled);
     setStreamState((currentState) => {
       return {
         ...currentState,
@@ -70,7 +76,9 @@ const MeetingFooter = (props) => {
   return (
     <div className="meeting-footer">
       <div
-        className={"meeting-icons " + (!streamState.mic ? "meeting-active" : "")}
+        className={
+          "meeting-icons " + (!streamState.mic ? "meeting-active" : "")
+        }
         data-tip={streamState.mic ? "Mute Audio" : "Unmute Audio"}
         onClick={micClick}
       >
@@ -79,51 +87,62 @@ const MeetingFooter = (props) => {
           title="Mute"
         />
       </div>
-      <div
-        className={"meeting-icons " + (!streamState.video ? "meeting-active" : "")}
-        data-tip={streamState.video ? "Hide Video" : "Show Video"}
-        onClick={onVideoClick}
-      >
-        <FontAwesomeIcon icon={!streamState.video ? faVideoSlash : faVideo} />
-      </div>
-
-      {
-        streamState.screen ? 
-        <>
+      {!hasPresenter ? (
         <div
-        className="meeting-icons"
-        data-tip="Share Screen"
-        disabled={streamState.screen}
-      >
-        <MdDesktopWindows icon={faDesktop} />
-      </div>
+          className={
+            "meeting-icons " + (!streamState.video ? "meeting-active" : "")
+          }
+          data-tip={streamState.video ? "Hide Video" : "Show Video"}
+          onClick={onVideoClick}
+        >
+          <FontAwesomeIcon icon={!streamState.video ? faVideoSlash : faVideo} />
+        </div>
+      ) : (
+        <div
+          className={
+            "meeting-icons " + (!streamState.video ? "meeting-active" : "")
+          }
+          data-tip={streamState.video ? "Hide Video" : "Show Video"}
+          disabled={true}
+        >
+          <FontAwesomeIcon icon={!streamState.video ? faVideoSlash : faVideo} />
+        </div>
+      )}
 
-      <div
-        className="meeting-icons"
-        data-tip="Stop sharing"
-        onClick={onScreenShareEndClick}
-      >
-        <MdOutlineDesktopAccessDisabled icon={faDesktop} />
-      </div>
+      {streamState.screen ? (
+        <>
+          <div
+            className="meeting-icons"
+            data-tip="Share Screen"
+            disabled={streamState.screen}
+          >
+            <MdDesktopWindows icon={faDesktop} />
+          </div>
 
+          <div
+            className="meeting-icons"
+            data-tip="Stop sharing"
+            onClick={onScreenShareEndClick}
+          >
+            <MdOutlineDesktopAccessDisabled icon={faDesktop} />
+          </div>
         </>
-        : <div
-        className="meeting-icons"
-        data-tip="Share Screen"
-        onClick={onScreenClick}
-        disabled={streamState.screen || hasPresenter}
-      >
-        <MdDesktopWindows icon={faDesktop} />
-      </div>
-      }
+      ) : (
+        <div
+          className="meeting-icons"
+          data-tip="Share Screen"
+          onClick={onScreenClick}
+          disabled={streamState.screen || hasPresenter}
+        >
+          <MdDesktopWindows icon={faDesktop} />
+        </div>
+      )}
 
-     
       <div
         className="meeting-icons"
         data-tip="End the call"
-        id='end-call'
+        id="end-call"
         onClick={onEndCallClick}
-
       >
         <MdCallEnd size={22} />
       </div>
