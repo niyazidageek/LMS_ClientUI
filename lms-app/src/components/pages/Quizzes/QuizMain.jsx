@@ -58,7 +58,7 @@ function Timer({ expiryTimestamp, overAllTime }) {
 
 const QuizMain = () => {
   const time = new Date();
-  const overAllTime = 10;
+  const overAllTime = 600;
   time.setSeconds(time.getSeconds() + overAllTime);
   return <Timer expiryTimestamp={time} overAllTime={overAllTime} />;
 };

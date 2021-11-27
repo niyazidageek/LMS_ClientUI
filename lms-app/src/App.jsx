@@ -41,6 +41,8 @@ import VideoChat from "./components/pages/VideoChat/VideoChat";
 import OffBoardPage from "./components/pages/VideoChat/OffBoardPage";
 import QuizMain from "./components/pages/Quizzes/QuizMain";
 import QuizContent from "./components/pages/Quizzes/QuizContent";
+import QuizOnBoard from "./components/pages/Quizzes/QuizOnBoard";
+
 
 
 
@@ -55,7 +57,7 @@ function App() {
     <Router>
           <Switch>
             <ChakraProvider>
-
+              <Route exact path="/quizzes/onboard" component={QuizOnBoard}/>
               <Route exact path="/quizzes" component={QuizMain}/>
               <Route exact path="/quizzes/content" component={QuizContent}/>
               
