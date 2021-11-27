@@ -56,7 +56,7 @@ function VideoChat() {
       });
 
       const stream = await createUserStreamWithVideo();
-      killVideoTracks(stream);
+      stream.getVideoTracks()[0].enabled = false;
       dispatch(setMainStreamAction(stream));
       connectedRef.on("value", (snap) => {
         if (snap.val()) {

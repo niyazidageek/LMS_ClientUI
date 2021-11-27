@@ -108,6 +108,10 @@ export default function StudentHome() {
     console.log(connect);
   }, []);
 
+  useEffect(()=>{
+    console.log(hasMore);
+  })
+
   useEffect(() => {
     if (connection) {
       connection

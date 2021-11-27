@@ -43,35 +43,41 @@ export const initializeListensers = async (userId, participants,roomId) => {
   currentUserRef.child("offers").on("child_added", async (snapshot) => {
     const data = snapshot.val();
     if (data?.offer) {
-      const pc = store.getState().videoChatReducer.participants[data.offer.userId].peerConnection;
+      const pc = store.getState().videoChatReducer.participants ? store.getState().videoChatReducer.participants[data.offer.userId].peerConnection : false
+      if(pc){
         await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
         await createAnswer(data.offer.userId, userId, participants,roomId);
       
+      }
+        
     }
   });
 
   currentUserRef.child("offerCandidates").on("child_added", (snapshot) => {
     const data = snapshot.val();
     if (data.userId) {
-      const pc = store.getState().videoChatReducer.participants && store.getState().videoChatReducer.participants[data.userId].peerConnection;
-      pc.addIceCandidate(new RTCIceCandidate(data));
-      
+      const pc = store.getState().videoChatReducer.participants ? store.getState().videoChatReducer.participants[data.userId].peerConnection : false;
+      if(pc){
+        pc.addIceCandidate(new RTCIceCandidate(data));
+      }
     }
   });
 
   currentUserRef.child("answers").on("child_added", (snapshot) => {
     const data = snapshot.val();
     if (data?.answer) {
-      const pc = store.getState().videoChatReducer.participants[data.answer.userId].peerConnection;
-      const answerDescription = new RTCSessionDescription(data.answer);
-      pc.setRemoteDescription(answerDescription);
+      const pc = store.getState().videoChatReducer.participants ? store.getState().videoChatReducer.participants[data.answer.userId].peerConnection:false
+      if(pc){
+        const answerDescription = new RTCSessionDescription(data.answer);
+        pc.setRemoteDescription(answerDescription);
+      }
     }
   });
 
   currentUserRef.child("answerCandidates").on("child_added", (snapshot) => {
     const data = snapshot.val();
     if (data.userId) {
-      const pc = store.getState().videoChatReducer.participants[data.userId].peerConnection;
+      const pc =  store.getState().videoChatReducer.participants ? store.getState().videoChatReducer.participants[data.userId].peerConnection : false;
       pc.addIceCandidate(new RTCIceCandidate(data));
     }
   });

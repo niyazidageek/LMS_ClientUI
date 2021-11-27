@@ -2,7 +2,7 @@ import { addConnection, initializeListensers, updatePreference } from "../servic
 import { actionTypes } from "./const"
 import {generateColor} from "../utils/generateColor"
 
-export const setMainStreamAction = (stream) => async(dispatch)=>{
+export const setMainStreamAction = (stream) =>(dispatch)=>{
     dispatch({
         type:actionTypes.SET_MAIN_STREAM,
         payload:{
@@ -76,7 +76,7 @@ export const updateParticipantAction = (user) => (dispatch)=>{
     // dispatch(fetchVideoStateAction())
 }
 
-export const removeParticipantAction = (participants,userId) => async (dispatch) =>{
+export const removeParticipantAction = (participants,userId) => (dispatch) =>{
     delete participants[userId]
     dispatch({
         type:actionTypes.REMOVE_VIDEO_PARTICIPANT,

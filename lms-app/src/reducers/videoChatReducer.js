@@ -5,6 +5,7 @@ const initialState = {
   participants: {},
   currentUser: null,
   hasPresenter: null,
+  shareEnabled:null
 };
 
 const videoChatReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ const videoChatReducer = (state = initialState, action) => {
       return {
         ...state,
         hasPresenter: true,
+      };
+      case actionTypes.SET_SHARE_ENABLED:
+      return {
+        ...state,
+        shareEnabled: false,
       };
     case actionTypes.UNSET_PRESENTER:
       return {

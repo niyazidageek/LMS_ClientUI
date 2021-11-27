@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, createContext } from "react";
 import MeetingFooter from "../MeetingFooter/MeetingFooter";
 import Participants from "../Participants/Participants";
 import "./MainScreen.css";
@@ -69,12 +69,23 @@ const MainScreen = ({dbRef,roomId}) => {
   const onEndCall = async () => {
 
     let cookies = new Cookies;
+
+    dbRef.child(Object.keys(currentUser)[0]).remove();
+
     
+   
+
+    dispatch(removeParticipantAction(participants,Object.keys(currentUser)[0]))
+
+    mainStream.getVideoTracks()[0].enabled=false;
+
     await stopMediaStream(mainStream);
 
-    mainStream.getVideoTracks()[0].stop();
-    dbRef.child(Object.keys(currentUser)[0]).remove();
-    removeParticipantAction(participants,Object.keys(currentUser)[0])
+    
+    dispatch(setMainStreamAction(null))
+
+    console.log(mainStream.getVideoTracks());
+
     // console.log(Object.keys(currentUser)[0]);
 
     history.replace({
@@ -91,6 +102,8 @@ const MainScreen = ({dbRef,roomId}) => {
   const onScreenShareEnd = async (callback) => {
 
     // console.log(mainStream);
+
+    console.log('ccddaa');
 
     mainStream.getVideoTracks()[0].enabled = false;
     
@@ -110,9 +123,16 @@ const MainScreen = ({dbRef,roomId}) => {
 
     updateStream(localStream);
 
-    await dispatch(updateUserAction(currentUser, { screen: false },roomId));
+    dispatch(updateUserAction(currentUser, { screen: false },roomId));
 
-    callback(false)
+    // setShareEnabled(false);
+    
+    callback(false);
+
+    // Event.prototype.isPrototypeOf(callback) ? dispatch({
+    //   type:actionTypes.SET_SHARE_ENABLED
+    // }) : callback(false);
+    // console.log(callback);
   };
 
   const onScreenClick = async (callback) => {
@@ -134,7 +154,7 @@ const MainScreen = ({dbRef,roomId}) => {
 
     updateStream(mediaStream);
 
-    console.log(mediaStream.getTracks());
+    // console.log(mediaStream.getTracks());
 
     await dispatch(updateUserAction(currentUser, { screen: true },roomId));
 
@@ -147,6 +167,7 @@ const MainScreen = ({dbRef,roomId}) => {
       </div>
 
       <div className="footer">
+      {/* <FooterContext.Provider value={shareEnabled}> */}
         <MeetingFooter
           onScreenClick={onScreenClick}
           onMicClick={onMicClick}
@@ -154,6 +175,7 @@ const MainScreen = ({dbRef,roomId}) => {
           onEndCall={onEndCall}
           onScreenShareEnd={onScreenShareEnd}
         />
+        {/* </FooterContext.Provider> */}
       </div>
     </div>
   );
