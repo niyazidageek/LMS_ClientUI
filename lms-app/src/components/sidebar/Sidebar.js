@@ -1,6 +1,5 @@
-/*eslint-disable*/
 import { HamburgerIcon } from "@chakra-ui/icons";
-// chakra imports
+import { Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -10,7 +9,6 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  Link,
   Icon,
   Stack,
   Text,
@@ -19,49 +17,29 @@ import {
 } from "@chakra-ui/react";
 import IconBox from "../icons/IconBox";
 import { Separator } from "../seperator/Separator";
-import PropTypes from "prop-types";
 import React from "react";
-import { NavLink,useLocation } from "react-router-dom";
-import logo from "../../assets/img/logo.png"
-
-// FUNCTIONS
+import { NavLink, useLocation } from "react-router-dom";
+import logo from "../../assets/img/logo.png";
 
 function Sidebar(props) {
-  // to check for active links and opened collapses
   let location = useLocation();
-  
+
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? "active" : "";
   };
 
+  const { routes } = props;
 
-
-  const { logoText, routes, sidebarVariant } = props;
-  
-  // this is for the rest of the collapses
   const [state, setState] = React.useState({});
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
-  
-  // this function creates the links and collapses that appear in the sidebar (left menu)
-  
-  const createLinks = (routes) => {
-    const { sidebarVariant } = props;
-    // Chakra Color Mode
-    let activeBg = useColorModeValue("white", "gray.700");
-    let inactiveBg = useColorModeValue("white", "gray.700");
-    let activeColor = useColorModeValue("gray.700", "white");
-    let inactiveColor = useColorModeValue("gray.400", "gray.400");
-    let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
-    // Here are all the props that may change depending on sidebar's state.(Opaque or transparent)
-    if (sidebarVariant === "opaque") {
-      activeBg = "transparent";
-      inactiveBg = useColorModeValue("gray.100", "gray.600");
-      activeColor = useColorModeValue("gray.700", "white");
-      inactiveColor = useColorModeValue("gray.400", "gray.400");
-      sidebarActiveShadow = "none";
-    }
+  let activeBg = useColorModeValue("white", "gray.700");
+  let inactiveBg = useColorModeValue("white", "gray.700");
+  let activeColor = useColorModeValue("gray.700", "white");
+  let inactiveColor = useColorModeValue("gray.400", "gray.400");
+  let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
 
+  const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
@@ -203,20 +181,12 @@ function Sidebar(props) {
       );
     });
   };
-  var links = <>{createLinks(routes)}</>; 
+  var links = <>{createLinks(routes)}</>;
 
-
-  //  BRAND
-  //  Chakra Color Mode
-  const mainText = useColorModeValue("gray.700", "gray.200");
   let sidebarBg = "none";
   let sidebarRadius = "0px";
   let sidebarMargins = "0px";
-  if (sidebarVariant === "opaque") {
-    sidebarBg = useColorModeValue("white", "gray.700");
-    sidebarRadius = "16px";
-    sidebarMargins = "16px 0px 16px 16px";
-  }
+
   var brand = (
     <Box pt={"25px"} mb="12px">
       <Link
@@ -230,13 +200,12 @@ function Sidebar(props) {
         alignItems="center"
         fontSize="11px"
       >
-        <img src={logo}/>
+        <img src={logo} />
       </Link>
       <Separator></Separator>
     </Box>
   );
 
-  // SIDEBAR
   return (
     <Box ref={mainPanel}>
       <Box display={{ sm: "none", xl: "block" }} position="fixed">
@@ -259,9 +228,7 @@ function Sidebar(props) {
         >
           <Box>{brand}</Box>
           <Stack direction="column" mb="40px">
-            <Box>
-            {links}
-            </Box>
+            <Box>{links}</Box>
           </Stack>
         </Box>
       </Box>
@@ -269,27 +236,20 @@ function Sidebar(props) {
   );
 }
 
-// FUNCTIONS
-
 export function SidebarResponsive(props) {
-  // to check for active links and opened collapses
-  // this is for the rest of the collapses
   const [state, setState] = React.useState({});
   let location = useLocation();
   const mainPanel = React.useRef();
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? "active" : "";
   };
+  const activeBg = useColorModeValue("white", "gray.700");
+  const inactiveBg = useColorModeValue("white", "gray.700");
+  const activeColor = useColorModeValue("gray.700", "white");
+  const inactiveColor = useColorModeValue("gray.400", "gray.400");
+  const { routes } = props;
 
-  const {routes, sidebarVariant } = props;
-  // verifies if routeName is the one active (in browser input)
   const createLinks = (routes) => {
-    // Chakra Color Mode
-    const activeBg = useColorModeValue("white", "gray.700");
-    const inactiveBg = useColorModeValue("white", "gray.700");
-    const activeColor = useColorModeValue("gray.700", "white");
-    const inactiveColor = useColorModeValue("gray.400", "gray.400");
-
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
@@ -428,14 +388,8 @@ export function SidebarResponsive(props) {
     });
   };
 
-  // this function creates the links and collapses that appear in the sidebar (left menu)
-
-  
- 
   var links = <>{createLinks(routes)}</>;
-  //  BRAND
-  //  Chakra Color Mode
-  const mainText = useColorModeValue("gray.700", "gray.200");
+
   let hamburgerColor = useColorModeValue("gray.500", "gray.200");
   if (props.secondary === true) {
     hamburgerColor = "white";
@@ -443,7 +397,6 @@ export function SidebarResponsive(props) {
   var brand = (
     <Box pt={"35px"} mb="8px">
       <Link
-        href={`${process.env.PUBLIC_URL}/#/`}
         target="_blank"
         display="flex"
         lineHeight="100%"
@@ -454,17 +407,13 @@ export function SidebarResponsive(props) {
         fontSize="11px"
       >
         <img src={logo} />
-        
       </Link>
       <Separator></Separator>
     </Box>
   );
 
-  // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-  // Color variables
-
 
   return (
     <Flex
@@ -474,8 +423,9 @@ export function SidebarResponsive(props) {
     >
       <HamburgerIcon
         color={hamburgerColor}
-        w="18px"
-        h="18px"
+        w="25px"
+        h="25px"
+        margin="0 0.3rem"
         ref={btnRef}
         colorScheme="teal"
         onClick={onOpen}
@@ -515,16 +465,5 @@ export function SidebarResponsive(props) {
     </Flex>
   );
 }
-// PROPS
-
-// Sidebar.propTypes = {
-//   logoText: PropTypes.string,
-//   routes: PropTypes.arrayOf(PropTypes.object),
-//   variant: PropTypes.string,
-// };
-// SidebarResponsive.propTypes = {
-//   logoText: PropTypes.string,
-//   routes: PropTypes.arrayOf(PropTypes.object),
-// };
 
 export default Sidebar;

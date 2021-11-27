@@ -40,14 +40,6 @@ function VideoChat() {
     userName = cookies.get("userName");
   }
 
-  // const getUserStream = async () => {
-  //   const localStream = await navigator.mediaDevices.getUserMedia({
-  //     audio: true,
-  //     video: true,
-  //   });
-
-  //   return localStream;
-  // };
 
   useEffect(async () => {
     if (userName && id && (hasJoined == "false" || !hasJoined)) {
@@ -164,7 +156,6 @@ function VideoChat() {
   }
 
   return (
-    // console.log(mainStream&&mainStream.getVideoTracks()),
     <div className="App">
       <MainScreen roomId={id} dbRef={participantRef}/>
     </div>

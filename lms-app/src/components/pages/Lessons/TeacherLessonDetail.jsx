@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
-// Chakra imports
-import {
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  Button,
-  Td,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { Flex, Text, Button, Grid, useColorModeValue } from "@chakra-ui/react";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
@@ -24,17 +8,13 @@ import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import {
-  getLessonByIdAction,
-  startLessonByIdAction,
-} from "../../../actions/lessonActions";
+import { getLessonByIdAction } from "../../../actions/lessonActions";
 
 function TeacherLessonDetail() {
   let { id } = useParams();
   const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
   const history = useHistory();
-  const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const lesson = useSelector((state) => state.lessonReducer.lesson);
 
@@ -64,7 +44,11 @@ function TeacherLessonDetail() {
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card
+        h={{ xl: "620px" }}
+        justifyContent="space-between"
+        overflowX={{ sm: "scroll", xl: "hidden" }}
+      >
         <CardHeader justifyContent="space-between" p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Lesson:{" "}
@@ -91,7 +75,6 @@ function TeacherLessonDetail() {
               Start the lesson
             </Button>
           ) : (
-            console.log(lesson.isOnline),
             <Button
               color="white"
               disabled={true}
@@ -124,7 +107,7 @@ function TeacherLessonDetail() {
                   Info
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
                 <Flex direction="column">
                   <Flex align="start" mb="18px">
                     <Text
@@ -198,8 +181,18 @@ function TeacherLessonDetail() {
                   Theory
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
-                <Flex direction="column" w="100%">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                  direction="column"
+                  w="100%"
+                >
                   {lesson.theories && lesson.theories.length != 0 ? (
                     lesson.theories.map((t, index) => {
                       return (
@@ -249,8 +242,16 @@ function TeacherLessonDetail() {
                   Assignments
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
-                <Flex direction="column" w="100%">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                >
                   {lesson.assignments && lesson.assignments.length != 0 ? (
                     lesson.assignments.map((a, index) => {
                       return (
@@ -289,21 +290,22 @@ function TeacherLessonDetail() {
             </Card>
           </Grid>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
-          outlineColor="teal.300"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

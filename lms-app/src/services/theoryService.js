@@ -65,3 +65,7 @@ export const editTheoryById = (id, data, token)=>{
     },
   })
 }
+
+export const deleteTheoryById = (id) =>{
+  return httpClient.delete("theory/deletetheory/"+id)
+}

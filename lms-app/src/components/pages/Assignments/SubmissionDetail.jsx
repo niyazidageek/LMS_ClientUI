@@ -1,35 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-// Chakra imports
 import { Formik, Form, Field } from "formik";
 import {
   Flex,
-  Table,
-  Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
   Button,
   FormControl,
-  Box,
   Input,
   FormLabel,
   FormErrorMessage,
-  Icon,
   Link,
-  Td,
   Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {
-  FaCheckCircle,
-  FaFileUpload,
-  FaExclamationTriangle,
-} from "react-icons/fa";
+import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { validateGrade } from "../../../validations/validateGrade";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
@@ -37,11 +22,8 @@ import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import {
-  getAssignmentByIdAction,
-  getStudentsAssignmentByIdAction,
   getSubmissionByIdAction,
   gradeSubmissionByIdAction,
-  submitAssignmentByIdAction,
 } from "../../../actions/assignmentActions";
 import { fileHelper } from "../../../utils/fileHelper";
 import gradeSubmissionSchema from "../../../validations/gradeSubmissionSchema";
@@ -83,7 +65,7 @@ function SubmissionDetail() {
           {submission.graded ? (
             <Flex color="green.500" alignItems="center">
               <Text
-               lineHeight='initial'
+                lineHeight="initial"
                 me="0.3rem"
                 fontSize="xl"
                 fontWeight="bold"
@@ -95,14 +77,14 @@ function SubmissionDetail() {
           ) : (
             <Flex color="red.500" alignItems="center">
               <Text
-                lineHeight='initial'
+                lineHeight="initial"
                 me="0.3rem"
                 fontSize="xl"
                 fontWeight="bold"
               >
                 Needs grading!
               </Text>
-              <FaExclamationTriangle size={20}/>
+              <FaExclamationTriangle size={20} />
             </Flex>
           )}
         </CardHeader>
@@ -366,20 +348,22 @@ function SubmissionDetail() {
             </Card>
           </Grid>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

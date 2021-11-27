@@ -1,7 +1,6 @@
 // chakra imports
-import { Avatar, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { ClockIcon } from "../icons/Icons";
-import PropTypes from "prop-types";
 import React from "react";
 
 export function ItemContent(props) {
@@ -10,12 +9,6 @@ export function ItemContent(props) {
   const spacing = " ";
   return (
     <>
-      <Avatar
-        name={props.aName}
-        src={props.aSrc}
-        borderRadius="12px"
-        me="16px"
-      />
       <Flex flexDirection="column">
         <Text fontSize="14px" mb="5px" color={notificationColor}>
           <Text fontWeight="bold" fontSize="14px" as="span">

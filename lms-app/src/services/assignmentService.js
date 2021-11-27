@@ -34,17 +34,15 @@ export const getAssignmentById = (id) => {
 
 export const getAllAssignmentsByGroupId = (groupId, page, size) => {
   let path;
-  (page!=null && size!=null)
-    ? (
-      path =
+  page != null && size != null
+    ? (path =
         "assignment/getallassignemntsbygroupid/" +
         groupId +
         "/" +
         page +
         "/" +
         size)
-    : (
-      path = "assignment/getallassignemntsbygroupid/" + groupId);
+    : (path = "assignment/getallassignemntsbygroupid/" + groupId);
   return httpClient.get(path);
 };
 
@@ -58,7 +56,7 @@ export const createAssignment = (data, token) => {
 };
 
 export const editAssignmentById = (id, data, token) => {
-  return httpClient.put("assignment/editassignment/"+id, data, {
+  return httpClient.put("assignment/editassignment/" + id, data, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
@@ -88,4 +86,8 @@ export const gradeSubmissionById = (id, data, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+export const deleteAssignmentById = (id) => {
+  return httpClient.delete("assignment/deleteassignment/" + id);
 };

@@ -1,53 +1,29 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-// Chakra imports
 import {
   Flex,
-  Table,
-  Tbody,
   Text,
-  Th,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Radio,
-  Stack,
-  RadioGroup,
   Input,
-  Switch,
   SimpleGrid,
-  Textarea,
-  Thead,
-  Tr,
   Button,
-  Td,
-  Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { Formik, Form, Field } from "formik";
-import { FaCheckCircle } from "react-icons/fa";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import lessonSchema from "../../../validations/lessonSchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import {
-  editLessonByIdAction,
-  getLessonByIdAction,
-  searchLessonsByGroupIdAction,
-} from "../../../actions/lessonActions";
+import { searchLessonsByGroupIdAction } from "../../../actions/lessonActions";
 import EditorUtil from "../../editor/EditorUtil";
 import theorySchema from "../../../validations/theorySchema";
 import { createTheoryAction } from "../../../actions/theoryActions";
 
 function CreateTheory() {
-  let { id } = useParams();
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   const [firstTouch, setFirstTouch] = useState(true);
 
@@ -96,7 +72,7 @@ function CreateTheory() {
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX='visible'>
+      <Card overflowX="visible">
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="teal.300" fontWeight="bold">
             Create theory
@@ -262,20 +238,22 @@ function CreateTheory() {
             </CardBody>
           </Card>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

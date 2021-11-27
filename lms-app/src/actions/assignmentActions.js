@@ -1,5 +1,6 @@
 import {
   createAssignment,
+  deleteAssignmentById,
   editAssignment,
   editAssignmentById,
   getAllAssignmentsByGroupId,
@@ -362,6 +363,40 @@ export const gradeSubmissionByIdAction = (id,data,token) => async (dispatch) => 
       payload: resp.data,
     });
     
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
+};
+
+export const deleteAssignmentByIdAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.SET_IS_FETCHING,
+    });
+
+    let resp = await deleteAssignmentById(id);
+
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
+
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
   } catch (error) {
     if (error.message === "Network Error") {
       dispatch({

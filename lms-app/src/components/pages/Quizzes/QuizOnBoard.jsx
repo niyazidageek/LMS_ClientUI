@@ -3,36 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import BgSignUp from "../../../assets/img/BgSignUp.png";
 import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
   Flex,
   Box,
   useColorModeValue,
-  Input,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
 import { AuthErrorAlert } from "../../alerts/AuthErrorAlert";
 import { AuthMessageAlert } from "../../alerts/AuthMessageAlert";
-import { Formik, Field, Form } from "formik";
-
+import Card from "../../cards/Card";
 import Cookies from "universal-cookie";
 import { FaExclamationTriangle } from "react-icons/fa";
 
-const QuizOnBoard = () => {
+const QuizOnBoard = (props) => {
   const history = useHistory();
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.authReducer.jwt);
-  const name = useSelector((state) => state.authReducer.name);
-
+  let quiz = history.location.state.quiz;
   function handleSubmit(values) {
     const { name } = values;
     if (history.location.state) {
@@ -44,6 +33,15 @@ const QuizOnBoard = () => {
       const win = window.open(path, "_blank");
       win.focus();
     }
+  }
+
+  function handleStart() {
+    let path = history.location.pathname.split("onboard")[0];
+    path = path + "content";
+    history.push({
+      pathname: path,
+      state: { quiz: quiz },
+    });
   }
 
   return (
@@ -109,49 +107,111 @@ const QuizOnBoard = () => {
             <Text textAlign="center" fontWeight="bold" fontSize="3xl">
               Quiz:{" "}
               <Text display="inline-block" color="teal.300">
-                math quiz
+                {quiz.name}
               </Text>
             </Text>
 
-            <Box my='1rem'>
+            <Box my="1rem">
               <Text fontWeight="bold" color="gray.400">
                 Number of questions:{" "}
                 <Text fontWeight="bold" display="inline-block" color="teal.300">
-                  12
+                  {quiz.questionCount}
                 </Text>
               </Text>
 
               <Text fontWeight="bold" color="gray.400">
                 Duration of quiz:{" "}
-                <Text fontWeight="bold" display="inline-block" color="teal.300">
-                  1 hour 5 minutes
+                <Text display="inline-block" fontWeight="bold" color="teal.300">
+                  {Math.floor(quiz.durationSeconds / 3600) == 1 ? (
+                    <Text display="inline-block">1 hour,</Text>
+                  ) : (
+                    <Text display="inline-block">
+                      {Math.floor(quiz.durationSeconds / 3600)} hours,
+                    </Text>
+                  )}{" "}
+                  {Math.floor(
+                    (quiz.durationSeconds -
+                      Math.floor(quiz.durationSeconds / 3600) * 3600) /
+                      60
+                  ) == 1 ? (
+                    <Text display="inline-block">1 minute,</Text>
+                  ) : (
+                    <Text display="inline-block">
+                      {Math.floor(
+                        (quiz.durationSeconds -
+                          Math.floor(quiz.durationSeconds / 3600) * 3600) /
+                          60
+                      )}{" "}
+                      minutes,
+                    </Text>
+                  )}{" "}
+                  {quiz.durationSeconds -
+                    Math.floor(quiz.durationSeconds / 3600) * 3600 -
+                    Math.floor(
+                      (quiz.durationSeconds -
+                        Math.floor(quiz.durationSeconds / 3600) * 3600) /
+                        60
+                    ) *
+                      60 ==
+                  1 ? (
+                    <Text display="inline-block">1 second</Text>
+                  ) : (
+                    <Text display="inline-block">
+                      {quiz.durationSeconds -
+                        Math.floor(quiz.durationSeconds / 3600) * 3600 -
+                        Math.floor(
+                          (quiz.durationSeconds -
+                            Math.floor(quiz.durationSeconds / 3600) * 3600) /
+                            60
+                        ) *
+                          60}{" "}
+                      seconds
+                    </Text>
+                  )}
                 </Text>
               </Text>
 
               <Text fontWeight="bold" color="gray.400">
                 Maximum point:{" "}
                 <Text fontWeight="bold" display="inline-block" color="teal.300">
-                  50.00
+                  {quiz.quizMaxPoint.maxPoint}
                 </Text>
               </Text>
             </Box>
 
+            <Card boxShadow="2xl" borderRadius="15px" p="1rem">
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                color="yellow.400"
+              >
+                <Text
+                  lineHeight="unset"
+                  me="0.3rem"
+                  display="inline-block"
+                  textAlign="center"
+                  fontWeight="bold"
+                  fontSize="3xl"
+                >
+                  Warning
+                </Text>
+                <FaExclamationTriangle size={30} />
+              </Flex>
 
-            <Flex alignItems='center' justifyContent='center' color='yellow.400'>
-            <Text lineHeight='unset' me='0.3rem' display='inline-block' textAlign="center" fontWeight="bold" fontSize="3xl">
-             Warning
-            </Text>
-            <FaExclamationTriangle size={30} />
-            </Flex>
-
-
-            <Box mt='1rem'>
-                <Text  color='yellow.400' fontWeight='bold' >If you reload or quit the page, your answers will not be saved!</Text>
-                <Text  fontWeight='bold' color='red.500'>Once the time finishes, your quiz will be automatically submitted!</Text>
-
-            </Box>
+              <Box textAlign="center">
+                <Text color="yellow.400" fontWeight="bold">
+                  If you reload or quit the page, your answers will not be
+                  saved!
+                </Text>
+                <Text fontWeight="bold" color="red.500">
+                  Once the time finishes, your quiz will be automatically
+                  submitted!
+                </Text>
+              </Box>
+            </Card>
 
             <Button
+              onClick={() => handleStart()}
               type="submit"
               bg="teal.300"
               fontSize="13px"

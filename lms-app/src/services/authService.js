@@ -16,8 +16,12 @@ export const resetPassword = (data) => {
   return httpClient.post("user/resetpassword", data);
 };
 
-export const sendConfirmEmail = (data) => {
-  return httpClient.post("user/sendconfirmationemail", data);
+export const sendConfirmEmail = (token) => {
+  return httpClient.get("user/sendconfirmationemail",{
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  });
 };
 
 export const confirmEmail = (data) => {

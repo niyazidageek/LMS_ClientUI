@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../actions/const";
-import { httpClient } from "../utils/httpClient";
 
 export function useFetch(callback) {
   const dispatch = useDispatch();

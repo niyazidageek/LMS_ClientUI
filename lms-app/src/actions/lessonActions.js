@@ -1,4 +1,4 @@
-import { createLesson, editLessonById, getLessonById, getLessonsWithSubmissionsByGroupId, getMoreStudentsLessons, getMoreTeachersLessons, searchLessonsByGroupId, startLessonById } from "../services/lessonService";
+import { createLesson, deleteLessonById, editLessonById, getLessonById, getLessonsWithSubmissionsByGroupId, getMoreStudentsLessons, getMoreTeachersLessons, searchLessonsByGroupId, startLessonById } from "../services/lessonService";
 import { actionTypes } from "./const";
 
 export const getMoreStudentsLessonsAction = (token, groupId, page, size, futureDaysCount=null) => async (dispatch) => {
@@ -277,3 +277,36 @@ export const getLessonsWithSubmissionsByGroupIdAction = (token, groupId, page, s
 };
 
 
+export const deleteLessonByIdAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.SET_IS_FETCHING,
+    });
+
+    let resp = await deleteLessonById(id);
+
+    dispatch({
+      type: actionTypes.DISABLE_IS_FETCHING,
+    });
+
+    dispatch({
+      type: actionTypes.SET_AUTH_MESSAGE,
+      payload: resp.data,
+    });
+  } catch (error) {
+    if (error.message === "Network Error") {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_AUTH_ERROR,
+        payload: error.response.data,
+      });
+    }
+  }
+  dispatch({
+    type: actionTypes.DISABLE_IS_FETCHING,
+  });
+};

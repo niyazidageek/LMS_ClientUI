@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field } from "formik";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Select } from "chakra-react-select";
-import { NavLink, Redirect } from "react-router-dom";
 import { FaFileUpload, FaExclamationTriangle } from "react-icons/fa";
 import { Icon } from "@chakra-ui/icon";
 import {
@@ -32,9 +30,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import { FiFilePlus } from "react-icons/fi";
 import { searchLessonsByGroupIdAction } from "../../../actions/lessonActions";
-import lessonSchema from "../../../validations/lessonSchema";
 import assignmentSchema from "../../../validations/assignmentSchema";
 import { createAssignmentAction } from "../../../actions/assignmentActions";
 
@@ -46,21 +42,24 @@ const CreateAssignmentModal = ({ onClick, value, fetchMore }) => {
   const dispatch = useDispatch();
   const fileRef = useRef(null);
 
-function handleSearchInput(input){
-      let lessons = dispatch(searchLessonsByGroupIdAction(currentGroupId,input.trim()));
-      lessons.then(res=>{
-          res ? setLessons(res) : setLessons([])
-      })
+  function handleSearchInput(input) {
+    let lessons = dispatch(
+      searchLessonsByGroupIdAction(currentGroupId, input.trim())
+    );
+    lessons.then((res) => {
+      res ? setLessons(res) : setLessons([]);
+    });
   }
   function handleSubmit(values) {
-    let { name, deadline, description, lessonId, maxGrade, files, notifyAll } = values;
+    let { name, deadline, description, lessonId, maxGrade, files, notifyAll } =
+      values;
     let data = {
       name,
       deadline,
       description,
       maxGrade,
       lessonId,
-      notifyAll
+      notifyAll,
     };
 
     var formData = new FormData();
@@ -72,10 +71,9 @@ function handleSearchInput(input){
 
     let promise = dispatch(createAssignmentAction(formData, token));
 
-    promise.then(()=>fetchMore())
-    
+    promise.then(() => fetchMore());
+
     onClick();
-   
   }
 
   return (
@@ -98,8 +96,8 @@ function handleSearchInput(input){
                 deadline: "",
                 maxGrade: "",
                 files: [],
-                lessonId:"",
-                notifyAll:false
+                lessonId: "",
+                notifyAll: false,
               }}
               validationSchema={assignmentSchema}
               onSubmit={handleSubmit}
@@ -324,9 +322,9 @@ function handleSearchInput(input){
                     <FaExclamationTriangle size={70} />
                   </Flex>
 
-                  <Field name='notifyAll'>
+                  <Field name="notifyAll">
                     {({ field, form }) => (
-                      <FormControl mt='12px' display="flex" alignItems="center">
+                      <FormControl mt="12px" display="flex" alignItems="center">
                         <Switch
                           id="notify-all"
                           {...field}

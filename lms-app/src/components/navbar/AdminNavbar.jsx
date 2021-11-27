@@ -25,7 +25,6 @@ export default function AdminNavbar(props) {
   const { variant, children, fixed, secondary, brandText, onOpen, ...rest } =
     props;
 
-  // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("gray.700", "gray.200");
   let secondaryText = useColorModeValue("gray.400", "gray.200");
   let navbarPosition = "absolute";
@@ -65,7 +64,7 @@ export default function AdminNavbar(props) {
       zIndex="1"
       position={navbarPosition}
       boxShadow={navbarShadow}
-      backgroundColor='white !important'
+      backgroundColor="white !important"
       bg={navbarBg}
       filter={navbarFilter}
       borderWidth="1.5px"
@@ -83,7 +82,7 @@ export default function AdminNavbar(props) {
       left="50%"
       style={{ transform: "translate(-50%,0)" }}
       top="18px"
-      p={{xl:'1rem',sm:'8px'}}
+      p={{ xl: "1rem", sm: "8px" }}
       w={{ sm: "calc(100vw - 30px)", xl: "calc(100vw - 75px - 275px)" }}
     >
       <Flex
@@ -94,10 +93,10 @@ export default function AdminNavbar(props) {
         }}
         alignItems="center"
       >
-        <Box ml={{ sm: "1rem" }} width="100%" marginRight="1rem">
+        <Box width="100%" marginRight={{ md: "1rem" }}>
           {groups && currentGroup ? (
-            <Select 
-              selectedOptionColor='teal'
+            <Select
+              selectedOptionColor="teal"
               width="500px"
               name="subjectId"
               closeMenuOnSelect={true}
@@ -111,7 +110,7 @@ export default function AdminNavbar(props) {
             />
           ) : (
             <Select
-            selectedOptionColor='teal'
+              selectedOptionColor="teal"
               width="500px"
               name="subjectId"
               closeMenuOnSelect={true}

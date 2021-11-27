@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-// Chakra imports
-import { Formik, Form, Field } from "formik";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Table,
@@ -9,18 +7,11 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {
-  FaCheckCircle,
-  FaFileUpload,
-  FaExclamationTriangle,
-} from "react-icons/fa";
+
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
 import classes from "./main.module.scss";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
@@ -53,7 +44,7 @@ function StudentTheoryDetail() {
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card minH="620px" overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader justifyContent="space-between" p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Theory:{" "}
@@ -72,6 +63,7 @@ function StudentTheoryDetail() {
               onClick={() => handleMarkAsRead(theory.id)}
               lineHeight="unset"
               color="white"
+              borderRadius="5px"
               bg="teal.300"
               _hover={{
                 bg: "teal.400",
@@ -99,25 +91,28 @@ function StudentTheoryDetail() {
         </CardHeader>
         <CardBody flexDirection="column">
           <div
+            style={{ minHeight: "500px" }}
             className={classes.renderedHtml}
             dangerouslySetInnerHTML={{ __html: html }}
           ></div>
         </CardBody>
 
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

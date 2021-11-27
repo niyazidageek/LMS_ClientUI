@@ -1,28 +1,24 @@
-import React, { useCallback, useEffect, useRef } from "react";
-// Chakra imports
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import profileSettingsSchema from "../../../validations/profileSettingsSchema";
 import "./Profile.scss";
 import {
-  AvatarGroup,
   FormControl,
   FormLabel,
   FormErrorMessage,
   Textarea,
   SimpleGrid,
   Box,
-  Link,
   Button,
   Flex,
   Grid,
-  Icon,
   Input,
   Image,
   Switch,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Custom components
+
 import { fileHelper } from "../../../utils/fileHelper";
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
@@ -31,25 +27,15 @@ import CardHeader from "../../cards/CardHeader";
 import avatar from "../../../assets/img/default-avatar.jpeg";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import ProfileBgImage from "../../../assets/img/ProfileBackground.png";
-import {
-  FaCube,
-  FaFacebook,
-  FaInstagram,
-  FaPenFancy,
-  FaPlus,
-  FaTwitter,
-  FaCamera,
-} from "react-icons/fa";
-import { IoDocumentsSharp } from "react-icons/io5";
+import { FaCamera } from "react-icons/fa";
 import {
   editProfileAction,
-  editProfilePictureAction,
   getProfileAction,
 } from "../../../actions/profileActions";
 import { NavLink } from "react-router-dom";
+import ProfilePictureModal from "./ProfilePictureModal";
 
 function Profile() {
-  // Chakra color mode
   const dispatch = useDispatch();
   const textColor = useColorModeValue("gray.700", "white");
   const titleColor = useColorModeValue("teal.300", "teal.200");
@@ -62,7 +48,6 @@ function Profile() {
     "rgba(255, 255, 255, 0.31)"
   );
   const emailColor = useColorModeValue("gray.400", "gray.300");
-  const photoRef = useRef(null);
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const name = useSelector((state) => state.profileReducer.name);
@@ -71,21 +56,18 @@ function Profile() {
   const email = useSelector((state) => state.profileReducer.email);
   const bio = useSelector((state) => state.profileReducer.bio);
   const groups = useSelector((state) => state.profileReducer.groups);
+  const [isOpen, setIsOpen] = useState(false);
   const isSubscribedToSender = useSelector(
     (state) => state.profileReducer.isSubscribedToSender
   );
   const filename = useSelector((state) => state.profileReducer.filename);
 
   function handleSubmit(values) {
-    console.log(values);
     dispatch(editProfileAction(token, values));
   }
 
-  function handlePhoto(e) {
-    var formData = new FormData();
-    var file = e.target.files[0];
-    formData.append("Picture", file);
-    dispatch(editProfilePictureAction(token, formData));
+  function handleModal() {
+    setIsOpen((prev) => !prev);
   }
 
   useEffect(() => {
@@ -95,7 +77,7 @@ function Profile() {
   return !name || !surname || !username || !email || isFetching ? (
     <SpinnerComponent />
   ) : (
-    <Flex zIndex='-2' direction="column">
+    <Flex zIndex="-2" direction="column">
       <Box
         mb={{ sm: "205px", md: "75px", xl: "70px" }}
         borderRadius="15px"
@@ -118,11 +100,9 @@ function Profile() {
         >
           <Flex
             direction={{ sm: "column", md: "row" }}
-            // mx="1.5rem"
             maxH="330px"
             w={{ sm: "90%", xl: "95%" }}
             justifyContent={{ sm: "center", md: "space-between" }}
-            // align="center"
             backdropFilter="saturate(200%) blur(50px)"
             position="absolute"
             boxShadow="0px 2px 5.5px rgba(0, 0, 0, 0.02)"
@@ -144,14 +124,8 @@ function Profile() {
               w={{ sm: "100%" }}
               textAlign={{ sm: "center", md: "start" }}
             >
-              <Input
-                style={{ display: "none" }}
-                type="file"
-                ref={photoRef}
-                onChange={(e) => handlePhoto(e)}
-              />
               <Box
-                onClick={() => photoRef.current.click()}
+                onClick={() => handleModal()}
                 pos="relative"
                 className="photo-container"
                 transition="150ms linear"
@@ -178,15 +152,19 @@ function Profile() {
                   alignItems="center"
                 >
                   <FaCamera />
-                  <Text textAlign="center" fontSize="sm">
-                    New photo
-                  </Text>
+
+                  <ProfilePictureModal
+                    value={isOpen}
+                    onClick={() => handleModal()}
+                    profilePicture={filename}
+                  />
                 </Box>
                 {filename ? (
                   <Image
                     zIndex="3"
                     w="80px"
                     h="80px"
+                    objectFit="cover"
                     borderRadius="15px"
                     src={fileHelper.convertToUrl(filename)}
                   />
@@ -475,22 +453,26 @@ function Profile() {
             justifyContent="center"
             alignItems="center"
           >
-            <NavLink style={{width:'100%',height:'100%'}} path to="/requestchangeemail">
-            <Button
-              bg="red.500"
-              fontSize="13px"
-              color="white"
-              fontWeight="bold"
-              w="100%"
-              h="45"
-              mt="24px"
-              mb="24px"
-              _hover={{
-                bg: "red.400",
-              }}
+            <NavLink
+              style={{ width: "100%", height: "100%" }}
+              path
+              to="/requestchangeemail"
             >
-              CHANGE YOUR E-MAIL
-            </Button>
+              <Button
+                bg="red.500"
+                fontSize="13px"
+                color="white"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mt="24px"
+                mb="24px"
+                _hover={{
+                  bg: "red.400",
+                }}
+              >
+                CHANGE YOUR E-MAIL
+              </Button>
             </NavLink>
           </CardBody>
         </Card>

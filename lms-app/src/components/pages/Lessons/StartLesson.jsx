@@ -8,12 +8,8 @@ import {
   Flex,
   Box,
   useColorModeValue,
-  Input,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
 import { AuthErrorAlert } from "../../alerts/AuthErrorAlert";
@@ -27,7 +23,7 @@ const StartLesson = () => {
   const dispatch = useDispatch();
   let { id } = useParams();
   const history = useHistory();
-  const name =  useSelector((state) => state.authReducer.name);
+  const name = useSelector((state) => state.authReducer.name);
   const token = useSelector((state) => state.authReducer.jwt);
   const [localIsFetching, setLocalIsFetching] = useState(false);
 
@@ -45,8 +41,6 @@ const StartLesson = () => {
     };
 
     var resp = dispatch(startLessonByIdAction(id, data, token));
-
-
 
     resp.then((res) => {
       if (res) {

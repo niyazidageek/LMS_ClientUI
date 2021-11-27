@@ -93,7 +93,12 @@ export const searchLessonsByGroupId = (groupId, input) => {
   );
 };
 
-export const getLessonsWithSubmissionsByGroupId = (token, groupId, page, size) => {
+export const getLessonsWithSubmissionsByGroupId = (
+  token,
+  groupId,
+  page,
+  size
+) => {
   return httpClient.get(
     "lesson/getlessonswithsubmissionsbygroupid/" +
       groupId +
@@ -107,4 +112,8 @@ export const getLessonsWithSubmissionsByGroupId = (token, groupId, page, size) =
       },
     }
   );
+};
+
+export const deleteLessonById = (id) => {
+  return httpClient.delete("lesson/deletelesson/" + id);
 };

@@ -11,13 +11,14 @@ const SpinnerComponent = React.memo(() => {
         left: "50%",
         top: "50%",
         transform: "translate(-50%,-50%)",
+        zIndex:'2'
       }}
     >
       <Spinner
         thickness="4px"
         speed="0.65s"
         emptyColor="gray.200"
-        color="blue.500"
+        color="teal.500"
         size="xl"
       />
     </div>

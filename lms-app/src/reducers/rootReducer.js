@@ -7,27 +7,36 @@ import lessonReducer from "./lessonReducer";
 import onBoardReducer from "./onBoardReducer";
 import profileReducer from "./profileReducer";
 import assignmentReducer from "./assignmentReducer";
-import theoryReducer from "./theoryReducer"
-import teacherHomeReducer from "./teacherHomeReducer"
+import theoryReducer from "./theoryReducer";
+import teacherHomeReducer from "./teacherHomeReducer";
 import videoChatReducer from "./videoChatReducer";
+import quizReducer from "./quizReducer";
+import questionReducer from "./questionReducer";
+import optionReducer from "./optionReducer";
+import joinLinkReducer from "./joinLinkReducer";
+import notificationReducer from "./notificationReducer";
 
 const persistConfig = {
-    key: "root",
-    storage,
-    whitelist: ["authReducer","onBoardReducer"],
-  };
+  key: "root",
+  storage,
+  whitelist: ["authReducer", "onBoardReducer"],
+};
 
-  const rootReducer = combineReducers({
-    profileReducer,
-    authReducer,
-    theoryReducer,
-    onBoardReducer,
-    studentHomeReducer,
-    assignmentReducer,
-    teacherHomeReducer,
-    lessonReducer,
-    videoChatReducer
-  });
-  
+const rootReducer = combineReducers({
+  profileReducer,
+  authReducer,
+  theoryReducer,
+  onBoardReducer,
+  studentHomeReducer,
+  assignmentReducer,
+  teacherHomeReducer,
+  lessonReducer,
+  videoChatReducer,
+  quizReducer,
+  questionReducer,
+  optionReducer,
+  joinLinkReducer,
+  notificationReducer,
+});
 
-  export default persistReducer(persistConfig, rootReducer);
+export default persistReducer(persistConfig, rootReducer);

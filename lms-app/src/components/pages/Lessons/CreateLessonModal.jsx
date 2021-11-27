@@ -1,22 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field } from "formik";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { Select } from "chakra-react-select";
-import { NavLink, Redirect } from "react-router-dom";
 
-import { Icon } from "@chakra-ui/icon";
 import {
   FormErrorMessage,
-  Flex,
-  Box,
-  Checkbox,
   Stack,
-  Link,
-  Heading,
   SimpleGrid,
   RadioGroup,
   Radio,
@@ -27,12 +18,10 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import { FiFilePlus } from "react-icons/fi";
-import { createLessonAction, getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
+import { createLessonAction } from "../../../actions/lessonActions";
 import lessonSchema from "../../../validations/lessonSchema";
 
 const CreateLessonModal = ({ onClick, value, groupId, fetchMore }) => {
@@ -47,20 +36,19 @@ const CreateLessonModal = ({ onClick, value, groupId, fetchMore }) => {
       description,
       endDate,
       groupId,
-      isOnline :isOnline == "1" ? true : false,
+      isOnline: isOnline == "1" ? true : false,
     };
 
-    let promise = dispatch(createLessonAction(data, token))
+    let promise = dispatch(createLessonAction(data, token));
 
-    promise.then(()=>fetchMore())
-    
-    onClick()
+    promise.then(() => fetchMore());
 
+    onClick();
   }
 
   return (
     <>
-      <Modal size='xl' isOpen={value} onClose={onClick}>
+      <Modal size="xl" isOpen={value} onClose={onClick}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

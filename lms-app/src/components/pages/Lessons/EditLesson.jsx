@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-// Chakra imports
 import {
   Flex,
-  Table,
-  Tbody,
   Text,
-  Th,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -13,29 +9,22 @@ import {
   Stack,
   RadioGroup,
   Input,
-  Switch,
   SimpleGrid,
-  Textarea,
-  Thead,
-  Tr,
   Button,
-  Td,
-  Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
-import { FaCheckCircle } from "react-icons/fa";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import lessonSchema from "../../../validations/lessonSchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { editLessonByIdAction, getLessonByIdAction } from "../../../actions/lessonActions";
+import {
+  editLessonByIdAction,
+  getLessonByIdAction,
+} from "../../../actions/lessonActions";
 
 function EditLesson() {
   let { id } = useParams();
@@ -53,17 +42,17 @@ function EditLesson() {
   function handleSubmit(values) {
     let groupId = lesson.groupId;
 
-    let {name, startDate, endDate, description, isOnline} = values;
+    let { name, startDate, endDate, description, isOnline } = values;
 
-    let data = { 
+    let data = {
       groupId,
-      name, 
+      name,
       startDate,
       endDate,
       description,
       isOnline: isOnline == "1" ? true : false,
-    }
-    dispatch(editLessonByIdAction(id, data, token))
+    };
+    dispatch(editLessonByIdAction(id, data, token));
   }
 
   return isFetching || !lesson ? (
@@ -211,60 +200,60 @@ function EditLesson() {
                       </SimpleGrid>
 
                       <Field name="isOnline">
-                          {({ field, form }) => (
-                            <FormControl
-                              mt="24px"
-                              display="flex"
-                              flexDirection="column"
-                              isInvalid={
-                                form.errors.isOnline && form.touched.isOnline
-                              }
+                        {({ field, form }) => (
+                          <FormControl
+                            mt="24px"
+                            display="flex"
+                            flexDirection="column"
+                            isInvalid={
+                              form.errors.isOnline && form.touched.isOnline
+                            }
+                          >
+                            <FormLabel
+                              htmlFor="isSubscribedToSender"
+                              fontWeight="semibold"
+                              fontSize="md"
                             >
-                              <FormLabel
-                                htmlFor="isSubscribedToSender"
-                                fontWeight="semibold"
-                                fontSize="md"
-                              >
-                                Format of the lesson
-                              </FormLabel>
-                              <RadioGroup {...field}>
-                                <Stack spacing={5} direction="row">
-                                  <Radio
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        field.name,
-                                        e.target.value
-                                      );
-                                    }}
-                                    fontWeight="semibold"
-                                    color="green"
-                                    colorScheme="green"
-                                    value="1"
-                                  >
-                                    Online
-                                  </Radio>
-                                  <Radio
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        field.name,
-                                        e.target.value
-                                      );
-                                    }}
-                                    fontWeight="semibold"
-                                    color="yellow.500"
-                                    colorScheme="yellow"
-                                    value="0"
-                                  >
-                                    Offline
-                                  </Radio>
-                                </Stack>
-                                 <FormErrorMessage>
+                              Format of the lesson
+                            </FormLabel>
+                            <RadioGroup {...field}>
+                              <Stack spacing={5} direction="row">
+                                <Radio
+                                  onChange={(e) => {
+                                    form.setFieldValue(
+                                      field.name,
+                                      e.target.value
+                                    );
+                                  }}
+                                  fontWeight="semibold"
+                                  color="green"
+                                  colorScheme="green"
+                                  value="1"
+                                >
+                                  Online
+                                </Radio>
+                                <Radio
+                                  onChange={(e) => {
+                                    form.setFieldValue(
+                                      field.name,
+                                      e.target.value
+                                    );
+                                  }}
+                                  fontWeight="semibold"
+                                  color="yellow.500"
+                                  colorScheme="yellow"
+                                  value="0"
+                                >
+                                  Offline
+                                </Radio>
+                              </Stack>
+                              <FormErrorMessage>
                                 {form.errors.isOnline}
                               </FormErrorMessage>
-                              </RadioGroup>
-                            </FormControl>
-                          )}
-                        </Field>
+                            </RadioGroup>
+                          </FormControl>
+                        )}
+                      </Field>
 
                       <Button
                         isLoading={isFetching}

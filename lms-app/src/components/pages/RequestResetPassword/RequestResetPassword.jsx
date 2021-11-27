@@ -4,7 +4,6 @@ import { Formik, Form, Field } from "formik";
 import requestResetPasswordSchema from "../../../validations/requestResetPasswordSchema";
 import { Redirect } from "react-router-dom";
 import validateEmail from "../../../validations/validateEmail";
-import validatePassword from "../../../validations/validatePassword";
 import { NavLink, useHistory } from "react-router-dom";
 import BgSignUp from "../../../assets/img/BgSignUp.png";
 import {
@@ -15,15 +14,10 @@ import {
   Box,
   Input,
   useColorModeValue,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
-import { AuthErrorAlert } from "../../alerts/AuthErrorAlert";
-import { AuthMessageAlert } from "../../alerts/AuthMessageAlert";
 import { requestResetPasswordAction } from "../../../actions/authActions";
 
 const RequestResetPassword = () => {
@@ -83,7 +77,7 @@ const RequestResetPassword = () => {
           mb="26px"
           w={{ base: "90%", sm: "60%", lg: "40%", xl: "30%" }}
         >
-            Send a request for a new password.
+          Send a request for a new password.
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -110,7 +104,6 @@ const RequestResetPassword = () => {
                 <Field name="email" validate={validateEmail}>
                   {({ field, form }) => (
                     <FormControl
-                      //   mb="24px"
                       isInvalid={form.errors.email && form.touched.email}
                     >
                       <FormLabel ms="4px" fontSize="sm" fontWeight="normal">

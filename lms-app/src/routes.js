@@ -9,8 +9,9 @@ import {
   ProfileIcon,
 } from "./components/icons/Icons";
 
-import {MdPlayLesson} from 'react-icons/md'
+import { MdGrading, MdPlayLesson } from "react-icons/md";
 import { FaBook, FaCheck, FaFileAlt } from "react-icons/fa";
+import { BsFillChatLeftTextFill } from "react-icons/bs";
 
 export const studentRoutes = [
   {
@@ -29,6 +30,12 @@ export const studentRoutes = [
     path: "/lessons",
     name: "Lessons",
     icon: <MdPlayLesson color="inherit" />,
+    layout: "/student",
+  },
+  {
+    path: "/quizzes",
+    name: "Quizzes",
+    icon: <MdGrading color="inherit" />,
     layout: "/student",
   },
 ];
@@ -69,5 +76,11 @@ export const teacherRoutes = [
     name: "Submissions",
     icon: <FaCheck color="inherit" />,
     layout: "/teacher",
-  }
-]
+  },
+  {
+    path: "/quizzes",
+    name: "Quizzes",
+    icon: <MdGrading color="inherit" />,
+    layout: "/teacher",
+  },
+];

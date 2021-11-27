@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -11,16 +10,13 @@ import {
   Td,
   useColorModeValue,
 } from "@chakra-ui/react";
-
 import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import ReactPaginate from "react-paginate";
 import {
   Pagination,
   usePagination,
@@ -45,7 +41,7 @@ function StudentLessons() {
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   let history = useHistory();
-  let size = 3;
+  let size = 9;
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
@@ -64,7 +60,7 @@ function StudentLessons() {
     initialState: {
       pageSize: size,
       isDisabled: false,
-      currentPage: (page&&parseInt(page)) ?? 0,
+      currentPage: (page && parseInt(page)) ?? 0,
     },
   });
 
@@ -72,7 +68,7 @@ function StudentLessons() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
-    let pageTake = page ? currentPage-1 : currentPage;
+    let pageTake = page ? currentPage - 1 : currentPage;
     dispatch(
       getMoreStudentsLessonsAction(token, currentGroupId, pageTake, size)
     );
@@ -93,7 +89,9 @@ function StudentLessons() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
-    dispatch(getMoreStudentsLessonsAction(token, currentGroupId, number - 1, size));
+    dispatch(
+      getMoreStudentsLessonsAction(token, currentGroupId, number - 1, size)
+    );
     setLessons(newLessons);
   };
 
@@ -102,131 +100,154 @@ function StudentLessons() {
     history.push(path);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
+
   return isFetching || !lessons ? (
     <SpinnerComponent />
   ) : lessons.length != 0 ? (
-    (
-    (
-      <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-        <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-          <CardHeader p="6px 0px 22px 0px">
-            <Text fontSize="xl" color={textColor} fontWeight="bold">
-              Lessons
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <Table variant="simple" color={textColor}>
-              <Thead>
-                <Tr color="gray.400">
-                  <Th color="gray.400">Name</Th>
-                  <Th color="gray.400">Start time</Th>
-                  <Th color="gray.400">End time</Th>
-                </Tr>
-              </Thead>
-              <Tbody fontWeight="semibold">
-                {lessons.map((lesson) => {
-                  let startDate =
-                    dateHelper.normalizedDateWithVerbalDateAndTime(
-                      lesson.startDate
-                    );
-                  let endDate = dateHelper.normalizedDateWithVerbalDateAndTime(
-                    lesson.endDate
-                  );
-                  return (
-                    <Tr
-                      onClick={() => lessonClick(lesson.id)}
-                      _hover={{
-                        bg: "whitesmoke",
-                      }}
-                    >
-                      <Td>{lesson.name}</Td>
-                      <Td>{startDate}</Td>
-                      <Td>{endDate}</Td>
-                    </Tr>
-                  );
-                })}
-              </Tbody>
-            </Table>
-          </CardBody>
-        </Card>
-        <Pagination
-          pagesCount={pagesCount}
-          currentPage={currentPage}
-          isDisabled={isDisabled}
-          onPageChange={handlePageClick}
-        >
-          <PaginationContainer
-            align="center"
-            justify="space-between"
-            p={4}
-            w="full"
-          >
-            <PaginationPrevious
-              lineHeight="none"
-              color="white"
-              borderRadius="6px"
-              _hover={{
-                bg: "teal.400",
-              }}
-              bg="teal.300"
-            >
-              <Text>Previous</Text>
-            </PaginationPrevious>
-            <PaginationPageGroup
-              isInline
-              align="center"
-              separator={
-                <PaginationSeparator
-                  lineHeight="none"
-                  bg="blue.300"
-                  fontSize="sm"
-                  borderRadius="6px"
-                  w={7}
-                  jumpSize={11}
-                />
-              }
-            >
-              {pages.map((page) => (
-                <PaginationPage
-                  lineHeight="none"
-                  w={7}
-                  h={7}
-                  borderRadius="6px"
-                  color="white"
-                  bg="gray.300"
-                  key={`pagination_page_${page}`}
-                  page={page}
-                  fontSize="sm"
-                  _hover={{
-                    bg: "teal.400",
-                  }}
-                  _current={{
-                    bg: "teal.300",
-                    fontSize: "sm",
-                    w: 7,
-                  }}
-                />
-              ))}
-            </PaginationPageGroup>
-            <PaginationNext
-              lineHeight="none"
-              color="white"
-              _hover={{
-                bg: "teal.400",
-              }}
-              bg="teal.300"
-              borderRadius="6px"
-            >
-              <Text>Next</Text>
-            </PaginationNext>
-          </PaginationContainer>
-        </Pagination>
-      </Flex>
-    ))
-  ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+      <Card height="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px">
+          <Text fontSize="xl" color={textColor} fontWeight="bold">
+            Lessons
+          </Text>
+        </CardHeader>
+        <CardBody>
+          <Table variant="simple" color={textColor}>
+            <Thead>
+              <Tr color="gray.400">
+                <Th color="gray.400">Name</Th>
+                <Th color="gray.400">Start time</Th>
+                <Th color="gray.400">End time</Th>
+              </Tr>
+            </Thead>
+            <Tbody fontWeight="semibold">
+              {lessons.map((lesson) => {
+                let startDate = dateHelper.normalizedDateWithVerbalDateAndTime(
+                  lesson.startDate
+                );
+                let endDate = dateHelper.normalizedDateWithVerbalDateAndTime(
+                  lesson.endDate
+                );
+                return (
+                  <Tr
+                    onClick={() => lessonClick(lesson.id)}
+                    _hover={{
+                      bg: "whitesmoke",
+                    }}
+                  >
+                    <Td>{lesson.name}</Td>
+                    <Td>{startDate}</Td>
+                    <Td>{endDate}</Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </CardBody>
+      </Card>
+      <Pagination
+        pagesCount={pagesCount}
+        currentPage={currentPage}
+        isDisabled={isDisabled}
+        onPageChange={handlePageClick}
+      >
+        <PaginationContainer
+          align="center"
+          justify="space-between"
+          p={4}
+          w="full"
+        >
+          <PaginationPrevious
+            lineHeight="none"
+            color="white"
+            borderRadius="6px"
+            _hover={{
+              bg: "teal.400",
+            }}
+            bg="teal.300"
+          >
+            <Text>Previous</Text>
+          </PaginationPrevious>
+          <PaginationPageGroup
+            isInline
+            align="center"
+            separator={
+              <PaginationSeparator
+                lineHeight="none"
+                bg="blue.300"
+                fontSize="sm"
+                borderRadius="6px"
+                w={7}
+                jumpSize={11}
+              />
+            }
+          >
+            {pages.map((page) => (
+              <PaginationPage
+                lineHeight="none"
+                w={7}
+                h={7}
+                borderRadius="6px"
+                color="white"
+                bg="gray.300"
+                key={`pagination_page_${page}`}
+                page={page}
+                fontSize="sm"
+                _hover={{
+                  bg: "teal.400",
+                }}
+                _current={{
+                  bg: "teal.300",
+                  fontSize: "sm",
+                  w: 7,
+                }}
+              />
+            ))}
+          </PaginationPageGroup>
+          <PaginationNext
+            lineHeight="none"
+            color="white"
+            _hover={{
+              bg: "teal.400",
+            }}
+            bg="teal.300"
+            borderRadius="6px"
+          >
+            <Text>Next</Text>
+          </PaginationNext>
+        </PaginationContainer>
+      </Pagination>
+    </Flex>
+  ) : (
+    <Flex pos="relative" direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card h="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <Text
+          pos="absolute"
+          left="50%"
+          top="50%"
+          style={{ transform: "translate(-50%,-50%)" }}
+          textAlign="center"
+          fontSize="xl"
+          fontWeight="bold"
+        >
           You have no lessons..
         </Text>
       </Card>

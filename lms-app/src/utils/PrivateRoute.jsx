@@ -15,6 +15,10 @@ export const PrivateRoute = ({
 }) => {
   const validRoles = rolesRestriction;
 
+  const isMailConfirmed = useSelector(
+    (state) => state.authReducer.isMailConfirmed
+  );
+
   const isLoggedIn = useSelector(
     (state) => state.authReducer.isLoggedIn && state.authReducer.jwt !== null
   );
@@ -28,7 +32,11 @@ export const PrivateRoute = ({
       {...rest}
       render={(props) =>
         isLoggedIn === true && isAuthorized === true ? (
-          <Component {...props} />
+          !isMailConfirmed ? (
+            <Redirect to="/demo/onboard" />
+          ) : (
+            <Component {...props} />
+          )
         ) : (
           <Redirect to="/login" />
         )

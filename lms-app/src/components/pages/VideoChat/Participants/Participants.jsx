@@ -10,7 +10,6 @@ const Participants = () => {
   const participantsState = useSelector(state=>state.videoChatReducer.participants)
   const mainStream = useSelector(state=>state.videoChatReducer.mainStream)
   const currentUserState = useSelector(state=>state.videoChatReducer.currentUser)
-  // const hasPresenter = useSelector(state=>state.videoChatReducer.hasPresenter)
 
   let participantKey = Object.keys(participantsState);
   useEffect(() => {

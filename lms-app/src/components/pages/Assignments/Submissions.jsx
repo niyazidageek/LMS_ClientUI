@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -14,14 +13,11 @@ import {
 } from "@chakra-ui/react";
 
 import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import ReactPaginate from "react-paginate";
 import {
   Pagination,
   usePagination,
@@ -33,7 +29,10 @@ import {
   PaginationSeparator,
 } from "@ajna/pagination";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getLessonsWithSubmissionsByGroupIdAction, getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
+import {
+  getLessonsWithSubmissionsByGroupIdAction,
+  getMoreTeachersLessonsAction,
+} from "../../../actions/lessonActions";
 
 function Submissions() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -46,7 +45,7 @@ function Submissions() {
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   let history = useHistory();
-  let size = 3;
+  let size = 8;
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
@@ -75,7 +74,12 @@ function Submissions() {
     });
     let pageTake = page ? currentPage - 1 : currentPage;
     dispatch(
-      getLessonsWithSubmissionsByGroupIdAction(token, currentGroupId, pageTake, size)
+      getLessonsWithSubmissionsByGroupIdAction(
+        token,
+        currentGroupId,
+        pageTake,
+        size
+      )
     );
     setPageCount(Math.ceil(total / size));
     setLessons(newLessons);
@@ -95,7 +99,12 @@ function Submissions() {
       type: actionTypes.SET_IS_FETCHING,
     });
     dispatch(
-      getLessonsWithSubmissionsByGroupIdAction(token, currentGroupId, number - 1, size)
+      getLessonsWithSubmissionsByGroupIdAction(
+        token,
+        currentGroupId,
+        number - 1,
+        size
+      )
     );
     setLessons(newLessons);
   };
@@ -105,17 +114,35 @@ function Submissions() {
     history.push(path);
   }
 
-  function handleStatistics(){
+  function handleStatistics() {
     let path = history.location.pathname + "/statistics";
     history.push(path);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
 
   return isFetching || !lessons ? (
     <SpinnerComponent />
   ) : lessons.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card h={{ xl: "600px" }} overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons
@@ -132,17 +159,14 @@ function Submissions() {
           >
             View statistics
           </Button>
-          
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>
             <Thead>
               <Tr color="gray.400">
-                <Th textAlign="center" color="gray.400">
-                  Name
-                </Th>
-                <Th textAlign="center" color="gray.400">
-                  Submissionns
+                <Th color="gray.400">Name</Th>
+                <Th textAlign="end" color="gray.400">
+                  Submissions
                 </Th>
               </Tr>
             </Thead>
@@ -150,18 +174,19 @@ function Submissions() {
               {lessons.map((lesson) => {
                 return (
                   <Tr
-                    onClick={()=>lessonClick(lesson.id)}
+                    onClick={() => lessonClick(lesson.id)}
                     _hover={{
                       bg: "whitesmoke",
                     }}
                   >
-                    <Td textAlign="center">{lesson.name}</Td>
-                    <Td textAlign="center" color='teal.300' fontWeight='bold'>
-                      {
-                        lesson.assignments &&
-                        lesson.assignments.reduce( (accumulator, curr) =>
-                        accumulator +curr.assignmentAppUsers.length, 0)
-                      }
+                    <Td>{lesson.name}</Td>
+                    <Td textAlign="end" color="teal.300" fontWeight="bold">
+                      {lesson.assignments &&
+                        lesson.assignments.reduce(
+                          (accumulator, curr) =>
+                            accumulator + curr.assignmentAppUsers.length,
+                          0
+                        )}
                     </Td>
                   </Tr>
                 );
@@ -245,8 +270,8 @@ function Submissions() {
     </Flex>
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+      <Card height="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons with submissions
           </Text>
@@ -262,9 +287,16 @@ function Submissions() {
           >
             View statistics
           </Button>
-          
         </CardHeader>
-        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+        <Text
+          pos="absolute"
+          left="50%"
+          top="50%"
+          style={{ transform: "translate(-50%,-50%)" }}
+          textAlign="center"
+          fontSize="xl"
+          fontWeight="bold"
+        >
           You have no lessons with submissions..
         </Text>
       </Card>

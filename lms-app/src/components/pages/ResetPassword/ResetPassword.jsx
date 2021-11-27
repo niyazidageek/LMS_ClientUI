@@ -15,15 +15,10 @@ import {
   Box,
   useColorModeValue,
   Input,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
-import { AuthErrorAlert } from "../../alerts/AuthErrorAlert";
-import { AuthMessageAlert } from "../../alerts/AuthMessageAlert";
 import { useValidateToken } from "../../../hooks/useValidateToken";
 import { resetPasswordAction } from "../../../actions/authActions";
 

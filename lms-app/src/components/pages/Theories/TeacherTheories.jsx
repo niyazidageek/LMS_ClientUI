@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -14,14 +13,11 @@ import {
 } from "@chakra-ui/react";
 
 import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import ReactPaginate from "react-paginate";
 import {
   Pagination,
   usePagination,
@@ -33,8 +29,6 @@ import {
   PaginationSeparator,
 } from "@ajna/pagination";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
-import { getAllAssignmentsByGroupIdAction } from "../../../actions/assignmentActions";
 import { getAllTheoriesByGroupIdAction } from "../../../actions/theoryActions";
 
 function TeacherTheories() {
@@ -45,10 +39,9 @@ function TeacherTheories() {
   const newTheories = useSelector((state) => state.theoryReducer.theories);
   const total = useSelector((state) => state.theoryReducer.count);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
-  const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   let history = useHistory();
-  let size = 3;
+  let size = 6;
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
@@ -113,11 +106,30 @@ function TeacherTheories() {
     history.push(path);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
+
   return isFetching || !theories ? (
     <SpinnerComponent />
   ) : theories.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card height="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Theory
@@ -285,7 +297,7 @@ function TeacherTheories() {
     </Flex>
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card height="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Theory
@@ -303,7 +315,15 @@ function TeacherTheories() {
             Create theory
           </Button>
         </CardHeader>
-        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+        <Text
+          pos="absolute"
+          left="50%"
+          top="50%"
+          style={{ transform: "translate(-50%,-50%)" }}
+          textAlign="center"
+          fontSize="xl"
+          fontWeight="bold"
+        >
           You have no theory..
         </Text>
       </Card>

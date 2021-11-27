@@ -5,17 +5,17 @@ const profileSettingsSchema = Yup.object().shape(
 
         name: Yup.string()
             .min(5, 'Should be 5 character long!')
-            .max(15, 'Should not exceed 15 characters!')
+            .max(150, 'Should not exceed 150 characters!')
             .required('Required!'),
 
         surname: Yup.string()
             .min(5, 'Should be 5 character long!')
-            .max(15, 'Should not exceed 15 characters!')
+            .max(150, 'Should not exceed 150 characters!')
             .required('Required!'),
 
         bio: Yup.string()
         .min(5, 'Should be 5 character long!')
-        .max(50, 'Should not exceed 50 characters!')
+        .max(250, 'Should not exceed 250 characters!')
     }
 );
 

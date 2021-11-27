@@ -34,7 +34,6 @@ export const createOffer = async (peerConnection, receiverId, createdID,roomId) 
 
   await currentParticipantRef.child("offers").push().set({ offer });
 
-  console.log(offer);
 };
 
 
@@ -156,7 +155,6 @@ const createAnswer = async (otherUserId, userId, participants,roomId) => {
   
     await participantRef1.child("answers").push().set({ answer });
 
-    console.log(answer);
   };
 
   export const servers = {

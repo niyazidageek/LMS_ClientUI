@@ -2,26 +2,18 @@ import React, { useRef, useEffect, useState, createContext } from "react";
 import MeetingFooter from "../MeetingFooter/MeetingFooter";
 import Participants from "../Participants/Participants";
 import "./MainScreen.css";
-import { Redirect } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeParticipantAction,
   setMainStreamAction,
   updateUserAction,
 } from "../../../../actions/videoChatActions";
-import {
-  createUserStream,
-  createUserStreamWithoutVideo,
-  createUserStreamWithVideo,
-  killVideoTracks,
-  replaceTracks,
-  stopMediaStream,
-} from "../../../../services/videoChatService";
+import { stopMediaStream } from "../../../../services/videoChatService";
 import { useHistory } from "react-router";
 import Cookies from "universal-cookie";
-import { actionTypes } from "../../../../actions/const";
 
-const MainScreen = ({dbRef,roomId}) => {
+const MainScreen = ({ dbRef, roomId }) => {
   const participants = useSelector(
     (state) => state.videoChatReducer.participants
   );
@@ -37,14 +29,13 @@ const MainScreen = ({dbRef,roomId}) => {
   const onMicClick = (micEnabled) => {
     if (mainStream) {
       mainStream.getAudioTracks()[0].enabled = micEnabled;
-      dispatch(updateUserAction(currentUser, { audio: micEnabled },roomId));
+      dispatch(updateUserAction(currentUser, { audio: micEnabled }, roomId));
     }
   };
   const onVideoClick = async (videoEnabled) => {
     if (mainStream) {
-      // console.log(mainStream.getVideoTracks());
       mainStream.getVideoTracks()[0].enabled = videoEnabled;
-      dispatch(updateUserAction(currentUser, { video: videoEnabled },roomId));
+      dispatch(updateUserAction(currentUser, { video: videoEnabled }, roomId));
     }
   };
 
@@ -59,7 +50,6 @@ const MainScreen = ({dbRef,roomId}) => {
       const peerConnection = sender.peerConnection
         .getSenders()
         .find((s) => (s.track ? s.track.kind === "video" : false));
-        // console.log(stream.getVideoTracks())
       console.log(peerConnection);
       peerConnection.replaceTrack(stream.getVideoTracks()[0]);
     }
@@ -67,26 +57,21 @@ const MainScreen = ({dbRef,roomId}) => {
   };
 
   const onEndCall = async () => {
-
-    let cookies = new Cookies;
+    let cookies = new Cookies();
 
     dbRef.child(Object.keys(currentUser)[0]).remove();
 
-    
-   
+    dispatch(
+      removeParticipantAction(participants, Object.keys(currentUser)[0])
+    );
 
-    dispatch(removeParticipantAction(participants,Object.keys(currentUser)[0]))
-
-    mainStream.getVideoTracks()[0].enabled=false;
+    mainStream.getVideoTracks()[0].enabled = false;
 
     await stopMediaStream(mainStream);
 
-    
-    dispatch(setMainStreamAction(null))
+    dispatch(setMainStreamAction(null));
 
     console.log(mainStream.getVideoTracks());
-
-    // console.log(Object.keys(currentUser)[0]);
 
     history.replace({
       pathname: "/videochat/offboard",
@@ -96,47 +81,29 @@ const MainScreen = ({dbRef,roomId}) => {
       },
     });
     cookies.set("hasJoined", false, { path: "/" });
-    // console.log(Object.keys(currentUser)[0]);
   };
 
   const onScreenShareEnd = async (callback) => {
-
-    // console.log(mainStream);
-
-    console.log('ccddaa');
+    console.log("ccddaa");
 
     mainStream.getVideoTracks()[0].enabled = false;
-    
+
     const localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
     });
-
-
-    // navigator.mediaDevices.getUserMedia({
-    //   video: { mediaSource: "screen" },
-    // });
-    
 
     localStream.getVideoTracks()[0].enabled =
       Object.values(currentUser)[0].video;
 
     updateStream(localStream);
 
-    dispatch(updateUserAction(currentUser, { screen: false },roomId));
+    dispatch(updateUserAction(currentUser, { screen: false }, roomId));
 
-    // setShareEnabled(false);
-    
     callback(false);
-
-    // Event.prototype.isPrototypeOf(callback) ? dispatch({
-    //   type:actionTypes.SET_SHARE_ENABLED
-    // }) : callback(false);
-    // console.log(callback);
   };
 
   const onScreenClick = async (callback) => {
-    // mainStream.getVideoTracks()[0].enabled=false;
     let mediaStream;
     if (navigator.getDisplayMedia) {
       mediaStream = await navigator.getDisplayMedia({ video: true });
@@ -154,9 +121,7 @@ const MainScreen = ({dbRef,roomId}) => {
 
     updateStream(mediaStream);
 
-    // console.log(mediaStream.getTracks());
-
-    await dispatch(updateUserAction(currentUser, { screen: true },roomId));
+    await dispatch(updateUserAction(currentUser, { screen: true }, roomId));
 
     callback(true);
   };
@@ -167,7 +132,6 @@ const MainScreen = ({dbRef,roomId}) => {
       </div>
 
       <div className="footer">
-      {/* <FooterContext.Provider value={shareEnabled}> */}
         <MeetingFooter
           onScreenClick={onScreenClick}
           onMicClick={onMicClick}
@@ -175,7 +139,6 @@ const MainScreen = ({dbRef,roomId}) => {
           onEndCall={onEndCall}
           onScreenShareEnd={onScreenShareEnd}
         />
-        {/* </FooterContext.Provider> */}
       </div>
     </div>
   );

@@ -27,6 +27,7 @@ const authReducer = (state = initialState, action) => {
         surname: action.payload.surname,
         isLoggedIn: true,
         isFetching: false,
+        isMailConfirmed:action.payload.isMailConfirmed,
         jwt: action.payload.token,
         error: null,
         roles: action.payload.roles,

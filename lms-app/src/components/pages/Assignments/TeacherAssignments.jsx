@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -14,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 
 import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
@@ -22,7 +20,6 @@ import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import ReactPaginate from "react-paginate";
-// import CreateLessonModal from "./CreateLessonModal";
 import {
   Pagination,
   usePagination,
@@ -34,8 +31,10 @@ import {
   PaginationSeparator,
 } from "@ajna/pagination";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
-import { getAllAssignmentsByGroupIdAction } from "../../../actions/assignmentActions";
+import {
+  deleteAssignmentByIdAction,
+  getAllAssignmentsByGroupIdAction,
+} from "../../../actions/assignmentActions";
 import CreateAssignmentModal from "./CreateAssignmentModal";
 
 function TeacherAssignments() {
@@ -43,14 +42,15 @@ function TeacherAssignments() {
   const dispatch = useDispatch();
   const [assignments, setAssignments] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const newAssignments = useSelector((state) => state.assignmentReducer.assignments);
+  const newAssignments = useSelector(
+    (state) => state.assignmentReducer.assignments
+  );
   const total = useSelector((state) => state.assignmentReducer.count);
   const [isOpen, setIsOpen] = useState(false);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
-  const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   let history = useHistory();
-  let size = 3;
+  let size = 6;
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
@@ -73,18 +73,21 @@ function TeacherAssignments() {
     },
   });
 
-  function fetchMore(){
+  function fetchMore() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
     let pageTake = page ? currentPage - 1 : currentPage;
-    dispatch(
-      getAllAssignmentsByGroupIdAction(currentGroupId, pageTake, size)
-    );
+    dispatch(getAllAssignmentsByGroupIdAction(currentGroupId, pageTake, size));
+  }
+
+  function handleDelete(id) {
+    let promise = dispatch(deleteAssignmentByIdAction(id));
+    promise.then(() => fetchMore());
   }
 
   useEffect(() => {
-    fetchMore()
+    fetchMore();
     setPageCount(Math.ceil(total / size));
     setAssignments(newAssignments);
   }, [currentGroupId]);
@@ -122,11 +125,30 @@ function TeacherAssignments() {
     setIsOpen((prev) => !prev);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
+
   return isFetching || !assignments ? (
     <SpinnerComponent />
   ) : assignments.length != 0 ? (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card height="600px" overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Assignments
@@ -147,7 +169,7 @@ function TeacherAssignments() {
           <CreateAssignmentModal
             onClick={() => handleModal()}
             value={isOpen}
-            fetchMore={()=>fetchMore()}
+            fetchMore={() => fetchMore()}
           />
         </CardHeader>
         <CardBody>
@@ -180,7 +202,7 @@ function TeacherAssignments() {
             <Tbody fontWeight="semibold">
               {assignments.map((assignment) => {
                 let deadline = dateHelper.normalizedDateWithVerbalDateAndTime(
-                    assignment.deadline
+                  assignment.deadline
                 );
                 return (
                   <Tr
@@ -217,6 +239,7 @@ function TeacherAssignments() {
                     </Td>
                     <Td textAlign="center">
                       <Button
+                        onClick={() => handleDelete(assignment.id)}
                         borderRadius="6px"
                         _hover={{ bg: "red.600" }}
                         lineHeight="none"
@@ -307,9 +330,9 @@ function TeacherAssignments() {
       </Pagination>
     </Flex>
   ) : (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+    <Flex pos="relative" direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card height="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Assignments
           </Text>
@@ -329,9 +352,18 @@ function TeacherAssignments() {
           <CreateAssignmentModal
             onClick={() => handleModal()}
             value={isOpen}
+            fetchMore={() => fetchMore()}
           />
         </CardHeader>
-        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+        <Text
+          pos="absolute"
+          left="50%"
+          top="50%"
+          style={{ transform: "translate(-50%,-50%)" }}
+          textAlign="center"
+          fontSize="xl"
+          fontWeight="bold"
+        >
           You have no assignments..
         </Text>
       </Card>

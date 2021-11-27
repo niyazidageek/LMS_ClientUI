@@ -1,15 +1,6 @@
-import React, {
-  Component,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import draftToMarkdown from "draftjs-to-markdown";
+import React, { useCallback, useEffect, useState } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import htmlToDraft from "html-to-draftjs";
-import draftToHtml from "draftjs-to-html";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const EditorUtil = React.memo(

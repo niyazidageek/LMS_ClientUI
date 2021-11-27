@@ -1,44 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-// Chakra imports
-import { Formik, Form, Field } from "formik";
 import {
   Flex,
-  Table,
-  Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
-  Button,
-  FormControl,
-  Box,
-  Input,
-  FormErrorMessage,
-  Icon,
   Link,
   Td,
   Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {
-  FaCheckCircle,
-  FaFileUpload,
-  FaExclamationTriangle,
-} from "react-icons/fa";
+
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import {
-    getAssignmentByIdAction,
-  getStudentsAssignmentByIdAction,
-  submitAssignmentByIdAction,
-} from "../../../actions/assignmentActions";
+import { getAssignmentByIdAction } from "../../../actions/assignmentActions";
 import { fileHelper } from "../../../utils/fileHelper";
 
 function TeacherAssignmentDetail() {
@@ -53,12 +30,15 @@ function TeacherAssignmentDetail() {
     dispatch(getAssignmentByIdAction(id));
   }, []);
 
-
   return isFetching || !assignment ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card
+        justifyContent="center"
+        minH="620px"
+        overflowX={{ sm: "scroll", xl: "hidden" }}
+      >
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Assingment:{" "}
@@ -90,7 +70,7 @@ function TeacherAssignmentDetail() {
                   Info
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
                 <Flex direction="column">
                   <Flex align="start" mb="18px">
                     <Text
@@ -149,7 +129,7 @@ function TeacherAssignmentDetail() {
                   Content
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
                 <Flex direction="column">
                   {assignment.assignmentMaterials &&
                   assignment.assignmentMaterials.length != 0 ? (
@@ -200,23 +180,24 @@ function TeacherAssignmentDetail() {
             mt="22px"
             templateColumns={{ sm: "1fr", xl: "repeat(1 , 1fr)" }}
             gap="22px"
-          >
-          </Grid>
+          ></Grid>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

@@ -1,53 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-// Chakra imports
 import { Formik, Form, Field } from "formik";
-import {
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  Button,
-  FormControl,
-  Box,
-  Input,
-  FormErrorMessage,
-  Icon,
-  Link,
-  Td,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import {
-  FaCheckCircle,
-  FaFileUpload,
-  FaExclamationTriangle,
-} from "react-icons/fa";
+import { Flex, Text, Grid, useColorModeValue, Image } from "@chakra-ui/react";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import {
-  getAssignmentByIdAction,
-  getStudentsAssignmentByIdAction,
-  getSubmissionsByLessonIdAction,
-  submitAssignmentByIdAction,
-} from "../../../actions/assignmentActions";
-import { fileHelper } from "../../../utils/fileHelper";
+import { getSubmissionsByLessonIdAction } from "../../../actions/assignmentActions";
 import { getLessonByIdAction } from "../../../actions/lessonActions";
 import { distinctBy } from "../../../utils/distinctBy";
 import StudentSubmissionsModal from "./StudentSubmissionsModal";
 
 function LessonSubmissions() {
   let { id } = useParams();
-  const textColor = useColorModeValue("gray.700", "white");
   const dispatch = useDispatch();
   const history = useHistory();
   const [modalContent, setModalContent] = useState({
@@ -63,6 +30,7 @@ function LessonSubmissions() {
   const lesson = useSelector((state) => state.lessonReducer.lesson);
   const count = useSelector((state) => state.assignmentReducer.count);
   const token = useSelector((state) => state.authReducer.jwt);
+  const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
 
   useEffect(() => {
     dispatch(getSubmissionsByLessonIdAction(id, token));
@@ -87,11 +55,34 @@ function LessonSubmissions() {
     history.push(path);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
+
   return isFetching || !submissions || !lesson ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card
+        h={{ xl: "640px" }}
+        justifyContent="space-between"
+        overflowX={{ sm: "scroll", xl: "hidden" }}
+      >
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Submissions:{" "}
@@ -123,8 +114,18 @@ function LessonSubmissions() {
                   Assignments
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
-                <Flex direction="column" width="100%">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                  direction="column"
+                  w="100%"
+                >
                   {lesson.assignments && lesson.assignments.length != 0 ? (
                     lesson.assignments.map((a, index) => {
                       return (
@@ -132,9 +133,7 @@ function LessonSubmissions() {
                           _hover={{
                             bg: "#c9c9c9",
                           }}
-                          onClick={() =>
-                            assignmentClick(a.id)
-                          }
+                          onClick={() => assignmentClick(a.id)}
                           flexDirection="row"
                           alignItems="center"
                           bg="whitesmoke"
@@ -148,12 +147,16 @@ function LessonSubmissions() {
                             {++index}. {a.name}
                           </Text>
                           <Text fontWeight="bold">
-                            Deadline: {" "}
-                            {
-                              dateHelper.isLessonOver(a.deadline) ?
-                              <Text display='inline-block' color='red.500'>{dateHelper.normalizedDate(a.deadline)}</Text>
-                              :  <Text  display='inline-block' color='green.500'>{dateHelper.normalizedDate(a.deadline)}</Text>
-                            }
+                            Deadline:{" "}
+                            {dateHelper.isLessonOver(a.deadline) ? (
+                              <Text display="inline-block" color="red.500">
+                                {dateHelper.normalizedDate(a.deadline)}
+                              </Text>
+                            ) : (
+                              <Text display="inline-block" color="green.500">
+                                {dateHelper.normalizedDate(a.deadline)}
+                              </Text>
+                            )}
                           </Text>
                         </Card>
                       );
@@ -184,7 +187,17 @@ function LessonSubmissions() {
                 </Text>
               </CardHeader>
               <CardBody px="5px">
-                <Flex direction="column" width="100%">
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                  direction="column"
+                  w="100%"
+                >
                   {submissions && submissions.length != 0 ? (
                     distinctBy(submissions).map((au, index) => {
                       return (
@@ -249,20 +262,22 @@ function LessonSubmissions() {
             </Card>
           </Grid>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

@@ -1,6 +1,5 @@
-// Chakra Icons
 import { BellIcon, SearchIcon } from "@chakra-ui/icons";
-// Chakra Imports
+
 import {
   Button,
   Flex,
@@ -8,18 +7,20 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  CloseButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Box,
+  Badge,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
 
-// Custom Icons
-import { ProfileIcon, SettingsIcon } from "../icons/Icons";
-// Custom Components
+import "./navbar.scss";
+
+import { useEffect, useState } from "react";
 import { roles } from "../../utils/roles";
 import { ItemContent } from "../menu/ItemContent";
 import { SidebarResponsive } from "../sidebar/Sidebar";
@@ -27,27 +28,56 @@ import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
 import { studentRoutes, teacherRoutes } from "../../routes";
 import { logOutAction } from "../../actions/authActions";
-import { FaDoorOpen } from "react-icons/fa";
 import { IoLogIn } from "react-icons/io5";
+import { useToast } from "@chakra-ui/toast";
+import {
+  getUnreadNotifications,
+  markNotificationAsReadById,
+} from "../../services/notificationService";
+import { dateHelper } from "../../utils/dateHelper";
 
 export default function HeaderLinks(props) {
   const userRoles = useSelector((state) => state.authReducer.roles);
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
-
-  // Chakra Color Mode
+  const token = useSelector((state) => state.authReducer.jwt);
+  const [notifications, setNotifications] = useState([]);
+  const appUserNotification = useSelector(
+    (state) => state.notificationReducer.appUserNotification
+  );
+  const toast = useToast();
   const dispatch = useDispatch();
-  let mainTeal = useColorModeValue("teal.300", "teal.300");
-  let inputBg = useColorModeValue("white", "gray.800");
+
   let mainText = useColorModeValue("gray.700", "gray.200");
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
-  let searchIcon = useColorModeValue("gray.700", "gray.200");
 
   if (secondary) {
     navbarIcon = "white";
     mainText = "white";
+  }
+
+  useEffect(() => {
+    let resp = getUnreadNotifications(token);
+    resp.then((res) => {
+      setNotifications(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (appUserNotification) {
+      toast({
+        title: appUserNotification.notification.content,
+        position: "top-right",
+        isClosable: true,
+      });
+      setNotifications((prev) => [appUserNotification, ...prev]);
+    }
+  }, [appUserNotification]);
+
+  function handleReadNotification(id) {
+    setNotifications(notifications.filter((n) => n.id != id));
+    markNotificationAsReadById(id, token);
   }
 
   return (
@@ -57,7 +87,7 @@ export default function HeaderLinks(props) {
       flexDirection="row"
       mt={{ sm: "8px", md: "unset" }}
     >
-      <InputGroup
+      {/* <InputGroup
         width="100%"
         cursor="pointer"
         bg={inputBg}
@@ -99,60 +129,75 @@ export default function HeaderLinks(props) {
           placeholder="Type here..."
           borderRadius="inherit"
         />
-      </InputGroup>
+      </InputGroup> */}
 
       <Flex>
-        <IconButton
-          bg="none"
-          me={{ sm: "1px", md: "8px" }}
-          ml={{ sm: "1px", md: "8px" }}
-        >
-          <IoLogIn
-            color="gray"
-            size={25}
-            onClick={() => {
-              dispatch(logOutAction());
-            }}
-          />
-        </IconButton>
+        <IoLogIn
+          id="logout-button"
+          style={{ margin: "0 0.3rem" }}
+          alignSelf="center"
+          color="gray"
+          size={25}
+          onClick={() => {
+            dispatch(logOutAction());
+          }}
+        />
         <Menu>
-          <MenuButton
-            me={{ sm: "1px", md: "8px" }}
-            ml={{ sm: "1px", md: "8px" }}
-          >
-            <BellIcon color="gray" w="25px" h="25px" />
+          <MenuButton>
+            <BellIcon
+              m={{ xl: "0", sm: "0 0.3rem" }}
+              id="notification-button"
+              margin="0 0.3rem"
+              color="gray"
+              w="25px"
+              h="25px"
+            />
           </MenuButton>
-          <MenuList>
-            <Flex flexDirection="column">
-              <MenuItem borderRadius="8px">
-                <ItemContent
-                  time="13 minutes ago"
-                  info="from Alicia"
-                  boldInfo="New Message"
-                  aName="Alicia"
-                />
-              </MenuItem>
-              <MenuItem borderRadius="8px">
-                <ItemContent
-                  time="2 days ago"
-                  info="by Josh Henry"
-                  boldInfo="New Album"
-                  aName="Josh Henry"
-                />
-              </MenuItem>
-              <MenuItem borderRadius="8px">
-                <ItemContent
-                  time="3 days ago"
-                  info="Payment succesfully completed!"
-                  boldInfo=""
-                  aName="Kara"
-                />
-              </MenuItem>
-            </Flex>
+          <MenuList maxH="300px" overflowX="auto">
+            {notifications.length != 0 ? (
+              <Flex flexDirection="column">
+                {notifications.map((n) => {
+                  return (
+                    <MenuItem
+                      closeOnSelect={false}
+                      justifyContent="space-between"
+                      borderRadius="8px"
+                    >
+                      <ItemContent
+                        time={dateHelper.getNotificationAgoTimeString(
+                          n.notification.creationDate
+                        )}
+                        boldInfo={n.notification.content}
+                      />
+                      <CloseButton
+                        onClick={() => handleReadNotification(n.id)}
+                        color="red"
+                        alignSelf="baseline"
+                      />
+                    </MenuItem>
+                  );
+                })}
+              </Flex>
+            ) : (
+              <Flex pos="relative" height="70px" flexDirection="column">
+                <Text
+                  textAlign="center"
+                  lineHeight="unset"
+                  whiteSpace="nowrap"
+                  pos="absolute"
+                  top="50%"
+                  left="50%"
+                  style={{ transform: "translate(-50%,-50%)" }}
+                  color="gray.500"
+                >
+                  No new notifications..
+                </Text>
+              </Flex>
+            )}
           </MenuList>
         </Menu>
 
-        <Flex me={{ sm: "1px", md: "8px" }} ml={{ sm: "1px", md: "8px" }}>
+        <Flex>
           <SidebarResponsive
             logoText={props.logoText}
             secondary={props.secondary}

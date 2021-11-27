@@ -4,7 +4,6 @@ import { Formik, Form, Field } from "formik";
 import requestChangeEmailSchema from "../../../validations/requestChangeEmailSchema";
 import { Redirect } from "react-router-dom";
 import validateEmail from "../../../validations/validateEmail";
-import validatePassword from "../../../validations/validatePassword";
 import { NavLink, useHistory } from "react-router-dom";
 import BgSignUp from "../../../assets/img/BgSignUp.png";
 import {
@@ -15,11 +14,8 @@ import {
   Box,
   Input,
   useColorModeValue,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
 import { requestChangeEmailAction } from "../../../actions/profileActions";
@@ -33,7 +29,7 @@ const RequestChangeEmail = () => {
   const isFetching = useSelector((state) => state.authReducer.isFetching);
   const token = useSelector((state) => state.authReducer.jwt);
   async function handleSubmit(values) {
-    await dispatch(requestChangeEmailAction(values,token));
+    await dispatch(requestChangeEmailAction(values, token));
     setRequestDone(true);
   }
   let history = useHistory();
@@ -82,7 +78,7 @@ const RequestChangeEmail = () => {
           mb="26px"
           w={{ base: "90%", sm: "60%", lg: "40%", xl: "30%" }}
         >
-            Send a request for a new e-mail.
+          Send a request for a new e-mail.
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">

@@ -19,7 +19,7 @@ const LineChart = React.memo(
     const [options, setOptions] = useState(null);
     const [statistics, setStatistics] = useState(null);
     const [isFetching, setIsFetching] = useState(true);
-    const [year, setYear] = useState(null)
+    const [year, setYear] = useState(null);
     const token = useSelector((state) => state.authReducer.jwt);
     useEffect(() => {
       let options = lineChartOptions(optionType);
@@ -27,8 +27,7 @@ const LineChart = React.memo(
 
       switch (actionType) {
         case actionTypes.GET_SUBMISSIONS_COUNT_BY_GROUP_ID:
-          // setIsFetching(true)
-          getSubmissionsCountByGroupId(currentGroupId, token,year)
+          getSubmissionsCountByGroupId(currentGroupId, token, year)
             .then((res) => {
               setStatistics(res.data);
               yearCallback(res.data.currentYear);
@@ -36,8 +35,7 @@ const LineChart = React.memo(
             .then(() => setIsFetching(false));
           break;
         case actionTypes.GET_ASSIGNMENT_PROGRESS_BY_GROUP_ID:
-          // setIsFetching(true)
-          getAssignmentProgressByGroupId(currentGroupId, token,year)
+          getAssignmentProgressByGroupId(currentGroupId, token, year)
             .then((res) => {
               setStatistics(res.data);
               yearCallback(res.data.currentYear);
@@ -46,17 +44,19 @@ const LineChart = React.memo(
         default:
           break;
       }
-    }, [currentGroupId,year]);
+    }, [currentGroupId, year]);
 
-    return isFetching  || !statistics ?  (
+    return isFetching || !statistics ? (
       <Spinner color="teal.300" alignSelf="center" />
     ) : (
-      console.log('dsmj'),
       <>
         <Select
           closeMenuOnSelect={true}
           placeholder="Select a year"
-          defaultValue={{ label: `${statistics.currentYear}`, value: statistics.currentYear }}
+          defaultValue={{
+            label: `${statistics.currentYear}`,
+            value: statistics.currentYear,
+          }}
           onChange={(value) => setYear(value.value)}
           options={statistics.years.map((y) => ({
             label: `${y}`,

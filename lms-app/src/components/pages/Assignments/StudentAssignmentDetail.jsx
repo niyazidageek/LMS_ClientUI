@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-// Chakra imports
 import { Formik, Form, Field } from "formik";
 import {
   Flex,
@@ -21,13 +20,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
-  FaCheckCircle,
   FaFileUpload,
   FaExclamationTriangle,
 } from "react-icons/fa";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";

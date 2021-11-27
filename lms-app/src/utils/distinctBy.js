@@ -3,7 +3,7 @@ export function distinctBy(array) {
   const map = new Map();
   for (const item of array) {
     if (!map.has(item.appUserId)) {
-      map.set(item.appUserId, true); // set any value to Map
+      map.set(item.appUserId, true);
       result.push({
         id:item.id,
         appUserId: item.appUserId,

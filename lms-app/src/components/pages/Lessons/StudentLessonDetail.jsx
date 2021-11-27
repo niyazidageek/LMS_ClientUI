@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from "react";
-// Chakra imports
-import {
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  Button,
-  Td,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Text, Grid, useColorModeValue } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
@@ -49,21 +34,25 @@ function StudentLessonDetail() {
 
   function assignmentClick(id) {
     let path = history.location.pathname.split("lessons")[0];
-    path=path.concat("assignments/" + id);
-    history.push(path)
+    path = path.concat("assignments/" + id);
+    history.push(path);
   }
 
   function theoryClick(id) {
     let path = history.location.pathname.split("lessons")[0];
-    path=path.concat("theories/" + "detail/" + id);
-    history.push(path)
+    path = path.concat("theories/" + "detail/" + id);
+    history.push(path);
   }
 
   return isFetching || !lesson || !undoneAssignments || !studentsTheories ? (
     <SpinnerComponent />
   ) : (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card
+        h={{ xl: "620px" }}
+        justifyContent="space-between"
+        overflowX={{ sm: "scroll", xl: "hidden" }}
+      >
         <CardHeader p="6px 0px 22px 0px">
           <Text fontSize="xl" color="gray.400" fontWeight="bold">
             Lesson:{" "}
@@ -77,9 +66,9 @@ function StudentLessonDetail() {
             </Text>
           </Text>
         </CardHeader>
-        <CardBody>
+        <CardBody height="100%">
           <Grid
-            width='100%'
+            width="100%"
             templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }}
             gap="22px"
           >
@@ -95,7 +84,7 @@ function StudentLessonDetail() {
                   Info
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
+              <CardBody h={{ base: "max-content", xl: "380px" }} px="5px">
                 <Flex direction="column">
                   <Flex align="start" mb="18px">
                     <Text
@@ -107,7 +96,7 @@ function StudentLessonDetail() {
                       Description:
                     </Text>
                     <Text fontSize="md" color="gray.500" fontWeight="400">
-                     {lesson.description}
+                      {lesson.description}
                     </Text>
                   </Flex>
                   <Flex align="center" mb="18px">
@@ -150,7 +139,7 @@ function StudentLessonDetail() {
                       Format:
                     </Text>
                     <Text fontSize="md" color="gray.500" fontWeight="400">
-                      {lesson.isOnline ? 'Online' : 'Offline'}
+                      {lesson.isOnline ? "Online" : "Offline"}
                     </Text>
                   </Flex>
                 </Flex>
@@ -169,13 +158,21 @@ function StudentLessonDetail() {
                   Theory
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
-                <Flex direction="column" w="100%">
+              <CardBody h={{ base: "max-content", xl: "380px" }}>
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                >
                   {studentsTheories && studentsTheories.length != 0 ? (
                     studentsTheories.map((t, index) => {
-                      return(t.theoryAppUsers[0].isRead ? (
+                      return t.theoryAppUsers[0].isRead ? (
                         <Card
-                        onClick={() => theoryClick(t.id)}
+                          onClick={() => theoryClick(t.id)}
                           flexDirection="row"
                           _hover={{
                             bg: "#c9c9c9",
@@ -215,7 +212,7 @@ function StudentLessonDetail() {
                             {++index}. {t.name}
                           </Text>
                         </Card>
-                      ))
+                      );
                     })
                   ) : (
                     <Text
@@ -246,8 +243,16 @@ function StudentLessonDetail() {
                   Assignments
                 </Text>
               </CardHeader>
-              <CardBody px="5px">
-                <Flex direction="column" w="100%">
+              <CardBody h={{ base: "max-content", xl: "380px" }}>
+                <Flex
+                  px="0.5rem"
+                  py="0.2rem"
+                  borderRadius="5px"
+                  boxShadow="inner"
+                  direction="column"
+                  w="100%"
+                  overflowY="scroll"
+                >
                   {undoneAssignments && undoneAssignments.length != 0 ? (
                     undoneAssignments.map((ua, index) => {
                       return ua.assignmentAppUsers[0].isSubmitted ? (
@@ -259,17 +264,28 @@ function StudentLessonDetail() {
                           my="0.3rem"
                           p="0.5rem"
                           borderRadius="5px"
-                          boxShadow="md"
+                          // boxShadow="md"
                           justifyContent="space-between"
                         >
                           <Text fontWeight="bold">
                             {++index}. {ua.name}
                           </Text>
-                          <Flex alignItems="center">
-                            <Text mx="0.5rem" fontWeight="bold">
-                              Done!
-                            </Text>
-                            <FaCheckCircle />
+                          <Flex>
+                            <Flex alignItems="center">
+                              <Text mx="0.5rem" fontWeight="bold">
+                                Done!
+                              </Text>
+                              <FaCheckCircle />
+                            </Flex>
+                            {ua.assignmentAppUsers[0].graded && (
+                              <Text
+                                whiteSpace="nowrap"
+                                mx="0.5rem"
+                                fontWeight="bold"
+                              >
+                                (Grade: {ua.assignmentAppUsers[0].grade})
+                              </Text>
+                            )}
                           </Flex>
                         </Card>
                       ) : (
@@ -308,21 +324,22 @@ function StudentLessonDetail() {
             </Card>
           </Grid>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
-          bg='transparent'
-          outlineColor="teal.300"
+          fontWeight="bold"
+          fontSize="large"
+          bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color:'white'
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );

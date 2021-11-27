@@ -53,7 +53,6 @@ const yAxisPercentageOptions = {
     forceNiceScale: true,
     max: 100,
     min: 0,
-    // max: 100,
     tickAmount: 6,
     labels: {
       formatter: (value) => value&&value.toFixed(0) + "%",

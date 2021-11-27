@@ -10,11 +10,8 @@ import {
   Box,
   useColorModeValue,
   Input,
-  Checkbox,
-  Stack,
   Link,
   Button,
-  Heading,
   Text,
 } from "@chakra-ui/react";
 import { AuthErrorAlert } from "../../../alerts/AuthErrorAlert";
@@ -28,8 +25,6 @@ const OnBoardPage = () => {
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.authReducer.jwt);
   const name = useSelector((state) => state.authReducer.name);
 
   function handleSubmit(values) {

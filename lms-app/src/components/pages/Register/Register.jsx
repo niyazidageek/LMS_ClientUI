@@ -1,12 +1,9 @@
-// Chakra imports
 import {
   Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
-  HStack,
-  Icon,
   Input,
   Link,
   Switch,
@@ -15,8 +12,6 @@ import {
   useColorModeValue,
   FormErrorMessage,
 } from "@chakra-ui/react";
-// Assets
-import { AuthErrorAlert } from "../../alerts/AuthErrorAlert";
 import { signUpAction } from "../../../actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field } from "formik";
@@ -27,7 +22,6 @@ import validatePassword from "../../../validations/validatePassword";
 import { NavLink } from "react-router-dom";
 import BgSignUp from "../../../assets/img/BgSignUp.png";
 import React from "react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 
 export function Register() {
   const titleColor = useColorModeValue("teal.300", "teal.200");
@@ -95,7 +89,7 @@ export function Register() {
           borderRadius="15px"
           p="40px"
           mx={{ base: "100px" }}
-          height='100%'
+          height="100%"
           bg={bgColor}
           boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
         >
@@ -114,7 +108,10 @@ export function Register() {
           >
             <Form>
               <FormControl>
-                <SimpleGrid columns={{sm:1,md:1,lg:2,xl:2}} spacing={10}>
+                <SimpleGrid
+                  columns={{ sm: 1, md: 1, lg: 2, xl: 2 }}
+                  spacing={10}
+                >
                   <Field name="name">
                     {({ field, form }) => (
                       <FormControl
@@ -271,7 +268,7 @@ export function Register() {
 
                 <Field name="rememberMe">
                   {({ field, form }) => (
-                    <FormControl m='24px 0' display="flex" alignItems="center">
+                    <FormControl m="24px 0" display="flex" alignItems="center">
                       <Switch
                         id="remember-login"
                         {...field}
@@ -324,13 +321,13 @@ export function Register() {
               Already have an account?
               <NavLink path to="/login">
                 <Link
-                    color={titleColor}
-                    as="span"
-                    ms="5px"
-                    href="#"
-                    fontWeight="bold"
+                  color={titleColor}
+                  as="span"
+                  ms="5px"
+                  href="#"
+                  fontWeight="bold"
                 >
-                    Sign In
+                  Sign In
                 </Link>
               </NavLink>
             </Text>

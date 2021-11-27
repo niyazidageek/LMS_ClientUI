@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -31,24 +30,18 @@ import {
 import { Formik, Form, Field, FieldArray } from "formik";
 import { fileHelper } from "../../../utils/fileHelper";
 import { Select } from "chakra-react-select";
-import { FaCheckCircle } from "react-icons/fa";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
-import { dateHelper } from "../../../utils/dateHelper";
 import { FaFileUpload, FaExclamationTriangle } from "react-icons/fa";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import lessonSchema from "../../../validations/lessonSchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
+import { searchLessonsByGroupIdAction } from "../../../actions/lessonActions";
 import {
-  editLessonByIdAction,
-  getLessonByIdAction,
-  searchLessonsByGroupIdAction,
-} from "../../../actions/lessonActions";
-import { editAssignmentByIdAction, getAssignmentByIdAction } from "../../../actions/assignmentActions";
+  editAssignmentByIdAction,
+  getAssignmentByIdAction,
+} from "../../../actions/assignmentActions";
 import assignmentSchema from "../../../validations/assignmentSchema";
 
 function EditAssignment() {
@@ -77,7 +70,8 @@ function EditAssignment() {
   }
 
   function handleSubmit(values) {
-    let { name, lessonId, description, deadline, fileNames, files, maxGrade } = values;
+    let { name, lessonId, description, deadline, fileNames, files, maxGrade } =
+      values;
     var formData = new FormData();
     let data = {
       name,
@@ -85,7 +79,7 @@ function EditAssignment() {
       description,
       maxGrade,
       lessonId,
-      assignmentMaterials: fileNames
+      assignmentMaterials: fileNames,
     };
 
     formData.append("Values", JSON.stringify(data));
@@ -95,7 +89,6 @@ function EditAssignment() {
     }
 
     dispatch(editAssignmentByIdAction(assignment.id, formData, token));
-
   }
 
   return isFetching || !assignment ? (
@@ -310,7 +303,7 @@ function EditAssignment() {
                                       // flexWrap = 'wrap'
                                     >
                                       <Link
-                                        wordBreak='break-all'
+                                        wordBreak="break-all"
                                         cursor="pointer"
                                         href={fileHelper.convertToUrl(
                                           file.fileName
@@ -338,8 +331,8 @@ function EditAssignment() {
                                 borderColor="gray.200"
                               >
                                 <Box
-                                textAlign='center'
-                                  p='1rem'
+                                  textAlign="center"
+                                  p="1rem"
                                   borderRadius="15px"
                                 >
                                   <Text>No content..</Text>
@@ -351,89 +344,91 @@ function EditAssignment() {
                       </FieldArray>
 
                       <Field name="files">
-                    {({ field, form }) => (
-                      <FormControl
-                        mt="24px"
-                        mb="12px"
-                        isInvalid={form.errors.files && form.touched.files}
-                      >
-                        <Input
-                          multiple={true}
-                          ref={fileRef}
-                          type="file"
-                          placeholder="Files"
-                          display="none"
-                          onChange={(e) => {
-                            form.setFieldValue(
-                              field.name,
-                              Array.from(e.target.files)
-                            );
-                          }}
-                        />
-                        <Box display="flex" alignItems="center">
-                          <Icon
-                            cursor="pointer"
-                            onClick={() => fileRef.current.click()}
-                            border="orange"
-                            boxSize={10}
-                            as={FaFileUpload}
-                          />
-                          <Text
-                            cursor="pointer"
-                            onClick={() => fileRef.current.click()}
-                            marginLeft="1"
+                        {({ field, form }) => (
+                          <FormControl
+                            mt="24px"
+                            mb="12px"
+                            isInvalid={form.errors.files && form.touched.files}
                           >
-                            {fileRef.current !== undefined &&
-                            fileRef.current !== null &&
-                            fileRef.current.value != "" ? (
-                              fileRef.current.files.length == 1 ? (
-                                <Text fontWeight="bold">
-                                  {fileRef.current.files[0].name}
-                                </Text>
-                              ) : (
-                                <Text fontWeight="bold">
-                                  {fileRef.current.files.length} files
-                                </Text>
-                              )
-                            ) : (
-                              <Text fontWeight="bold">Upload files</Text>
-                            )}
+                            <Input
+                              multiple={true}
+                              ref={fileRef}
+                              type="file"
+                              placeholder="Files"
+                              display="none"
+                              onChange={(e) => {
+                                form.setFieldValue(
+                                  field.name,
+                                  Array.from(e.target.files)
+                                );
+                              }}
+                            />
+                            <Box display="flex" alignItems="center">
+                              <Icon
+                                cursor="pointer"
+                                onClick={() => fileRef.current.click()}
+                                border="orange"
+                                boxSize={10}
+                                as={FaFileUpload}
+                              />
+                              <Text
+                                cursor="pointer"
+                                onClick={() => fileRef.current.click()}
+                                marginLeft="1"
+                              >
+                                {fileRef.current !== undefined &&
+                                fileRef.current !== null &&
+                                fileRef.current.value != "" ? (
+                                  fileRef.current.files.length == 1 ? (
+                                    <Text fontWeight="bold">
+                                      {fileRef.current.files[0].name}
+                                    </Text>
+                                  ) : (
+                                    <Text fontWeight="bold">
+                                      {fileRef.current.files.length} files
+                                    </Text>
+                                  )
+                                ) : (
+                                  <Text fontWeight="bold">Upload files</Text>
+                                )}
+                              </Text>
+                            </Box>
+
+                            <FormErrorMessage>
+                              {form.errors.files}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+
+                      <Flex
+                        justifyContent="space-between"
+                        color="yellow.400"
+                        alignItems="center"
+                      >
+                        <Text>
+                          <Text
+                            display="inline-block"
+                            lineHeight="unset"
+                            fontWeight="bold"
+                            me="10px"
+                            borderBottom="1px"
+                          >
+                            Maximum file size: 16mb!
                           </Text>
-                        </Box>
-
-                        <FormErrorMessage>{form.errors.files}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Flex
-                    justifyContent="space-between"
-                    color="yellow.400"
-                    alignItems="center"
-                  >
-                    <Text>
-                      <Text
-                        display="inline-block"
-                        lineHeight="unset"
-                        fontWeight="bold"
-                        me="10px"
-                        borderBottom="1px"
-                      >
-                        Maximum file size: 16mb!
-                      </Text>
-                      <Text
-                        display="inline-block"
-                        lineHeight="unset"
-                        fontWeight="bold"
-                        me="10px"
-                      >
-                        Before attaching files, make sure your submission is
-                        either in ".jpg", ".jpeg", ".png", ".pptx", ".txt",
-                        ".pdf", or ".docx" format!
-                      </Text>
-                    </Text>
-                    <FaExclamationTriangle size={50} />
-                  </Flex>
+                          <Text
+                            display="inline-block"
+                            lineHeight="unset"
+                            fontWeight="bold"
+                            me="10px"
+                          >
+                            Before attaching files, make sure your submission is
+                            either in ".jpg", ".jpeg", ".png", ".pptx", ".txt",
+                            ".pdf", or ".docx" format!
+                          </Text>
+                        </Text>
+                        <FaExclamationTriangle size={50} />
+                      </Flex>
 
                       <Button
                         isLoading={isFetching}

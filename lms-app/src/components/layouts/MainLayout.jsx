@@ -12,11 +12,13 @@ import { useSelector } from "react-redux";
 import { studentRoutes, teacherRoutes } from "../../routes";
 import { AuthErrorAlert } from "../alerts/AuthErrorAlert";
 import { AuthMessageAlert } from "../alerts/AuthMessageAlert";
+import LoadingBar from "react-top-loading-bar";
 
 function MainLayout({ children }) {
   const mainPanel = React.createRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const userRoles = useSelector((state) => state.authReducer.roles);
+  const isFetching = useSelector((state) => state.authReducer.isFetching);
   return (
     <ChakraProvider theme={theme} resetCss={false}>
       <Sidebar
@@ -37,12 +39,14 @@ function MainLayout({ children }) {
           base: "100%",
           xl: "calc(100% - 275px)",
         }}
+        h="100%"
       >
         <AdminNavbar onOpen={onOpen} />
         <PanelContent>
           <PanelContainer>
             <AuthErrorAlert />
             <AuthMessageAlert />
+            {isFetching && <LoadingBar color="teal" progress={90} />}
             {children}
           </PanelContainer>
         </PanelContent>

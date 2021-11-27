@@ -1,41 +1,15 @@
-// Chakra imports
 import {
   Box,
-  Button,
   Flex,
-  Grid,
-  Icon,
-  Image,
-  Portal,
   Progress,
   SimpleGrid,
-  Spacer,
   Stat,
-  StatHelpText,
   StatLabel,
   StatNumber,
-  Table,
-  Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuIcon,
-  MenuCommand,
-  MenuDivider,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router";
-// assets
-// Custom components
 import { Link } from "react-router-dom";
 import Card from "../../cards/Card";
 import CardBody from "../../cards/CardBody";
@@ -43,49 +17,33 @@ import CardHeader from "../../cards/CardHeader";
 import IconBox from "../../icons/IconBox";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { GoBrowser } from "react-icons/go";
-// Custom icons
-import {
-  CartIcon,
-  GlobeIcon,
-  RocketIcon,
-  StatsIcon,
-  WalletIcon,
-} from "../../icons/Icons";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
 import { useValidateToken } from "../../../hooks/useValidateToken";
 import { HiCursorClick } from "react-icons/hi";
-// react icons
 import {
   FaChalkboardTeacher,
-  FaFile,
   FaChartPie,
   FaFileAlt,
   FaBook,
   FaSchool,
   FaVideo,
-  FaMousePointer,
 } from "react-icons/fa";
-import { BsArrowRight, BsTypeH1 } from "react-icons/bs";
-import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { getStudentHomeAction } from "../../../actions/studentHomeActions";
 import { dateHelper } from "../../../utils/dateHelper";
 import { getMoreStudentsLessonsAction } from "../../../actions/lessonActions";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 export default function StudentHome() {
   useValidateToken();
   const dispatch = useDispatch();
-  // Chakra Color Mode
   const history = useHistory();
   const iconTeal = useColorModeValue("teal.300", "teal.300");
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   const [hasMore, setHasMore] = useState(true);
-
-  const [link, setLink] = useState(null);
-  const [connection, setConnection] = useState(null);
+  const link = useSelector((state) => state.joinLinkReducer.link);
   const homeContent = useSelector((state) => state.studentHomeReducer);
   const token = useSelector((state) => state.authReducer.jwt);
   const isFetching = useSelector((state) => state.authReducer.isFetching);
@@ -95,38 +53,6 @@ export default function StudentHome() {
   const [lessons, setLessons] = useState([]);
   const [paging, setPaging] = useState(1);
   const size = 3;
-
-  useEffect(() => {
-    var connect = new HubConnectionBuilder()
-      .withUrl(process.env.REACT_APP_BROADCAST_HUB, {
-        accessTokenFactory: () => token,
-      })
-      .withAutomaticReconnect()
-      .build();
-    setConnection(connect);
-
-    console.log(connect);
-  }, []);
-
-  useEffect(()=>{
-    console.log(hasMore);
-  })
-
-  useEffect(() => {
-    if (connection) {
-      connection
-        .start()
-        .then(() => {
-          connection.on("ReceiveMessage", (message) => {
-            console.log(message);
-            var link = JSON.parse(message);
-            console.log(link);
-            setLink(link);
-          });
-        })
-        .catch((error) => console.log(error));
-    }
-  }, [connection]);
 
   useEffect(() => {
     if (homeContent) {
@@ -163,10 +89,29 @@ export default function StudentHome() {
     history.push(path);
   }
 
-  return isFetching || !homeContent ? (
+  return isFetching || !homeContent.groups ? (
     <SpinnerComponent />
+  ) : !onBoardGroupId ? (
+    <Text
+      fontSize="4xl"
+      fontWeight="bold"
+      pos="absolute"
+      top="50%"
+      left="50%"
+      textAlign="center"
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      <Text>Oops!</Text>
+      <Text color="teal.300">
+        You do not participate in any of the groups yet!
+      </Text>
+    </Text>
   ) : (
-    <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
+    <Flex
+      height="max-content"
+      flexDirection="column"
+      pt={{ base: "120px", md: "75px" }}
+    >
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <Card minH="83px" justifyContent="center">
           <CardBody height="100%">
@@ -304,11 +249,13 @@ export default function StudentHome() {
         </CardHeader>
         <Box variant="simple" color={textColor}>
           <Box
+            boxShadow="md"
+            borderRadius="15px"
             id="scrollableDiv"
             width="100%"
             overflow="hidden"
             p="0 1rem"
-            height="500px"
+            h={{ sm: "500px", md: "350px", xl: "450px" }}
             overflowY="scroll"
             pos="relative"
           >
@@ -374,7 +321,7 @@ export default function StudentHome() {
                               display="inline-block"
                               onClick={() => handleLessonClick(lesson.id)}
                               _hover={{
-                                cursor:'default',
+                                cursor: "default",
                                 color: "teal.200",
                               }}
                             >
@@ -550,7 +497,7 @@ export default function StudentHome() {
                                       >
                                         {((lesson.lessonJoinLink && true) ||
                                           (link &&
-                                            link.LessonId == lesson.id)) &&
+                                            link.lessonId == lesson.id)) &&
                                         !isLessonOver ? (
                                           <Flex
                                             _hover={{ color: "teal.200" }}
@@ -563,7 +510,7 @@ export default function StudentHome() {
                                                 pathname: "/videochat/onboard",
                                                 state: {
                                                   roomId: link
-                                                    ? link.JoinLink
+                                                    ? link.joinLink
                                                     : lesson.lessonJoinLink &&
                                                       lesson.lessonJoinLink
                                                         .joinLink,

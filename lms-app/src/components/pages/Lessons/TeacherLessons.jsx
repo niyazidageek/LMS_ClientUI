@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-// Chakra imports
 import {
   Flex,
   Table,
@@ -14,14 +13,12 @@ import {
 } from "@chakra-ui/react";
 
 import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import Card from "../../cards/Card";
 import { dateHelper } from "../../../utils/dateHelper";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
-import ReactPaginate from "react-paginate";
 import CreateLessonModal from "./CreateLessonModal";
 import {
   Pagination,
@@ -34,7 +31,10 @@ import {
   PaginationSeparator,
 } from "@ajna/pagination";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { getMoreTeachersLessonsAction } from "../../../actions/lessonActions";
+import {
+  deleteLessonByIdAction,
+  getMoreTeachersLessonsAction,
+} from "../../../actions/lessonActions";
 
 function TeacherLessons() {
   const textColor = useColorModeValue("gray.700", "white");
@@ -48,7 +48,7 @@ function TeacherLessons() {
   const token = useSelector((state) => state.authReducer.jwt);
   const currentGroupId = useSelector((state) => state.onBoardReducer.groupId);
   let history = useHistory();
-  let size = 3;
+  let size = 6;
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const page = searchParams.get("page");
@@ -71,9 +71,7 @@ function TeacherLessons() {
     },
   });
 
-
-  function fetchMore(){
-    console.log('worked');
+  function fetchMore() {
     dispatch({
       type: actionTypes.SET_IS_FETCHING,
     });
@@ -83,8 +81,13 @@ function TeacherLessons() {
     );
   }
 
+  function handleDelete(id) {
+    let promise = dispatch(deleteLessonByIdAction(id));
+    promise.then(() => fetchMore());
+  }
+
   useEffect(() => {
-    fetchMore()
+    fetchMore();
     setPageCount(Math.ceil(total / size));
     setLessons(newLessons);
   }, [currentGroupId]);
@@ -122,12 +125,30 @@ function TeacherLessons() {
     setIsOpen((prev) => !prev);
   }
 
+  if (!currentGroupId) {
+    return (
+      <Text
+        fontSize="4xl"
+        fontWeight="bold"
+        pos="absolute"
+        top="50%"
+        left="50%"
+        textAlign="center"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <Text>Oops!</Text>
+        <Text color="teal.300">
+          You do not participate in any of the groups yet!
+        </Text>
+      </Text>
+    );
+  }
+
   return isFetching || !lessons ? (
     <SpinnerComponent />
   ) : lessons.length != 0 ? (
-    console.log(currentPage),
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+      <Card h={{ xl: "610px" }} overflowX={{ sm: "scroll", xl: "hidden" }}>
         <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons
@@ -146,7 +167,7 @@ function TeacherLessons() {
           </Button>
 
           <CreateLessonModal
-            fetchMore={()=>fetchMore()}
+            fetchMore={() => fetchMore()}
             onClick={() => handleModal()}
             value={isOpen}
             groupId={currentGroupId}
@@ -219,6 +240,7 @@ function TeacherLessons() {
                     </Td>
                     <Td textAlign="center">
                       <Button
+                        onClick={() => handleDelete(lesson.id)}
                         borderRadius="6px"
                         _hover={{ bg: "red.600" }}
                         lineHeight="none"
@@ -309,9 +331,9 @@ function TeacherLessons() {
       </Pagination>
     </Flex>
   ) : (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
+    <Flex pos="relative" direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card h="610px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px" justifyContent="space-between">
           <Text fontSize="xl" color={textColor} fontWeight="bold">
             Lessons
           </Text>
@@ -332,9 +354,17 @@ function TeacherLessons() {
             onClick={() => handleModal()}
             value={isOpen}
             groupId={currentGroupId}
+            fetchMore={() => fetchMore()}
           />
         </CardHeader>
-        <Text textAlign="center" fontSize="xl" fontWeight="bold">
+        <Text
+          pos="absolute"
+          left="50%"
+          top="50%"
+          style={{ transform: "translate(-50%,-50%)" }}
+          fontSize="xl"
+          fontWeight="bold"
+        >
           You have no lessons..
         </Text>
       </Card>

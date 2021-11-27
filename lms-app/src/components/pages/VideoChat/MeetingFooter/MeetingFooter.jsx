@@ -13,10 +13,8 @@ import {
   MdCallEnd,
   MdDesktopWindows,
   MdOutlineDesktopAccessDisabled,
-  MdOutlineStopScreenShare,
 } from "react-icons/md";
-import Cookies from "universal-cookie";
-import { stopMediaStream } from "../../../../services/videoChatService";
+
 import { useSelector } from "react-redux";
 
 const MeetingFooter = (props) => {
@@ -59,7 +57,6 @@ const MeetingFooter = (props) => {
   };
 
   const setScreenState = (isEnabled) => {
-    // console.log(isEnabled);
     setStreamState((currentState) => {
       return {
         ...currentState,

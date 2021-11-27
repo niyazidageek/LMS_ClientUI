@@ -1,43 +1,29 @@
 import React, { useState, useEffect } from "react";
-// Chakra imports
 import {
   Flex,
-  Table,
-  Tbody,
   Text,
-  Th,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Radio,
-  Stack,
-  RadioGroup,
   Input,
-  Switch,
   SimpleGrid,
-  Textarea,
-  Thead,
-  Tr,
   Button,
-  Td,
-  Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import { Select } from "chakra-react-select";
 import { useHistory, useParams } from "react-router";
-import { actionTypes } from "../../../actions/const";
-// Custom components
 import { useDispatch, useSelector } from "react-redux";
 import Card from "../../cards/Card";
-import {searchLessonsByGroupIdAction} from "../../../actions/lessonActions";
-import { dateHelper } from "../../../utils/dateHelper";
+import { searchLessonsByGroupIdAction } from "../../../actions/lessonActions";
 import CardHeader from "../../cards/CardHeader";
 import CardBody from "../../cards/CardBody";
 import theorySchema from "../../../validations/theorySchema";
 import SpinnerComponent from "../../spinners/SpinnerComponent";
-import { editLessonByIdAction, getLessonByIdAction } from "../../../actions/lessonActions";
-import { editTheoryByIdAction, getTheoryByIdAction } from "../../../actions/theoryActions";
+import {
+  editTheoryByIdAction,
+  getTheoryByIdAction,
+} from "../../../actions/theoryActions";
 import EditorUtil from "../../editor/EditorUtil";
 
 function EditTheory() {
@@ -55,14 +41,14 @@ function EditTheory() {
   const theory = useSelector((state) => state.theoryReducer.theory);
 
   useEffect(() => {
-    let resp =dispatch(getTheoryByIdAction(id));
+    let resp = dispatch(getTheoryByIdAction(id));
     resp.then((r) => setRawContent(r));
   }, []);
 
   function onEditorStateChange(rawContentState, form, field) {
     form.setFieldValue(field.name, rawContentState);
   }
-  
+
   function handleSearchInput(input) {
     let lessons = dispatch(
       searchLessonsByGroupIdAction(currentGroupId, input.trim())
@@ -87,7 +73,7 @@ function EditTheory() {
     formData.append("Values", JSON.stringify(data));
     formData.append("Content", JSON.stringify(content));
     let resp = dispatch(editTheoryByIdAction(id, formData, token));
-    resp.then(r=>setRawContent(r))
+    resp.then((r) => setRawContent(r));
   }
 
   return isFetching || !theory || !rawContent ? (
@@ -117,7 +103,7 @@ function EditTheory() {
             </CardHeader>
             <CardBody px="5px">
               <Flex direction="column" width="100%">
-              <Formik
+                <Formik
                   initialValues={{
                     name: theory.name,
                     point: theory.point,
@@ -219,7 +205,6 @@ function EditTheory() {
 
                       <Field name="content">
                         {({ field, form }) => (
-                          console.log(field.value, '2'),
                           <FormControl mt="24px">
                             <FormLabel fontWeight="semibold" fontSize="md">
                               Content
@@ -261,7 +246,7 @@ function EditTheory() {
                         _active={{
                           bg: "teal.400",
                         }}
-                      >             
+                      >
                         SAVE
                       </Button>
                     </FormControl>
@@ -271,20 +256,22 @@ function EditTheory() {
             </CardBody>
           </Card>
         </CardBody>
-        <Button
+        <Text
           onClick={() => history.goBack()}
           lineHeight="unset"
+          fontWeight="bold"
+          fontSize="large"
           bg="transparent"
           _hover={{
-            bg: "teal.400",
-            color: "white",
+            cursor: "pointer",
+            color: "teal.300",
           }}
           color="teal.400"
           mt="2rem"
           width="max-content"
         >
           Back
-        </Button>
+        </Text>
       </Card>
     </Flex>
   );
