@@ -9,6 +9,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
 import { FaExclamationTriangle, FaCheck, FaCheckCircle } from "react-icons/fa";

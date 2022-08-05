@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-d
 import { ChakraProvider } from "@chakra-ui/react";
 import {PrivateRoute} from "./utils/PrivateRoute";
 import Login from "./components/pages/Login/Login";
-import Home from "./components/pages/Home/Home";
 import Register from "./components/pages/Register/Register";
 import RequestResetPassword from "./components/pages/RequestResetPassword/RequestResetPassword";
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
